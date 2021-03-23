@@ -6,6 +6,9 @@
 ## VS Code Config files:
 .vscode
 
+## Mac OS X metadata files:
+*.DS_Store
+
 ### TeX ###
 ## Core latex/pdflatex auxiliary files:
 *.aux
