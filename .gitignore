@@ -1,0 +1,42 @@
+### Editor ###
+## Vim & Emacs temp files:
+.*sw[op]
+*~
+
+## VS Code Config files:
+.vscode
+
+### TeX ###
+## Core latex/pdflatex auxiliary files:
+*.aux
+*.lof
+*.log
+*.lot
+*.fls
+*.out
+*.toc
+*.gz
+*.synctex*
+*.xdv
+*.out.pyg
+
+## BibTex files
+*.bbl
+*.bcf
+*.blg
+*.fdb_*
+*-blx.bib
+*.run.xml
+
+
+## Intermediate documents:
+*.dvi
+*-converted-to.*
+
+
+
+
+
+
+
+
