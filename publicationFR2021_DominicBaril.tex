@@ -1,45 +1,58 @@
 \documentclass{article}
 \usepackage{frExamplee}
-\usepackage{graphicx}
-\usepackage{apalike}
+%%\usepackage{graphicx}
+%%\usepackage{apalike}
 \usepackage{setspace}
+\input{./latexGoodPractices/preamble}
+\addbibresource{./references.bib}
 
 %% Uncomment line below for double spacing
 %\doublespacing
 
 
-\title{Paper Template for Field Robotics}
+\title{Autonomous refuelling mission in subarctic conditions}
 
 \author{
-John Q.~Doe\thanks{ Use footnote for providing further information
-about author (webpage, alternative address). Acknowledgments to
-funding agencies should go in the \textbf{Acknowledgments} section
-at the end of the paper.} \\
-Department of Something\\
-Somewhere University\\
-Somewhere, AL 90210 \\
-\texttt{doe@something.somewhere.edu} \\
+Dominic Baril\thanks{ Use footnote for providing further information
+	about author (webpage, alternative address). Acknowledgments to
+	funding agencies should go in the \textbf{Acknowledgments} section
+	at the end of the paper.} \\
+Norlab, Universit\'{e} Laval\\
+Qu\'{e}bec, QC, Canada G1V 0A6 \\
+\texttt{dominic.baril@norlab.ulaval.ca} \\
 \And
-Coauthor \\
-Affiliation \\
-Address \\
-\texttt{email} \\
-\AND
-Coauthor \\
-Affiliation \\
-Address \\
-\texttt{email} \\
+Simon-Pierre Desch\^{e}nes \\
+Norlab, Universit\'{e} Laval\\
+Qu\'{e}bec, QC, Canada G1V 0A6 \\
 \And
-Coauthor \\
-Affiliation \\
-Address \\
-\texttt{email} \\
+Olivier Gamache \\
+Norlab, Universit\'{e} Laval\\
+Qu\'{e}bec, QC, Canada G1V 0A6 \\
 \And
-Coauthor \\
-Affiliation \\
-Address \\
-\texttt{email} \\
-(if needed)\\
+Maxime Vaidis \\
+Norlab, Universit\'{e} Laval\\
+Qu\'{e}bec, QC, Canada G1V 0A6 \\
+\And
+Damien Larocque \\
+Norlab, Universit\'{e} Laval\\
+Qu\'{e}bec, QC, Canada G1V 0A6 \\
+\And
+Johann Laconte \\
+Norlab, Universit\'{e} Laval\\
+Qu\'{e}bec, QC, Canada G1V 0A6 \\
+\And
+Vladim\'{i}r Kubelka \\
+Norlab, Universit\'{e} Laval\\
+Qu\'{e}bec, QC, Canada G1V 0A6 \\
+\And
+Philippe Gigu\'{e}re \\
+Norlab, Universit\'{e} Laval\\
+Qu\'{e}bec, QC, Canada G1V 0A6 \\
+\And
+Fran\c{c}ois Pomerleau \\
+Norlab, Universit\'{e} Laval\\
+Qu\'{e}bec, QC, Canada G1V 0A6 \\
+\texttt{francois.pomerleau@norlab.ulaval.ca} \\
 }
 
 % The \author macro works with any number of authors. There are two commands
@@ -50,162 +63,238 @@ Address \\
 % puts 3 of 4 authors names on the first line, and the last on the second
 % line, try using \AND instead of \And before the third author name.
 
+% Acronym definitions
+\acrodef{SNOW}{Self-driving Navigation Optimized for Winter}
+\acrodef{SSMR}{Skid-steering mobile robot}
+\acrodef{UGV}{unmanned ground vehicle}
+\acrodef{GPR}{ground penetrating radar}
+\acrodef{IMU}{inertial measurement unit}
+\acrodef{GNSS}{Global Navigation Satellite system}
+\acrodef{ICP}{iterative closest point}
+\acrodef{DoF}{degree of freedom}
+\acrodef{ICR}{instantaneous centre of rotation}
+\acrodef{ROC}{radius of curvature}
+\acrodef{COM}{center of mass}
+\acrodef{ROS}{Robot Operating System}
+
 \begin{document}
 
 \maketitle
 
 \begin{abstract}
-The abstract should be one paragraph. It should summarize the
-problem, approach, and significance of the results.
+\lightlipsum[1]
 \end{abstract}
 
 \section{Introduction}
+\label{sec:intro}
 
-This document provides a sample template that can be used for
-submission of articles to Field Robotics.
-
-
-The file frExample.pdf contains these
-instructions and illustrates the various formatting requirements
-your paper must satisfy. \LaTeX{} users can choose between two
-style files: frExample.sty (to be used with \LaTeX{} version 2.09)
-and frExamplee.sty (to be used with \LaTeX{}2e). The file
-frExample.tex may be used as a ``shell'' for writing your paper.
-All you have to do is replace the author, title, abstract, and text
-of the paper with your own.
-
-The formatting instructions contained in these style files are summarized in
-sections \ref{gen_inst}, \ref{headings}, and \ref{others} below.
-
-\section{General formatting instructions}
-\label{gen_inst}
-
-The main text of your paper should be in a single column textbox 6.5
-inches by 9 inches. Regular text should be in a 12 point font.
-Paragraphs should not be indented, and should be separated by a
-single line space.
-
-Please pay attention to the instructions in section \ref{others}
-regarding figures, tables, acknowledgments, and references.
-
-\section{Headings: first level}
-\label{headings}
-
-First level headings are lower case (except for first word and
-proper nouns), flush left, bold and in point size 14. One line space
-before the first level heading and 1/2~line space after the first
-level heading.
-
-\subsection{Headings: second level}
-
-Second level headings are lower case (except for first word and
-proper nouns), flush left, bold and in point size 12. One line space
-before the second level heading and 1/2~line space after the second
-level heading.
-
-\subsubsection{Headings: third level}
-
-Third level headings are lower case (except for first word and
-proper nouns), flush left, bold and in point size 12. One line space
-before the third level heading and 1/2~line space after the third
-level heading.
-
-\section{Citations, figures, tables, references}
-\label{others}
-
-If not using the  latex template, please try to produce citations,
-references, and figure captions as close as possible to the example.
-
-\subsection{Citations within the text}
-
-Citations should follow the APA style (http://www.apastyle.org/). Unlike many
-scientific papers, this requires in text citation of authors' names
-and date of work. The corresponding references are to be listed in
-alphabetical order using APA reference style at the end of the
-paper, in the \textbf{References} section. 
-
-
-%Example references are
-%given in this template for books with one author \cite{baxter},
-%conference papers \cite{binh}, journal articles \cite{baldwin}, and
-%books with editors \cite{stock}. For electronic references without
-%authors, the reference is cited using the web page title. The
-%University of Wisconsin Writing Center provides a good resource for
-%questions about the APA style \cite{wisconsin}.
-
-\subsection{Footnotes}
-
-Indicate footnotes with a number\footnote{Sample of the first
-footnote} in the text. Place the footnotes at the bottom of the page
-on which they appear. Precede the footnote with a horizontal rule of
-2~inches.\footnote{Sample of the second footnote}
-
-\subsection{Figures}
-
-All artwork must be neat, clean, and legible. Lines should be dark
-enough for purposes of reproduction; art work should not be
-hand-drawn. We recommend using either the jpg or the embedded
-postscript format for images and the tiff format for line drawings.
-If the figures contain graphs, please ensure that the axis labels
-are legible when printed. Figure number and caption always appear
-after the figure. Place one line space before the figure caption,
-and one line space after the figure. The figure caption is lower
-case (except for first word and proper nouns); figures are numbered
-consecutively.
-
-Make sure the figure caption does not get separated from the figure.
-Leave sufficient space to avoid splitting the figure and figure caption.
+\lightlipsum[1]
+\cite{Pomerleau2014}
 
 \begin{figure} [h]
-    \centering
-    \includegraphics[height=2.0in]{figs/g1.pdf}
-    \hspace{.2in}
-    \includegraphics[height=2.0in]{figs/g2.pdf}
-    \caption{Line graph of random numbers (left) and bar graph of random numbers (right)}
-    \label{fig:sampleFigure}
+	\centering
+	\includegraphics[height=2.0in]{example-image}
+	\caption{Warthog driving / Aerial shot of the different paths}
+	\label{fig:front_fig}
 \end{figure}
 
-\subsection{Tables}
+\lightlipsum[1]
+\lightlipsum[1]
+\lightlipsum[1]
 
-All tables must be centered, neat, clean and legible. Do not use hand-drawn
-tables. Table number and title always appear before the table. See
-Table~\ref{sample-table}.
 
-Place one line space before the table title, one line space after the table
-title, and one line space after the table. The table title must be lower case
-(except for first word and proper nouns); tables are numbered consecutively.
 
-\begin{table}[t]
-\caption{Sample table title} \label{sample-table}
-\begin{center}
-\begin{tabular}{|c|c|c|c|c|c|}
-  \hline
-% after \\: \hline or \cline{col1-col2} \cline{col3-col4} ...
-   & $k_{g}$ & $k_{o}$ & $c_{3}$ & $c_{4}$ & $c_{5}$ \\
-  \hline\hline
-  Careful/Sparse & 0.334 & 0.597 & 1.101 & 9.621 & 8.170 \\ \hline
-  Careful/Dense & 3.124 & 3.195 & 1.094 & 5.899 & 7.318 \\ \hline
-  Aggressive/Sparse & 0.840 & 9.153 & 2.853 & 8.274 & 0.187 \\ \hline
-  Aggressive/Dense & 4.838 & 2.841 & 0.670 & 7.952 & 0.386 \\ \hline
-  Hand-Tuned & 0.767 & 0.060 & 0.340 & 2.000 & 0.250 \\
-  \hline
-\end{tabular}
-\end{center}
+\section{Related work}
+\label{sec:rel_work}
+
+\lightlipsum[1]
+\lightlipsum[1]
+\lightlipsum[1]
+
+\section{System description}
+\label{sec:sys}
+
+\lightlipsum[1]
+
+
+\subsection{Hardware description}
+\label{sec:hardware}
+
+\lightlipsum[1]
+
+\begin{figure} [htpb]
+	\centering
+	\includegraphics[height=2.0in]{example-image}
+	\caption{Warthog figure, pointing to every sensor.}
+	\label{fig:warthog}
+\end{figure}
+
+\subsection{Lidar teach-and-repeat}
+\label{sec:LTR}
+\lightlipsum[1]
+
+\begin{figure} [htpb]
+	\centering
+	\includegraphics[height=2.0in]{example-image}
+	\caption{Flowchart for LTR}
+	\label{fig:ltr_flow}
+\end{figure}
+
+\subsubsection{Iterative closest point}
+\label{ICP}
+
+\lightlipsum[1]
+
+\begin{figure} [htpb]
+	\centering
+	\includegraphics[height=2.0in]{example-image}
+	\caption{Figure explaining Simon-Pierre's tiled mapping framework}
+	\label{fig:tiled_map}
+\end{figure}
+
+\subsubsection{Path following}
+\label{sec:orthexp}
+
+\lightlipsum[1]
+
+\begin{figure} [htpb]
+	\centering
+	\includegraphics[height=2.0in]{example-image}
+	\caption{Figure explaining Differential orthogonal-exponential controller}
+	\label{fig:diff_orthexp}
+\end{figure}
+
+\section{Environment}
+\label{sec:env}
+
+\lightlipsum[1]
+
+\begin{figure} [htpb]
+	\centering
+	\includegraphics[height=2.0in]{example-image}
+	\caption{Johann's various runs and meteo figure}
+	\label{fig:meteo_runs}
+\end{figure}
+
+\lightlipsum[1]
+
+\section{Results}
+\label{sec:results}
+
+\lightlipsum[1]
+
+\begin{table}[htpb]
+	\caption{Teach and repeat runs table} \label{tab:LTR-runs}
+	\begin{center}
+		\begin{tabular}{|c|c|c|c|c|c|}
+			\hline
+			% after \\: \hline or \cline{col1-col2} \cline{col3-col4} ...
+			& $k_{g}$ & $k_{o}$ & $c_{3}$ & $c_{4}$ & $c_{5}$ \\
+			\hline\hline
+			Careful/Sparse & 0.334 & 0.597 & 1.101 & 9.621 & 8.170 \\ \hline
+			Careful/Dense & 3.124 & 3.195 & 1.094 & 5.899 & 7.318 \\ \hline
+			Aggressive/Sparse & 0.840 & 9.153 & 2.853 & 8.274 & 0.187 \\ \hline
+			Aggressive/Dense & 4.838 & 2.841 & 0.670 & 7.952 & 0.386 \\ \hline
+			Hand-Tuned & 0.767 & 0.060 & 0.340 & 2.000 & 0.250 \\
+			\hline
+		\end{tabular}
+	\end{center}
 \end{table}
 
-\subsection{APA Reference Style}
+\subsection{Localization}
+\label{sec:res_loc}
 
-References follow the acknowledgments. Use an unnumbered third level
-heading for the references. References must be listed in the APA
-format (available at http://www.apastyle.org/). References should be
-in the same font size as the paper text.
+\lightlipsum[1]
+
+\subsubsection{Vision-based}
+\label{sec:res_vis}
+
+\lightlipsum[1]
+
+\begin{figure} [htpb]
+	\centering
+	\includegraphics[height=2.0in]{example-image}
+	\caption{Olivier's over and under exposition figure for cameras}
+	\label{fig:cameras_expo}
+\end{figure}
+
+\subsubsection{GNSS}
+\label{sec:res_gnss}
+
+\lightlipsum[1]
+
+\begin{figure} [htpb]
+	\centering
+	\includegraphics[height=2.0in]{example-image}
+	\caption{Maxime's GNSS error figure}
+	\label{fig:gnss_error}
+\end{figure}
+
+\subsubsection{ICP}
+\label{sec:ICP}
+
+\lightlipsum[1]
+
+\begin{figure} [htpb]
+	\centering
+	\includegraphics[height=2.0in]{example-image}
+	\caption{Figure explaining ICP error for every run (correlated with meteo).}
+	\label{fig:icp_error}
+\end{figure}
+
+\begin{figure} [htpb]
+	\centering
+	\includegraphics[height=2.0in]{example-image}
+	\caption{Figure explaining special cases when mapping needed to be enabled.}
+	\label{fig:icp_failure}
+\end{figure}
+
+\subsection{Motion and control}
+\label{sec:res_motion}
+
+\lightlipsum[1]
+
+\subsubsection{Path following error}
+\label{sec:cmd_error}
+
+\lightlipsum[1]
+
+\begin{figure} [htpb]
+	\centering
+	\includegraphics[height=2.0in]{example-image}
+	\caption{Dominic's path following error figure}
+	\label{fig:pf_error}
+\end{figure}
+
+\subsubsection{Command error and power consumption}
+\label{sec:cmd_error}
+
+\lightlipsum[1]
+
+\begin{figure} [htpb]
+	\centering
+	\includegraphics[height=2.0in]{example-image}
+	\caption{Power consumption / motion efficiency figure.}
+	\label{fig:moiton_power}
+\end{figure}
+
+\section{Lessons learned}
+\label{sec:lessons}
+
+\lightlipsum[1]
+\lightlipsum[1]
+
+\section{Conclusion}
+\label{sec:concl}
+
+\lightlipsum[1]
 
 \subsubsection*{Acknowledgments}
-Use unnumbered third level headings for the acknowledgments. All
-acknowledgments go at the end of the paper.
+This research was supported by the Natural Sciences and Engineering Research Council of Canada (NSERC) through the grant CRDPJ 527642-18 SNOW (Self-driving Navigation Optimized for Winter) and FORAC.
 
 %\bibliographystyle{apalike}
-%\bibliography{frExampleRefs}
+%\bibliography{references.bib}
+\printbibliography
 
 
 \end{document}
