@@ -50,11 +50,27 @@ The system showed similar performance in localization accuracy (\SI{0.34}{m} to 
 The localizing \ac{GPR} sensor's measurement range depends on the width of the array, meaning the system cannot be easily miniaturized, which means it was mounted on the rear of the vehicle, at \SI{32}{cm} above the ground.
 This sensor size and mounting requirement could lead to decreased performance in deep snow or in off-road environments. 
 
+In this work, we demonstrate that lidar-based localization and navigation allows a robot to localize in \ac{GNSS}-deprived areas as well in snow-covered terrain.
+Our system has been deployed in complex meteorological scenarios, relying on lidar, \ac{IMU} and wheel encoders measurements to localize and track the desired path through a week-long deployment in a subarctic forest. 
+
+
 \subsection{Relative navigation}
 \label{rel_nav}
 
+% Text on topological path tracking / SLAM?
+
+In \ac{VTR}, a robot is first driven manually along a given path as a training example in order to build a manifold map of overlapping submaps. 
+Then, a visual path-tracking system is able to achieve high autonomy rates over many kilometres of steep terrain, relying on a single stereo camera~\citep{Furgale2010}. 
+\ac{EBN} has then been introduced to increase the robustness of \ac{VTR} to scene appearance change, caused by illumination variation or dynamic environment changes~\citep{Churchill2013}. 
+This feature was added in \ac{VTR} through \ac{MEL}, with the added ability to use landmarks from previous experiences in the same localization problem~\citep{Paton2016}.
+Recall of relevant landmarks for a specific scenario was then improved in computation speed through a bag-of-word approach~\citep{MacTavish2017}.
+While \ac{EBN} and \ac{MEL} offer means to use landmarks observed in various illumination conditions, they require re-teaching the nominal path to enable the \ac{VTR} framework.
+
+To mitigate the impact of illumination variations, colour-constant image transformations have been added to \ac{VTR}~\citep{Paton2015}. 
+The \ac{VTR} framework has also been shown to work with various sensors, such as intensity-based lidar~\citep{McManus2013} and monocular cameras~\citep{Clement2017}.
+Recently, \ac{GNSS} measurements were added to \ac{VTR} to expand its localization ability to environments where the ability to visually localize is compromised.
+
+Our \ac{LTR} framework allowed repeating paths up to five days after they were recorded, in high and low illumination conditions. 
+\ac{LTR} is also robust to dynamic changes in the environment, such as added machinery in the scenery, snow accumulation and robot tracks that change every run.
 
 
-% UofT TnR and other relevant
-\lightlipsum[1]
-\lightlipsum[1]
