@@ -1,6 +1,60 @@
 \section{Related work}
 \label{sec:rel_work}
 
-\lightlipsum[1]
+\subsection{Robotic deployments in snow}
+\label{sec:snow_robots}
+
+To our knowledge, few robots have been deployed in harsh winter environments. 
+Dante II is a \SI{900}{kg} tethered legged robot, which conducted a 5-day, \SI{165}{m} descent into the Mount Spurr Volcano, in Alaska~\citep{Bares1999}.
+During this deployment, Dante II reached speeds upwards to \SI{0.011}{m/s} during the descent.
+A two-axis lidar was used to create a local elevation map around the robot in order to conduct autonomous navigation.
+
+Nomad is a gasoline-powered \SI{725}{kg} \ac{UGV}, was deployed at Elephant Moraine, Antarctica for a duration of 4 weeks~\citep{Apostolopoulos2000}. 
+The robot reached speeds upwards of \SI{0.5}{m/s} while using differential-\ac{GPS} as the primary method of localization.
+The platform also used stereo cameras and a lidar sensor for obstacle detection, although stereo vision was found to be ineffective  on blue ice and snow in Antarctica due to extreme lack of texture~\citep{Moorehead1999}.
+Roll/pitch/yaw sensors were also added to the robot to make it cognizant to hazardous terrain.
+Nomad achieved its initial goal to identify meteorites autonomously in Antarctica at a search rate of ~  \SI{160}{m^2/h}.
+
+MARVIN I and MARVIN II are two diesel-powered \acp{SSMR} weighing \SI{720}{kg} were deployed in Greenland~\citep{Stansbury2004} and Antarctica~\citep{Gifford2009} respectively. 
+The goal of these robots was to increase survey safety in remote polar regions and large sensor payloads led to the selection of large vehicles.
+Both vehicles used \ac{RTK} \ac{GPS} as primary method, achieving a centimeter-level accuracy.
+They also used a lidar sensor for obstacle detection and a a gyroscope and inclinometer were used to provide the robot's pitch and roll angles.
+Skid-steer turns often caused MARVIN I to get immobilized in snow and its transmission eventually broke down during operation.
+MARVIN II thus incorporated design improvements to the hydro-static drive and track systems to increase its durability.
+
+
+Sno-mote Mk1 and Mk2 are dual-drive 1:10 scale snowmobiles equipped with a single camera and \ac{GPS} antenna were deployed on Alaskan glaciers and Wapekoneta, Ohio~\citep{Williams2009}.
+These robots were used to conduct manually-driven traverses of about \SI{100}{m} at a speed of ~\SI{1}{m/s}.
+The data gathered with the Sno-motes was then used to improve visual \ac{SLAM} feature extraction methods in snow. 
+Despite improving feature detection methods on snow, it was shown that snow is still feature-sparse~\citep{Williams2009}.
+Through this work, improvements were also done on slope estimation~\citep{Williams2010} and horizon line estimation~\citep{Williams2011}.
+
+Yeti is a battery-powered \SI{81}{kg} \ac{UGV} in Antarctica and Greenland~\citep{Lever2013}. 
+Yeti was used to conduct \ac{GPR} surveys in order to detect subsurface crevasses or other voids to increase vehicle travel safety in remote polar environments.
+Since polar terrain is largely obstacle-free and the effort required to provide reliable obstacle detection on low-contrast snowfields is considerable, Yeti drove "blind", relying only on \ac{GPS} waypoint following.
+During surveys, Yeti reached a top speed of \SI{2.2}{m/s} and managed to acquire data on hundreds of crevasse encounters and even locate a previously undetected buried building in the South Pole.
+
+A Clearpath Robotics Grizzly, a battery- and gasoline-powered \ac{SSMR} was deployed during winter on the University of Toronto Institute for Aerospace Studies (UTIAS) campus, in Ontario, Canada~\citep{Paton2017}.
+Only stereo cameras were used through a visual \ac{SLAM} algorithm to localize the robot during autonomous teach-and-repeat runs. 
+Path tracking was accomplished using a \ac{MPC} algorithm.
+A 250 m path was successfully repeated on an light snow cover 3 hours after it was first manually driven. 
+However, deep snow path-following provided unsatisfactory results due to features almost only being observed on the horizon, leading to inaccurate pose estimates, which caused issues for the path tracker.
+Furthermore, vehicle tracks that constantly change when driven over lead to an increased pose estimation error.
+
+A full-scale battery-powered Toyota Prius was deployed during winter on roads in Massachusetts, USA~\citep{Ort2020}.
+Localization was accomplished using a custom-designed localizing \ac{GPR}. 
+A prior mapping must be conducted during which the driven is driven by a human operator and the vehicle's sensor data is recorded, the saved map can then allow the vehicle to localize within this area.
+The \ac{GPR} location information is then probabilistically fused with wheel odometry and \ac{IMU} measurements to provide accurate vehicle localization.
+Path tracking is accomplished through the use of a Pure Pursuit controller, specifically designed for Ackermann steered autonomous vehicles.
+The system showed similar performance in localization accuracy (\SI{0.34}{m} to \SI{0.39}{m}) and cross-track error (\SI{0.26}{m} to \SI{0.29}{m}) between clear weather and snow-covered road.
+The localizing \ac{GPR} sensor's measurement range depends on the width of the array, meaning the system cannot be easily miniaturized, which means it was mounted on the rear of the vehicle, at \SI{32}{cm} above the ground.
+This sensor size and mounting requirement could lead to decreased performance in deep snow or in off-road environments. 
+
+\subsection{Relative navigation}
+\label{rel_nav}
+
+
+
+% UofT TnR and other relevant
 \lightlipsum[1]
 \lightlipsum[1]
