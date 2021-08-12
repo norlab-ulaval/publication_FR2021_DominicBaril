@@ -4,9 +4,10 @@
 This section will present a detailed description of our \ac{LTR} system. 
 Our system was designed to work by using 3D lidar scans as a primary mean of localization, also using \ac{IMU} and wheel odometry as input. 
 The main components of the framework are shown in~\autoref{fig:ltr_flow}.
-Incoming lidar scans are registered to a reference map using the \ac{ICP} algorithm in order to localize the robot and build a map of the environment, so the implementation of localization will be described first.
-Next, the path following algorithm, consisting of a simple controller and localizing-only \ac{ICP}.
-%% Describe map, odom, robot and lidar frames
+As the \ac{ICP} algorithm is the foundation of this algorithm, our implementation of the \ac{ICP} algorithm is detailed first. 
+Next, the teach phase is described, explaining how the reference trajectory and map are logged.
+Subsequently, the repeat phase is described, when the robot localizes within the map a simple controller allows to compute commands that allow to repeat the reference trajectory.
+Finally, the hardware used to deploy the \ac{LTR} system, including the \ac{UGV}, sensing and computing hardware is described.
 
 \begin{figure} [htpb]
 	\centering
@@ -15,6 +16,18 @@ Next, the path following algorithm, consisting of a simple controller and locali
 	\label{fig:ltr_flow}
 \end{figure}
 
+Various coordinate frames need to be defined for the \ac{LTR} framework to work, all of which are illustrated in~\autoref{fig:ltr_frames}.
+First, a map frame $\mapf$ is defined representing the world in which the robot is navigating.
+Second, an odom frame $\odomf$ is defined in order to localize the robot at a higher frequency. 
+The rigid transform between from the odom frame $\odomf$ to the map frame 
+A robot frame $\robotf$ is defined at the base of the robot chassis. 
+The rigid transform from the odom frame to the map frame \transform{\odomf}{\mapf} is updated every time a new localization is computed by the \ac{ICP} algorithm.
+Thirdly, a robot frame $\robotf$ is defined with it's origin at the base of the robot chassis and the $x$-axis parallel to the longitudinal direction and the $y$-axis parallel to the lateral direction of the vehicle.
+The rigid transform \transform{\robotf}{\odomf} is updated at the rate of the \ac{IMU} and wheel odometry and used as a prior for the \ac{ICP} algorithm.
+Lastly, a lidar frame $\lidarf$ is defined at the origin of the lidar sensor. 
+The rigid transform from the lidar frame to the robot frame \transform{\lidarf}{\robotf} is assumed to be constant and found through system calibration.
+Reading point clouds $\readpc$ are originally observed in the lidar frame $\lidarf$ but are then expressed in the map frame $\mapf$ by chaining rigid transformations from the lidar frame to the map frame \transform{\lidarf}{\mapf}.
+
 \begin{figure} [htpb]
 	\centering
 	\includegraphics[height=2.0in]{example-image}
@@ -22,22 +35,21 @@ Next, the path following algorithm, consisting of a simple controller and locali
 	\label{fig:ltr_frames}
 \end{figure}
 
-
-\subsection{Lidar teach-and-repeat}
-\label{sec:LTR}
-
-Our \ac{LTR} framework was designed to allow to repeat previously driven paths over large distances. 
-Localization is done mainly using lidar scans registration through the \ac{ICP} algorithm.
-During the teach phase, every \ac{ICP} pose is logged in order to record the path that was driven by the operator.
-All registered scans are also logged into a map, with a limit of density of points. 
-During the repeat phase, the corresponding map and trajectory are loaded and the robot follows the reference path using a simple controller.
-Registered scans are not added to the map during the repeat phase, we have found empirically that not updating the map during repeat runs increases the localization robustness.
-
-
-
-\subsubsection{Iterative closest point}
+\subsection{Iterative closest point}
 \label{ICP}
 
+Incoming lidar scans, or reading point clouds $\readpc$ registered to a reference map, or reference point cloud $\refpc$ using the \ac{ICP} algorithm in order to localize the robot and build a map of the environment during the teach phase.
+
+%% TODO : Re-do this figure to suit our needs for the paper
+\begin{figure} [htpb]
+	\centering
+	\includegraphics[height=2.0in]{figs/icp_pipeline.pdf}
+	\caption{ICP pipeline}
+	\label{fig:icp_pipeline}
+\end{figure}
+
+\subsubsection{Tiled mapping for large scale}
+\label{sec:tiled_map}
 \lightlipsum[1]
 
 \begin{figure} [htpb]
@@ -46,6 +58,7 @@ Registered scans are not added to the map during the repeat phase, we have found
 	\caption{Figure explaining Simon-Pierre's tiled mapping framework}
 	\label{fig:tiled_map}
 \end{figure}
+
 
 \begin{table}[htpb]
 	\caption{\ac{ICP} parameters} \label{tab:LTR-runs}
@@ -65,10 +78,48 @@ Registered scans are not added to the map during the repeat phase, we have found
 	\end{center}
 \end{table}
 
+\subsection{Teach phase}
+\label{sec:teach_phase}
+
+During the teach phase
+\lightlipsum[1]
+
+\begin{figure} [htpb]
+	\centering
+	\includegraphics[height=2.0in]{example-image}
+	\caption{Teach phase pipeline}
+	\label{fig:teach_pipeline}
+\end{figure}
+
+\subsection{Repeat phase}
+\label{sec:repeat_phase}
+
+\lightlipsum[1]
+
+\begin{figure} [htpb]
+	\centering
+	\includegraphics[height=2.0in]{example-image}
+	\caption{Repeat phase pipeline}
+	\label{fig:repeat_pipeline}
+\end{figure}
+
+\subsubsection{Repeat localization}
+\label{sec:rep_loc}
+
+\lightlipsum[1]
+
 \subsubsection{Path following}
 \label{sec:orthexp}
 
-\lightlipsum[1]
+Once the robot is localized within the environment and the reference trajectory is defined, this information is used as input to a simple path following controller in order to complete the repeat pipeline.
+For our implementation, we selected a simple \ac{ORTHEXP} controller was selected. 
+Originally proposed by~\citet{Mojaev2004} for differential-drive mobile robots, this controller allows path tracking with a feedback loop on robot localization.
+This controller was later adapted for omnidirectional mobile robots by~\citet{Li2007} and for dribbling control for soccer robots.
+More recently,~\citet{Huskic2017} improved the algorithm's path following performance through heuristic linear velocity control.
+
+Assuming the robot's 2D pose $\bm x_{2D}$, 
+
+\citet{Huskic2019} %gerona
 
 \begin{figure} [htpb]
 	\centering
@@ -118,10 +169,10 @@ All technical specifications for the platform are given in~\autoref{tab:warthog_
 	\end{center}
 \end{table}
 
-\begin{figure} [htpb]
+\begin{SCfigure}
 	\centering
-	\includegraphics[height=4.0in]{figs/warthog_sys_description.pdf}
+	\includegraphics[height=3.0in]{figs/warthog_sys_description.pdf}
 	\caption{Warthog figure, pointing to every sensor.}
 	\label{fig:warthog}
-\end{figure}
+\end{SCfigure}
 %% To do : Edit Figure to add pointers for all sensors

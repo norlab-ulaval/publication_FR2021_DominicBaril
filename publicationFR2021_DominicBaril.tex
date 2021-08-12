@@ -6,8 +6,21 @@
 \input{./latexGoodPractices/preamble}
 \addbibresource{./references.bib}
 
-%% Uncomment line below for double spacing
-%\doublespacing
+% Add subfigure
+\usepackage{subcaption}
+
+% Add figure with caption at the side
+\usepackage{sidecap}
+
+% Useful math commands
+\newcommand{\mapf}{\mathcal{M}} % map reference frame
+\newcommand{\odomf}{\mathcal{O}} % odom reference frame
+\newcommand{\robotf}{\mathcal{R}} % robot reference frame
+\newcommand{\lidarf}{\mathcal{L}} % lidar reference frame
+\newcommand{\readpc}{\mathcal{P}} % reading point cloud
+\newcommand{\refpc}{\mathcal{Q}} % reference point cloud
+\newcommand{\transform}[2]{$_{#1}^{#2}\bm{T}$} % Transform from #1 frame to #2 frame
+
 
 
 \title{Autonomous refuelling mission in subarctic conditions}
@@ -86,6 +99,8 @@ Qu\'{e}bec, QC, Canada G1V 0A6 \\
 \acrodef{MEL}{Multi-experience Localization}
 \acrodef{CNN}{Convolutional Neural Network}
 \acrodef{GeRoNa}{Generic Robot Navigation}
+\acrodef{ORTHEXP}{Orthogonal-Exponential}
+\acrodef{DD-ORTHEXP}{Differential-Drive-ORTHEXP}
 
 \begin{document}
 
