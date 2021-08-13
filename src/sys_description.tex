@@ -24,7 +24,7 @@ A robot frame $\robotf$ is defined at the base of the robot chassis.
 The rigid transform from the odom frame to the map frame \transform{\odomf}{\mapf} is updated every time a new localization is computed by the \ac{ICP} algorithm.
 Thirdly, a robot frame $\robotf$ is defined with its origin at the base of the robot chassis and the $x$-axis parallel to the longitudinal direction and the $y$-axis parallel to the lateral direction of the vehicle.
 The rigid transform \transform{\robotf}{\odomf} is updated at the rate of the \ac{IMU} and wheel odometry and used as a prior for the \ac{ICP} algorithm.
-Lastly, a lidar frame $\lidarf$ is defined at the origin of the lidar sensor. 
+Fourthly, a lidar frame $\lidarf$ is defined at the origin of the lidar sensor. 
 The rigid transform from the lidar frame to the robot frame \transform{\lidarf}{\robotf} is assumed to be constant and found through system calibration.
 Reading point clouds $\readpc$ are originally observed in the lidar frame $\lidarf$ but are then expressed in the map frame $\mapf$ by chaining rigid transformations from the lidar frame to the map frame \transform{\lidarf}{\mapf}.
 
@@ -112,28 +112,84 @@ During the teach phase
 \label{sec:orthexp}
 
 Once the robot is localized within the environment and the reference trajectory is defined, this information is used as input to a simple path following controller in order to complete the repeat pipeline.
+The output of the path-following algorithm is the commanded longitudinal and angular velocities, defined in the vector $\bm u = [v_x, \omega]$.
 For our implementation, we selected a simple \ac{ORTHEXP} controller was selected. 
 Originally proposed by~\citet{Mojaev2004} for differential-drive mobile robots, this controller allows path tracking with a feedback loop on robot localization.
 This controller was later adapted for omnidirectional mobile robots by~\citet{Li2007} and for dribbling control for soccer robots.
 More recently,~\citet{Huskic2017} improved the algorithm's path following performance through heuristic linear velocity control.
+To implement this controller, we used the open-source \ac{GeRoNa} library, created by~\citet{Huskic2019}.
 
-Assuming the robot's 2D pose $\bm x_{2D}$, 
+Knowing the robot's 2D pose $\bm x_{2D}$ and reference trajectory $\bm x_{ref}$, it is possible to compute the orthogonal projection $\bm P$ of the robot on the reference path.
+A path reference frame $\pathf$ is defined within the map frame with it's origin corresponding to the point $\bm P$.
+For the path reference frame, abscissa $\bm x_t$ and ordinate $\bm x_n$ are unit tangent and unit normal vectors respectively. 
+The orthogonal distance from the origin of the robot frame $\robotf$ and the path frame $\pathf$ along the $\bm x_n$ axis is denoted with $x_n$ and the tangential distance with $x_t$.
+The tangential angle of the path frame $\pathf$ with respect to the map frame $\mapf$ is defined as $\theta_t$.
+The angle of robot frame $\robotf$'s $\bm x$ axis with respect to the map frame $\mapf$ is defined $\theta_r$.
+If we denote $x_{n_o}$ as the distance between the origin of the robot frame $\robotf$ and the origin of the path frame $\pathf$, it is possible to define the following exponential law
 
-\citet{Huskic2019} %gerona
+\begin{equation}
+\label{eq:exp_law}
+	x_n = x_{n_o} e^{-k x_t}
+\end{equation}
+
+where $k$ is a positive constant that allows to regulate the convergence speed of the robot to the path.
+Next, the exponential function's tangent angle with the map frame $\phi_e$ can be computed as follows
+
+\begin{equation}
+\label{eq:exp_angle}
+\phi_e = \arctan(-k x_n)
+\end{equation}
+
+A PD controller can then be defined to compute the commanded angular velocity $\omega$ with $\phi_e$ as error input
+
+\begin{equation}
+\label{eq:exp_PD}
+\omega = K_h (K_p \phi_e + K_d \frac{d\phi_e}{dt})
+\end{equation}
+
+
+%% Mention angular velocity gain
+
+where $K_p$ and $K_d$ are proportional and derivative gains. 
+The $K_h$ parameter is a gain on commanded angular velocity that was added after we empirically observed that the robot stabilizes at an angular velocity significantly lower than the commanded angular velocity, based on \ac{IMU} measurements.
+A summary of the geometrical representation of the variables affecting the angular velocity command is shown in~\autoref{fig:diff_orthexp}.
 
 \begin{figure} [htpb]
 	\centering
-	\includegraphics[height=2.0in]{example-image}
+	\includegraphics[height=2.5in]{figs/orthexp.pdf}
 	\caption{Figure explaining Differential orthogonal-exponential controller}
 	\label{fig:diff_orthexp}
 \end{figure}
+
+In the \ac{GeRoNa} library, commanded longitudinal velocity $v_x$ can be computed based on multiple factors such as upcoming path curvature, current vehicle angular velocity, proximity of obstacles and distance from the end goal.
+
+
+% TODO : Replace with our own version of this figure
+
+
+\begin{table}[htpb]
+	\caption{\ac{ORTHEXP} controller parameters} \label{tab:orthexp_params}
+	\begin{center}
+		\begin{tabular}{|c|c|c|c|c|c|}
+			\hline
+			% after \\: \hline or \cline{col1-col2} \cline{col3-col4} ...
+			& $k_{g}$ & $k_{o}$ & $c_{3}$ & $c_{4}$ & $c_{5}$ \\
+			\hline\hline
+			Careful/Sparse & 0.334 & 0.597 & 1.101 & 9.621 & 8.170 \\ \hline
+			Careful/Dense & 3.124 & 3.195 & 1.094 & 5.899 & 7.318 \\ \hline
+			Aggressive/Sparse & 0.840 & 9.153 & 2.853 & 8.274 & 0.187 \\ \hline
+			Aggressive/Dense & 4.838 & 2.841 & 0.670 & 7.952 & 0.386 \\ \hline
+			Hand-Tuned & 0.767 & 0.060 & 0.340 & 2.000 & 0.250 \\
+			\hline
+		\end{tabular}
+	\end{center}
+\end{table}
 
 \subsection{Hardware description}
 \label{sec:hardware}
 
 Our system was deployed on a Clearpath Robotics Warthog \ac{UGV}. 
 The Warthog is a \ac{SSMR} using two drive units located on each side of it's chassis. 
-The drive
 For \acp{SSMR}, steering is done by sending rotating the wheels on each side of the vehicle at different velocities to creating a skidding effect, effectively turning the vehicle.
 The Warthog can be equipped with wheels or tracks, for this work, we selected the latter in order to maximize mobility. 
 The Warthog is also equipped with a differential suspension, maximizing track or wheel traction when navigating steep terrain.
@@ -148,7 +204,7 @@ All technical specifications for the platform are given in~\autoref{tab:warthog_
 \begin{table}[htpb]
 	\caption{Warthog specifications} \label{tab:warthog_specs}
 	\begin{center}
-		\begin{tabular}{c c c c}
+		\begin{tabular}{c c | c c}
 			\textbf{Physical} &  & \textbf{Power} & \\
 			% after \\: \hline or \cline{col1-col2} \cline{col3-col4} ...
 			Mass & \SI{590}{kg} & Chemistry & AGM sealed lead acid \\ 
@@ -157,6 +213,7 @@ All technical specifications for the platform are given in~\autoref{tab:warthog_
 			Steering geometry & Skid-steering  & Drive & Sevcon Gen4 \\
 			Locomotion & CAMSO ATV T4S Tracks \\
 			Suspension & Geometric Passive Articulation \\
+			\hline
 			\textbf{Sensors} & & \textbf{Computing} \\
 			\ac{LTR} & & Computer & Acrosser AIV-Q170V1FL  \\
 			Front lidar & Robosense RS-32 (\SI{10}{Hz}) & CPU & i7-6700 TE \\
