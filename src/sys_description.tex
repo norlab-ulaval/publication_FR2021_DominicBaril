@@ -6,7 +6,7 @@ Our system was designed to work by using 3D lidar scans as a primary mean of loc
 The main components of the framework are shown in~\autoref{fig:ltr_flow}.
 As the \ac{ICP} algorithm is the foundation of this algorithm, our implementation of the \ac{ICP} algorithm is detailed first. 
 Next, the teach phase is described, explaining how the reference trajectory and map are logged.
-Subsequently, the repeat phase is described, when the robot localizes within the map a simple controller allows to compute commands that allow to repeat the reference trajectory.
+Subsequently, the repeat phase is described, when the robot localizes within the map a simple controller allows computing commands that allow to repeat the reference trajectory.
 Finally, the hardware used to deploy the \ac{LTR} system, including the \ac{UGV}, sensing and computing hardware is described.
 
 \begin{figure} [htpb]
@@ -18,11 +18,11 @@ Finally, the hardware used to deploy the \ac{LTR} system, including the \ac{UGV}
 
 Various coordinate frames need to be defined for the \ac{LTR} framework to work, all of which are illustrated in~\autoref{fig:ltr_frames}.
 First, a map frame $\mapf$ is defined representing the world in which the robot is navigating.
-Second, an odom frame $\odomf$ is defined in order to localize the robot at a higher frequency. 
-The rigid transform between from the odom frame $\odomf$ to the map frame 
+Second, an odom frame $\odomf$ is defined in order to localize the robot at a higher frequency. %JL: odom -> odometry?
+The rigid transform between from the odom frame $\odomf$ to the map frame %unfinished sentence ;) 
 A robot frame $\robotf$ is defined at the base of the robot chassis. 
 The rigid transform from the odom frame to the map frame \transform{\odomf}{\mapf} is updated every time a new localization is computed by the \ac{ICP} algorithm.
-Thirdly, a robot frame $\robotf$ is defined with it's origin at the base of the robot chassis and the $x$-axis parallel to the longitudinal direction and the $y$-axis parallel to the lateral direction of the vehicle.
+Thirdly, a robot frame $\robotf$ is defined with its origin at the base of the robot chassis and the $x$-axis parallel to the longitudinal direction and the $y$-axis parallel to the lateral direction of the vehicle.
 The rigid transform \transform{\robotf}{\odomf} is updated at the rate of the \ac{IMU} and wheel odometry and used as a prior for the \ac{ICP} algorithm.
 Lastly, a lidar frame $\lidarf$ is defined at the origin of the lidar sensor. 
 The rigid transform from the lidar frame to the robot frame \transform{\lidarf}{\robotf} is assumed to be constant and found through system calibration.
