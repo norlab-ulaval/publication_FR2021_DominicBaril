@@ -112,6 +112,8 @@ During the teach phase
 \subsubsection{Path following}
 \label{sec:orthexp}
 
+%% Review Frenet-Serret frame formulation from Huskic 2019
+
 Once the robot is localized within the environment and the reference trajectory is defined, this information is used as input to a simple path following controller in order to complete the repeat pipeline.
 The output of the path-following algorithm is the commanded longitudinal and angular velocities, defined in the vector $\bm u = [v_x, \omega]$.
 For our implementation, we selected a simple \ac{ORTHEXP} controller was selected. 
@@ -141,20 +143,18 @@ Next, the exponential function's tangent angle with the map frame $\phi_e$ can b
 \phi_e = \arctan(-k x_n)
 \end{equation}
 
-A PD controller can then be defined to compute the commanded angular velocity $\omega$ with $\phi_e$ as error input
+The angular velocity command can then be computed as follows
 
 \begin{equation}
 \label{eq:exp_PD}
-\omega = K_h (K_p \phi_e + K_d \frac{d\phi_e}{dt})
+	\omega = K_h (\phi_e + \theta_e)
 \end{equation}
 
-
-%% Mention angular velocity gain
-
-where $K_p$ and $K_d$ are proportional and derivative gains. 
+where $\theta_e$ is the error between the robot angle $\theta_r$ and the path frame angle $\theta_t$.
 The $K_h$ parameter is a gain on commanded angular velocity that was added after we empirically observed that the robot stabilizes at an angular velocity significantly lower than the commanded angular velocity, based on \ac{IMU} measurements.
 A summary of the geometrical representation of the variables affecting the angular velocity command is shown in~\autoref{fig:diff_orthexp}.
 
+% TODO : Replace with our own version of this figure
 \begin{figure} [htpb]
 	\centering
 	\includegraphics[height=2.5in]{figs/orthexp.pdf}
@@ -163,24 +163,33 @@ A summary of the geometrical representation of the variables affecting the angul
 \end{figure}
 
 In the \ac{GeRoNa} library, commanded longitudinal velocity $v_x$ can be computed based on multiple factors such as upcoming path curvature, current vehicle angular velocity, proximity of obstacles and distance from the end goal.
+Due to \ac{ICP} localization noise in the teach phase, the upcoming path curvature would sometimes peak causing the robot to stop on the spot, we therefore removed this factor.
+Current vehicle angular velocity has also been removed from the equation to simplify controller parameter tuning.
+In our system, no obstacle detection feature is included, meaning that the proximity of obstacles cannot be used as a factor to compute linear velocity.
+It is only the distance from the end goal that was used in order to prevent the robot from finishing it's course abruptly.
+Thus, the commanded linear velocity $v_x$ is computed as follows
 
+\begin{equation}
+\label{eq:exp_lin_vel}
+v_x = v_n \exp\left(-\left(\frac{K_g}{d_g}\right)\right)
+\end{equation}
 
-% TODO : Replace with our own version of this figure
+where $v_n$ is the target vehicle velocity and $d_g$ is the distance between the robot's pose and the last pose of the final reference trajectory pose. 
+At each time step, a new exponential function and command $\bm u$ are computed using the control laws shown in~\autoref{eq:exp_PD} and~\autoref{eq:exp_lin_vel}, using the robot's 2D pose $x_{2D}$ and reference trajectory $\bm x_{ref}$ as input.
+The parameters for the \ac{ORTHEXP} controller were tuned empirically by having the robot repeating arbitrary short trajectories and minimizing error, these parameters are detailed in~\autoref{tab:orthexp_params}.
 
 
 \begin{table}[htpb]
 	\caption{\ac{ORTHEXP} controller parameters} \label{tab:orthexp_params}
 	\begin{center}
-		\begin{tabular}{|c|c|c|c|c|c|}
-			\hline
+		\begin{tabular}{c c | c c | c c}
 			% after \\: \hline or \cline{col1-col2} \cline{col3-col4} ...
-			& $k_{g}$ & $k_{o}$ & $c_{3}$ & $c_{4}$ & $c_{5}$ \\
-			\hline\hline
-			Careful/Sparse & 0.334 & 0.597 & 1.101 & 9.621 & 8.170 \\ \hline
-			Careful/Dense & 3.124 & 3.195 & 1.094 & 5.899 & 7.318 \\ \hline
-			Aggressive/Sparse & 0.840 & 9.153 & 2.853 & 8.274 & 0.187 \\ \hline
-			Aggressive/Dense & 4.838 & 2.841 & 0.670 & 7.952 & 0.386 \\ \hline
-			Hand-Tuned & 0.767 & 0.060 & 0.340 & 2.000 & 0.250 \\
+			General & & Angular velocity & & Linear velocity \\
+			\hline
+			Waypoint tolerance & \SI{1.0}{m} & $k$ & 0.4 & $K_g$ & 0.5 \\
+			Goal tolerance & \SI{0.15}{m} & $K_g$ & 0.5 & $v_n$ & \SI{1.5}{m/s} \\
+			 & & $K_h$ & 3.0 & $v_{min}$ & \SI{0.5}{m/s} \\
+			 & & Max angular velocity & \SI{1.0}{rad/s} & $v_{max}$ & \SI{1.5}{m/s} \\
 			\hline
 		\end{tabular}
 	\end{center}
