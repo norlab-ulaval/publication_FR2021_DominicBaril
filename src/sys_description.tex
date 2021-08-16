@@ -28,9 +28,10 @@ Fourthly, a lidar frame $\lidarf$ is defined at the origin of the lidar sensor.
 The rigid transform from the lidar frame to the robot frame \transform{\lidarf}{\robotf} is assumed to be constant and found through system calibration.
 Reading point clouds $\readpc$ are originally observed in the lidar frame $\lidarf$ but are then expressed in the map frame $\mapf$ by chaining rigid transformations from the lidar frame to the map frame \transform{\lidarf}{\mapf}.
 
+%% TODO : Replace with our version of the figure
 \begin{figure} [htpb]
 	\centering
-	\includegraphics[height=2.0in]{example-image}
+	\includegraphics[height=2.0in]{figs/warthog_frames.pdf}
 	\caption{Coordinate frames used for \ac{LTR}}
 	\label{fig:ltr_frames}
 \end{figure}
