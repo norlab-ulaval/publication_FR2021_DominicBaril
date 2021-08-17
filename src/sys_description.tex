@@ -116,40 +116,35 @@ During the teach phase
 
 Once the robot is localized within the environment and the reference trajectory is defined, this information is used as input to a simple path following controller in order to complete the repeat pipeline.
 The output of the path-following algorithm is the commanded longitudinal and angular velocities, defined in the vector $\bm u = [v_x, \omega]$.
-For our implementation, we selected a simple \ac{ORTHEXP} controller was selected. 
+For our implementation, we selected a simple \ac{ORTHEXP} controller. 
 Originally proposed by~\citet{Mojaev2004} for differential-drive mobile robots, this controller allows path tracking with a feedback loop on robot localization.
 This controller was later adapted for omnidirectional mobile robots by~\citet{Li2007} and for dribbling control for soccer robots.
 More recently,~\citet{Huskic2017} improved the algorithm's path following performance through heuristic linear velocity control.
 To implement this controller, we used the open-source \ac{GeRoNa} library, created by~\citet{Huskic2019}.
 
-Knowing the robot's 2D pose $\bm x_{2D}$ and reference trajectory $\bm x_{ref}$, it is possible to compute the orthogonal projection $\bm P$ of the robot on the reference path.
-A path reference frame $\pathf$ is defined within the map frame with it's origin corresponding to the point $\bm P$.
+Knowing the robot's 2D pose $\bm x_{\text{2D}}$ and reference trajectory $\bm x_{\text{ref}}$, it is possible to compute the orthogonal projection $\bm P$ of the robot on the reference path. %JL: I think it's better to always use \text{} or \texttt, mathtt or other while writing several letters in math, otherwise it's simply considered as one variable per letter. changed 2D by \text{2D} and ref by \text{ref}
+A path reference frame $\pathf$ is defined within the map frame with its origin corresponding to the point $\bm P$.
 For the path reference frame, abscissa $\bm x_t$ and ordinate $\bm x_n$ are unit tangent and unit normal vectors respectively. 
 The orthogonal distance from the origin of the robot frame $\robotf$ and the path frame $\pathf$ along the $\bm x_n$ axis is denoted with $x_n$ and the tangential distance with $x_t$.
 The tangential angle of the path frame $\pathf$ with respect to the map frame $\mapf$ is defined as $\theta_t$.
-The angle of robot frame $\robotf$'s $\bm x$ axis with respect to the map frame $\mapf$ is defined $\theta_r$.
-If we denote $x_{n_o}$ as the distance between the origin of the robot frame $\robotf$ and the origin of the path frame $\pathf$, it is possible to define the following exponential law
-
+The angle of robot frame $\robotf$'s $\bm x$ axis with respect to the map frame $\mapf$ is defined $\theta_r$. %JL robot frame R's -> hard to read
+If we denote $x_{n_o}$ as the distance between the origin of the robot frame $\robotf$ and the origin of the path frame $\pathf$, it is possible to define the following exponential law as
 \begin{equation}
 \label{eq:exp_law}
-	x_n = x_{n_o} e^{-k x_t}
+	x_n = x_{n_o} e^{-k x_t},
 \end{equation}
-
 where $k$ is a positive constant that allows to regulate the convergence speed of the robot to the path.
-Next, the exponential function's tangent angle with the map frame $\phi_e$ can be computed as follows
-
+Next, the exponential function's tangent angle with the map frame $\phi_e$ can be computed as follows:
 \begin{equation}
 \label{eq:exp_angle}
-\phi_e = \arctan(-k x_n)
+\phi_e = \arctan(-k x_n).
 \end{equation}
 
-The angular velocity command can then be computed as follows
-
+The angular velocity command can then be computed as %JL: remove some "as follows" before the equation and added punctuation 
 \begin{equation}
 \label{eq:exp_PD}
-	\omega = K_h (\phi_e + \theta_e)
+	\omega = K_h (\phi_e + \theta_e),
 \end{equation}
-
 where $\theta_e$ is the error between the robot angle $\theta_r$ and the path frame angle $\theta_t$.
 The $K_h$ parameter is a gain on commanded angular velocity that was added after we empirically observed that the robot stabilizes at an angular velocity significantly lower than the commanded angular velocity, based on \ac{IMU} measurements.
 A summary of the geometrical representation of the variables affecting the angular velocity command is shown in~\autoref{fig:diff_orthexp}.
@@ -166,16 +161,14 @@ In the \ac{GeRoNa} library, commanded longitudinal velocity $v_x$ can be compute
 Due to \ac{ICP} localization noise in the teach phase, the upcoming path curvature would sometimes peak causing the robot to stop on the spot, we therefore removed this factor.
 Current vehicle angular velocity has also been removed from the equation to simplify controller parameter tuning.
 In our system, no obstacle detection feature is included, meaning that the proximity of obstacles cannot be used as a factor to compute linear velocity.
-It is only the distance from the end goal that was used in order to prevent the robot from finishing it's course abruptly.
-Thus, the commanded linear velocity $v_x$ is computed as follows
-
+It is only the distance from the end goal that was used in order to prevent the robot from finishing its course abruptly.
+Thus, the commanded linear velocity $v_x$ is computed as
 \begin{equation}
 \label{eq:exp_lin_vel}
-v_x = v_n \exp\left(-\left(\frac{K_g}{d_g}\right)\right)
+v_x = v_n \exp\left(-\left(\frac{K_g}{d_g}\right)\right),
 \end{equation}
-
 where $v_n$ is the target vehicle velocity and $d_g$ is the distance between the robot's pose and the last pose of the final reference trajectory pose. 
-At each time step, a new exponential function and command $\bm u$ are computed using the control laws shown in~\autoref{eq:exp_PD} and~\autoref{eq:exp_lin_vel}, using the robot's 2D pose $x_{2D}$ and reference trajectory $\bm x_{ref}$ as input.
+At each time step, a new exponential function and command $\bm u$ are computed using the control laws shown in~\autoref{eq:exp_PD} and~\autoref{eq:exp_lin_vel}, using the robot's 2D pose $x_{\text{2D}}$ and reference trajectory $\bm x_{\text{ref}}$ as input.
 The parameters for the \ac{ORTHEXP} controller were tuned empirically by having the robot repeating arbitrary short trajectories and minimizing error, these parameters are detailed in~\autoref{tab:orthexp_params}.
 
 
@@ -199,7 +192,7 @@ The parameters for the \ac{ORTHEXP} controller were tuned empirically by having 
 \label{sec:hardware}
 
 Our system was deployed on a Clearpath Robotics Warthog \ac{UGV}. 
-The Warthog is a \ac{SSMR} using two drive units located on each side of it's chassis. 
+The Warthog is a \ac{SSMR} using two drive units located on each side of its chassis. 
 For \acp{SSMR}, steering is done by sending rotating the wheels on each side of the vehicle at different velocities to creating a skidding effect, effectively turning the vehicle.
 The Warthog can be equipped with wheels or tracks, for this work, we selected the latter in order to maximize mobility. 
 The Warthog is also equipped with a differential suspension, maximizing track or wheel traction when navigating steep terrain.
