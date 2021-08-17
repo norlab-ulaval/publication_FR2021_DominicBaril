@@ -11,8 +11,9 @@
   \def\sy{5}
 
   %draw axis
-  \draw[-latex, align=left, ultra thick] (0,0) -- (\sx,0) node[below right]{Environment\\ density};
-  \draw[-latex, align=left, ultra thick] (0,0) -- (0,\sy) node[above left]{Meteorological\\ conditions};
+  \draw[latex-latex, align=left, ultra thick] 
+    (0,\sy) node[above left]{Weather\\ conditions} -- (0,0) -- 
+    (\sx,0) node[below right]{Environment\\ density};
 
   %If needed, you can add ticks to the axis
   \draw (0,.7*\sy) -- ++ (-.01*\sx,0) node[left]{\small Rough};
@@ -26,9 +27,9 @@
 
   %Add a legend
   \matrix [draw, below left, nodes={anchor=center}] at (current bounding box.north east) {
-    \node [lidar] {}; & \node[text width=1.1cm] {Lidar}; \\
-    \node [camera] {}; & \node[text width=1.1cm] {Camera}; \\
-    \node [gps] {}; & \node[text width=1.1cm] {GPS}; \\
+    \node [lidar] {}; & \node[text width=2.1cm] {Lidar-based}; \\
+    \node [camera] {}; & \node[text width=2.1cm] {Camera-based}; \\
+    \node [gps] {}; & \node[text width=2.1cm] {GPS-based}; \\
   };
 
 
