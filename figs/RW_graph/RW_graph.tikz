@@ -7,8 +7,8 @@
   \def\gps{circle(1pt)}
 
   %def figure size
-  \def\sx{11}
-  \def\sy{5}
+  \def\sx{12.5}
+  \def\sy{7}
 
   %draw axis
   \draw[latex-latex, align=left, ultra thick] 
@@ -16,14 +16,18 @@
     (\sx,0) node[below right]{Environment\\ density};
 
   %If needed, you can add ticks to the axis
-  \draw (0,.7*\sy) -- ++ (-.01*\sx,0) node[left]{\small Rough};
-  \draw (0,.3*\sy) -- ++ (-.01*\sx,0) node[left]{\small Moderate};
+  \draw (0,.9*\sy) -- ++ (-.01*\sx,0) node[left]{\small Rough};
+  \draw (0,.5*\sy) -- ++ (-.01*\sx,0) node[left]{\small Moderate};
+  \draw (0,.1*\sy) -- ++ (-.01*\sx,0) node[left]{\small Light};
 
   %Add citations from csv file
   \csvreader[head to column names]{figs/RW_graph/citations.csv}{}{%
     \node[\sensor] at (\sx*\x,\sy*\y) {}; %draw point
-    \node[above, yshift=.1cm] at (\sx*\x,\sy*\y) {\citet{\citationKey}}; %add label
+    \node[below, yshift=-.1cm] at (\sx*\x,\sy*\y) {\citet{\citationKey}}; %add label
   }
+
+    % This paper
+	\draw[black, fill] (\sx*.6, \sy*.9) circle (5pt) node [above, yshift=.1cm] {LTR 2021};
 
   %Add a legend
   \matrix [draw, below left, nodes={anchor=center}] at (current bounding box.north east) {
@@ -31,6 +35,7 @@
     \node [camera] {}; & \node[text width=2.1cm] {Camera-based}; \\
     \node [gps] {}; & \node[text width=2.1cm] {GPS-based}; \\
   };
+
 
 
 \end{tikzpicture}

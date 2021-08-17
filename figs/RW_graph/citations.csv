@@ -1,4 +1,11 @@
 citationKey, sensor, x, y
-Stansbury2004, lidar, .2, .2
-Stansbury2004, camera, .5, .1
-Stansbury2004, gps, .5, .5
+Apostolopoulos2000, gps, .25, .7
+Gifford2009, gps, .25, .8
+Lever2013, gps, .25, .9
+Paton2017, camera, .5, .5
+Congram2021, camera, .5, .6
+Camara2020, camera, .5, .3
+Sprunk2013, lidar, .7, .2
+Mazuran2015, lidar, .7, .1
+
+
