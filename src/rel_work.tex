@@ -59,7 +59,7 @@ Our system has been deployed in complex meteorological scenarios, relying on lid
 \label{rel_nav}
 
 % Text on topological path tracking / SLAM?
-
+Teach-and-Repeat approaches are rooted in the idea that a route driven by a mobile robot should have previously been driven (or "taught") by a human operator~\citep{Furgale2010}.
 In \ac{VTR}, a robot is first driven manually along a given path as a training example in order to build a manifold map of overlapping submaps. 
 Then, a visual path-tracking system is able to achieve high autonomy rates over many kilometers of steep terrain, relying on a single stereo camera~\citep{Furgale2010}. %JL: changed km to its US variant
 \ac{EBN} has then been introduced to increase the robustness of \ac{VTR} to scene appearance change, caused by illumination variation or dynamic environment changes~\citep{Churchill2013}. 
@@ -70,7 +70,7 @@ The \ac{VTR} framework has also been shown to work with various sensors, such as
 \acp{CNN} and particle filters have also been used for visual place recognition in \ac{VTR} frameworks in order to localize the robot in the taught trajectory~\citep{Camara2020}.
 In this work, the horizontal offset of the reference image with the current image is used to correct the steering during the teach phase.
 Recently,~\citet{Congram2021} expanded \ac{VTR}'s localization ability to environments where the ability to visually localize is compromised by using \ac{GNSS} measurements.
-While \ac{VTR} has proven to be an efficient method for repeating trajectories in outdoor environments, the literature does not show the system to be deployed in snow.
+While \ac{VTR} is an efficient method for repeating trajectories in outdoor environments, is remains unproven when subject to harsh weather conditions related to winter.
 Our work aims to demonstrate that \ac{LTR} approaches allow repeating trajectories that were recorded multiple days prior and under vastly different lighting conditions. %JL: allow X to ... or allow verb+ing
 We also demonstrate that \ac{LTR} offers good performance on snow-covered terrain, which is known to be complex for visual localization.
 
@@ -85,9 +85,14 @@ While more focused on localization,~\citet{Landry2016} have worked to improve to
 In this work, the localization was done using a 3D lidar. 
 Following a similar idea, \citet{Boniardi2017} have extended this work to allow using architectural floor plans of buildings to localize within using 2D lidar scans.
 Our work differs from previous work on \ac{LTR} mainly because the system is deployed in an unstructured, outdoor environment and subject to harsh winter conditions. 
-We also demonstrate the performance of our \ac{LTR} system on \SI{22}{km} of autonomous path repeating.
+Additionally, work on localization in recent years has shown to be robust enough to perform large-scale 3D mapping in subarctic forests~\citep{Babin2019}.
 
-%% Sentence about 3D lidar TnR
+
+A summary of the major aforementioned robot deployments is shown in~\autoref{fig:RW_graph}.
+It can be seen that while \ac{GPS}-based localization approaches have been proven in harsh polar environments, the required path-following accuracy was low due to extremely low environment density inherent to polar environments~\citep{Lever2013}.
+\ac{VTR} approaches on the other hand were proven in denser, off-road environments, but they are sensitive to the high lightning variations related to snow, daytime/nighttime navigation, as well as the lack of visual features of snow-covered terrain~\citep{Paton2017}.
+Consequently, \ac{LTR} approaches based on 3D lidar measurements have the potential to be robust to the aforementioned issues related to vision-based navigation, but the literature lacks in documenting \ac{LTR} under harsh weather conditions.
+Our work shows that \ac{LTR} approaches are reliable to perform teach and repeat across multiple days, under harsh winter weather and totalling \SI{22}{km} of autonomous path repeating.
 
 \begin{figure}[thbp]
 	\centering
@@ -96,8 +101,6 @@ We also demonstrate the performance of our \ac{LTR} system on \SI{22}{km} of aut
 	\label{fig:RW_graph}
 \end{figure}
 
-
-% Paragraph on ICP and large scale outdoor localization using lidars?
 
 
 
