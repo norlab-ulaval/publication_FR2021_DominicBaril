@@ -1,7 +1,7 @@
 \begin{tikzpicture}[
-  lidar/.style={shape=circle, draw=black, line width=1, fill=gray},
-  camera/.style={shape=rectangle, draw=black, line width=1, fill=gray},
-  gps/.style={shape=diamond, draw=black, line width=1, fill=gray, scale=.7}]
+  lidar/.style={shape=circle, draw=black, line width=1, fill=red},
+  camera/.style={shape=rectangle, draw=black, line width=1, fill=blue},
+  gps/.style={shape=diamond, draw=black, line width=1, fill=green, scale=.7}]
   \def\lidar{circle(1pt)}
   \def\camera{(0,0) rectangle ++(5pt,5pt)}
   \def\gps{circle(1pt)}
