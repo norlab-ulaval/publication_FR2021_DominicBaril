@@ -1,0 +1,35 @@
+\begin{tikzpicture}[
+  lidar/.style={shape=circle, draw=black, line width=1, fill=gray},
+  camera/.style={shape=rectangle, draw=black, line width=1, fill=gray},
+  gps/.style={shape=diamond, draw=black, line width=1, fill=gray, scale=.7}]
+  \def\lidar{circle(1pt)}
+  \def\camera{(0,0) rectangle ++(5pt,5pt)}
+  \def\gps{circle(1pt)}
+
+  %def figure size
+  \def\sx{11}
+  \def\sy{5}
+
+  %draw axis
+  \draw[-latex, align=left, ultra thick] (0,0) -- (\sx,0) node[below right]{Environment\\ density};
+  \draw[-latex, align=left, ultra thick] (0,0) -- (0,\sy) node[above left]{Meteorological\\ conditions};
+
+  %If needed, you can add ticks to the axis
+  \draw (0,.7*\sy) -- ++ (-.01*\sx,0) node[left]{\small Rough};
+  \draw (0,.3*\sy) -- ++ (-.01*\sx,0) node[left]{\small Moderate};
+
+  %Add citations from csv file
+  \csvreader[head to column names]{figs/RW_graph/citations.csv}{}{%
+    \node[\sensor] at (\sx*\x,\sy*\y) {}; %draw point
+    \node[above, yshift=.1cm] at (\sx*\x,\sy*\y) {\citet{\citationKey}}; %add label
+  }
+
+  %Add a legend
+  \matrix [draw, below left, nodes={anchor=center}] at (current bounding box.north east) {
+    \node [lidar] {}; & \node[text width=1.1cm] {Lidar}; \\
+    \node [camera] {}; & \node[text width=1.1cm] {Camera}; \\
+    \node [gps] {}; & \node[text width=1.1cm] {GPS}; \\
+  };
+
+
+\end{tikzpicture}

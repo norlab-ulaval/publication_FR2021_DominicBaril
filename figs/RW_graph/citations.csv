@@ -1,0 +1,4 @@
+citationKey, sensor, x, y
+Stansbury2004, lidar, .2, .2
+Stansbury2004, camera, .5, .1
+Stansbury2004, gps, .5, .5
