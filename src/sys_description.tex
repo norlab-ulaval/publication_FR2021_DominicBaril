@@ -24,6 +24,7 @@ Thirdly, a lidar frame $\lidarf$ is defined at the origin of the lidar sensor.
 The rigid transform from the lidar frame to the robot frame \transform{\lidarf}{\robotf} is assumed to be constant and found through system calibration.
 Reading point clouds $\readpc$ are originally observed in the lidar frame $\lidarf$ and reference point clouds are expressed in the map frame $\mapf$.
 The transform between $\robotf$ and $\mapf$ \transform{\robotf}{\mapf} is updated via the \ac{ICP} algorithm and is used as odometry for the robot.
+Lastly, for path following algorithm, a Frenet-Serret frame $\pathf$ is defined directly on the path.
 
 %% TODO : Replace with our version of the figure
 \begin{figure} [htpb]
