@@ -18,15 +18,12 @@ Finally, the hardware used to deploy the \ac{LTR} system, including the \ac{UGV}
 
 Various coordinate frames need to be defined for the \ac{LTR} framework to work, all of which are illustrated in~\autoref{fig:ltr_frames}.
 First, a map frame $\mapf$ is defined representing the world in which the robot is navigating.
-Second, an odom frame $\odomf$ is defined in order to localize the robot at a higher frequency. %JL: odom -> odometry?
-The rigid transform between from the odom frame $\odomf$ to the map frame %unfinished sentence ;) 
-A robot frame $\robotf$ is defined at the base of the robot chassis. 
-The rigid transform from the odom frame to the map frame \transform{\odomf}{\mapf} is updated every time a new localization is computed by the \ac{ICP} algorithm.
-Thirdly, a robot frame $\robotf$ is defined with its origin at the base of the robot chassis and the $x$-axis parallel to the longitudinal direction and the $y$-axis parallel to the lateral direction of the vehicle.
-The rigid transform \transform{\robotf}{\odomf} is updated at the rate of the \ac{IMU} and wheel odometry and used as a prior for the \ac{ICP} algorithm.
-Fourthly, a lidar frame $\lidarf$ is defined at the origin of the lidar sensor. 
+Second, a robot frame $\robotf$ is defined with its origin at the base of the robot chassis and the $x$-axis parallel to the longitudinal direction and the $y$-axis parallel to the lateral direction of the vehicle.
+%The rigid transform \transform{\robotf}{\odomf} is updated at the rate of the \ac{IMU} and wheel odometry and used as a prior for the \ac{ICP} algorithm.
+Thirdly, a lidar frame $\lidarf$ is defined at the origin of the lidar sensor. 
 The rigid transform from the lidar frame to the robot frame \transform{\lidarf}{\robotf} is assumed to be constant and found through system calibration.
-Reading point clouds $\readpc$ are originally observed in the lidar frame $\lidarf$ but are then expressed in the map frame $\mapf$ by chaining rigid transformations from the lidar frame to the map frame \transform{\lidarf}{\mapf}.
+Reading point clouds $\readpc$ are originally observed in the lidar frame $\lidarf$ and reference point clouds are expressed in the map frame $\mapf$.
+The transform between $\robotf$ and $\mapf$ \transform{\robotf}{\mapf} is updated via the \ac{ICP} algorithm and is used as odometry for the robot.
 
 %% TODO : Replace with our version of the figure
 \begin{figure} [htpb]
@@ -40,6 +37,38 @@ Reading point clouds $\readpc$ are originally observed in the lidar frame $\lida
 \label{ICP}
 
 Incoming lidar scans, or reading point clouds $\readpc$ registered to a reference map, or reference point cloud $\refpc$ using the \ac{ICP} algorithm in order to localize the robot and build a map of the environment during the teach phase.
+Pioneered by~\citet{Besl1992} and~\citet{Chen1991}, this algorithm iteratively matches points between two point clouds and looks for a rigid transform minimizing the distance between each matched points.
+The first data processing step in our implementation is to randomly subsample $\readpc$ in order to decrease computation time.
+In our implementation, we know that $\readpc$ is observed in the lidar frame $\lidarf$ and that $\refpc$ is defined in the map frame $\mapf$. 
+Thus, in our implementation, the \ac{ICP} algorithm estimates the transform $_{\lidarf}^{\mapf}\bm{T}$ by minimizing an error function $\text{error}(\readpc, \refpc)$:
+
+\begin{equation}
+	_{\lidarf}^{\mapf}\bm{\hat{T}} = \argmin_{\bm T} (\text{error} \left(\readpc, \refpc, _{\lidarf}^{\mapf}\bm{\check{T}} \right))
+\end{equation}
+
+where $_{\lidarf}^{\mapf}\bm{\check{T}}$ is the prior transformation, estimated via the \ac{IMU} and wheel odometry.
+In order to compute the error function, we associate points between $\readpc$ and $\refpc$.
+This association is the done by finding the closest point in $\refpc$ for each point in $\readpc$.
+In order to accelerate this step, nearest neighbour search is done via the use of a kd-tree, as proposed by~\citet{Elseberg2012}.
+In addition, binary weights are added to each point match in order to remove the outlier matches from the error function.
+Formally, let $\match = \text{match}(\readpc, \refpc) = \{(\bm p, \bm q) : \bm p \in \readpc, \bm q \in \refpc \}$ be the set of matches between $\readpc$ and $\refpc$ and $\weight = \text{outlier}(\readpc, \refpc) = \{w(\bm p, \bm q) : \forall(\bm p, \bm q) \in \match\}$ be the weights associated to these matches.
+Our system uses point-to-plane error, which can be computed as follows
+
+\begin{equation}
+	\text{error}(\readpc, \refpc) = \sum_{k=1}^{K} w(\bm p, \bm q) \lVert (\bm p_k - \bm q_k) \cdot \bm n_k \rVert_2
+\end{equation}
+
+where $K$ is the number of matches in $\match$. 
+$\bm n_k$ is the normal vector around the 3D point $\bm q_k$ in $\refpc$, which needs to be computed prior to the \ac{ICP} algorithm.
+This error can be iteratively minimized using Cholesky decomposition.
+For more details, please refer to~\citep{Pomerleau2015}.
+Once the optimal transform is found, $\readpc$ can be registered to $\refpc$ by applying it to every point of $\readpc$. 
+The resulting points can then be appended to $\refpc$ and the resulting transform \transform{\lidarf}{\mapf} can be used to express the 3D robot pose in $\mapf$ by chaining with \transform{\lidarf}{\robotf}, since this transform is constant.
+An overview of the \ac{ICP} pipeline is shown in~\autoref{fig:icp_pipeline}.
+Our implementation is strongly based on the \texttt{libpointmatcher}\footnote{\url{https://github.com/ethz-asl/libpointmatcher}}~\citep{Pomerleau2013}.
+The parameters that were used on our system are detailed in~\autoref{tab:icp_params}.
+
+%% Need to write on point cloud preprocessing, matching, minimization (point-to-plane) and post-processing (might be added to mapping).
 
 %% TODO : Re-do this figure to suit our needs for the paper
 \begin{figure} [htpb]
@@ -49,20 +78,9 @@ Incoming lidar scans, or reading point clouds $\readpc$ registered to a referenc
 	\label{fig:icp_pipeline}
 \end{figure}
 
-\subsubsection{Tiled mapping for large scale}
-\label{sec:tiled_map}
-\lightlipsum[1]
-
-\begin{figure} [htpb]
-	\centering
-	\includegraphics[height=2.0in]{example-image}
-	\caption{Figure explaining Simon-Pierre's tiled mapping framework}
-	\label{fig:tiled_map}
-\end{figure}
-
 
 \begin{table}[htpb]
-	\caption{\ac{ICP} parameters} \label{tab:LTR-runs}
+	\caption{\ac{ICP} parameters} \label{tab:icp_params}
 	\begin{center}
 		\begin{tabular}{|c|c|c|c|c|c|}
 			\hline
@@ -82,8 +100,11 @@ Incoming lidar scans, or reading point clouds $\readpc$ registered to a referenc
 \subsection{Teach phase}
 \label{sec:teach_phase}
 
-During the teach phase
-\lightlipsum[1]
+During the teach phase, the robot is driven along a specific path by a human operator, while all sensors are used to collect data.
+The \ac{ICP} algorithm is used to solve the \ac{SLAM} problem, hence incoming reading point clouds $\readpc$ are registered to the reference point cloud $\refpc$ and then appended to the reference, effectively building a map.
+The other output of the \ac{ICP} algorithm, the transform that allows to register the reading point cloud to the reference point cloud \transform{\lidarf}{\mapf} represents the pose of the robot $\bm x$.
+By logging all robot poses, we build a reference trajectory
+
 
 \begin{figure} [htpb]
 	\centering
@@ -92,14 +113,29 @@ During the teach phase
 	\label{fig:teach_pipeline}
 \end{figure}
 
-\subsection{Repeat phase}
-\label{sec:repeat_phase}
-
+\subsubsection{Tiled mapping for large scale}
+\label{sec:tiled_map}
 \lightlipsum[1]
 
 \begin{figure} [htpb]
 	\centering
 	\includegraphics[height=2.0in]{example-image}
+	\caption{Figure explaining Simon-Pierre's tiled mapping framework}
+	\label{fig:tiled_map}
+\end{figure}
+
+\subsection{Repeat phase}
+\label{sec:repeat_phase}
+
+During the teach phase, the path map is loaded and used directly as the reference point cloud $\refpc$.
+During this phase, the previously built maps are used to localize the robot while it follows the reference path.
+Our system allows to repeat paths in both directions, going forwards or backwards. 
+No obstacle detection feature was implemented on the system.
+The repeat pipeline is shown in~\autoref{fig:repeat_pipeline}.
+
+\begin{figure} [htpb]
+	\centering
+	\includegraphics[height=2.0in]{figs/repeat_pipeline.pdf}
 	\caption{Repeat phase pipeline}
 	\label{fig:repeat_pipeline}
 \end{figure}
@@ -120,13 +156,13 @@ For our implementation, we selected a simple \ac{ORTHEXP} controller.
 Originally proposed by~\citet{Mojaev2004} for differential-drive mobile robots, this controller allows path tracking with a feedback loop on robot localization.
 This controller was later adapted for omnidirectional mobile robots by~\citet{Li2007} and for dribbling control for soccer robots.
 More recently,~\citet{Huskic2017} improved the algorithm's path following performance through heuristic linear velocity control.
-To implement this controller, we used the open-source \ac{GeRoNa} library, created by~\citet{Huskic2019}.
+To implement this controller, we used the open-source \ac{GeRoNa}\footnote{\url{https://github.com/cogsys-tuebingen/gerona}} library, created by~\citet{Huskic2019}.
 
-Knowing the robot's 2D pose $\bm x_{\text{2D}}$ and reference trajectory $\bm x_{\text{ref}}$, it is possible to compute the orthogonal projection $\bm P$ of the robot on the reference path. %JL: I think it's better to always use \text{} or \texttt, mathtt or other while writing several letters in math, otherwise it's simply considered as one variable per letter. changed 2D by \text{2D} and ref by \text{ref}
-A path reference frame $\pathf$ is defined within the map frame with its origin corresponding to the point $\bm P$.
-For the path reference frame, abscissa $\bm x_t$ and ordinate $\bm x_n$ are unit tangent and unit normal vectors respectively. 
-The orthogonal distance from the origin of the robot frame $\robotf$ and the path frame $\pathf$ along the $\bm x_n$ axis is denoted with $x_n$ and the tangential distance with $x_t$.
-The tangential angle of the path frame $\pathf$ with respect to the map frame $\mapf$ is defined as $\theta_t$.
+Knowing the robot's 2D pose $\bm x_{\text{2D}}$ and reference trajectory $\bm x_{\text{ref}}$, it is possible to compute the orthogonal projection $\bm P$ of the robot on the reference path.
+A Frenet-Serret frame $\pathf$ is defined within the map frame with its origin corresponding to the point $\bm P$.
+For Frenet-Serret frame, abscissa $\bm x_t$ and ordinate $\bm x_n$ are unit tangent and unit normal vectors respectively. 
+The orthogonal distance from the origin of the robot frame $\robotf$ and the Frenet-Serret frame $\pathf$ along the $\bm x_n$ axis is denoted with $x_n$ and the tangential distance with $x_t$.
+The tangential angle of the Frenet-Serret frame $\pathf$ with respect to the map frame $\mapf$ is defined as $\theta_t$.
 The angle of robot frame $\robotf$'s $\bm x$ axis with respect to the map frame $\mapf$ is defined $\theta_r$. %JL robot frame R's -> hard to read
 If we denote $x_{n_o}$ as the distance between the origin of the robot frame $\robotf$ and the origin of the path frame $\pathf$, it is possible to define the following exponential law as
 \begin{equation}
@@ -152,8 +188,9 @@ A summary of the geometrical representation of the variables affecting the angul
 % TODO : Replace with our own version of this figure
 \begin{figure} [htpb]
 	\centering
-	\includegraphics[height=2.5in]{figs/orthexp.pdf}
-	\caption{Figure explaining Differential orthogonal-exponential controller}
+	\includegraphics[height=2.5in]{figs/path_follower/orthexp.pdf}
+	\caption{Main components of the \ac{ORTHEXP} path following algorithm used in this work.
+	In red is the reference trajectory.}
 	\label{fig:diff_orthexp}
 \end{figure}
 
@@ -209,6 +246,7 @@ All technical specifications for the platform are given in~\autoref{tab:warthog_
 	\begin{center}
 		\begin{tabular}{c c | c c}
 			\textbf{Physical} &  & \textbf{Power} & \\
+			\hline
 			% after \\: \hline or \cline{col1-col2} \cline{col3-col4} ...
 			Mass & \SI{590}{kg} & Chemistry & AGM sealed lead acid \\ 
 			Footprint & 2.13 x 1.52 m & Voltage & \SI{48}{V} \\ 
@@ -218,6 +256,7 @@ All technical specifications for the platform are given in~\autoref{tab:warthog_
 			Suspension & Geometric Passive Articulation \\
 			\hline
 			\textbf{Sensors} & & \textbf{Computing} \\
+			\hline
 			\ac{LTR} & & Computer & Acrosser AIV-Q170V1FL  \\
 			Front lidar & Robosense RS-32 (\SI{10}{Hz}) & CPU & i7-6700 TE \\
 			\ac{IMU} & XSens MTi-10 (\SI{100}{Hz}) \\ 
@@ -225,6 +264,7 @@ All technical specifications for the platform are given in~\autoref{tab:warthog_
 			Recording & &   \\
 			Camera & Dalsa C1920 (\SI{8}{Hz})  \\
 			\ac{GPS} & Emlid Reach-RS+ (\SI{5}{Hz}) \\
+			\hline
 		\end{tabular}
 	\end{center}
 \end{table}

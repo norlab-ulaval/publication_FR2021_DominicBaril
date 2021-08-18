@@ -18,16 +18,23 @@
 \usepackage{csvsimple}
 \usetikzlibrary{shapes}
 
+% Text commands
+\newcommand{\laverdiere}{Laverdi\`{e}re} % set of point weights
 
 % Useful math commands
-\newcommand{\mapf}{\mathcal{M}} % map reference frame
+\newcommand{\mapf}{\mathcal{G}} % map reference frame
 \newcommand{\odomf}{\mathcal{O}} % odom reference frame
 \newcommand{\robotf}{\mathcal{R}} % robot reference frame
 \newcommand{\lidarf}{\mathcal{L}} % lidar reference frame
-\newcommand{\pathf}{\mathcal{X}} % path reference frame
+\newcommand{\pathf}{\mathcal{S}} % path Frenet-Serret frame
 \newcommand{\readpc}{\mathcal{P}} % reading point cloud
 \newcommand{\refpc}{\mathcal{Q}} % reference point cloud
+\newcommand{\match}{\mathcal{M}} % set of point matches
+\newcommand{\weight}{\mathcal{W}} % set of point weights
 \newcommand{\transform}[2]{$_{#1}^{#2}\bm{T}$} % Transform from #1 frame to #2 frame
+
+% argmin and argmax
+\DeclareMathOperator*{\argmin}{arg\,min}
 
 %JL: is there a specific reason for this notation? I find the notation _^{R1}T_{R2} somewhat better, but it might be personal!
 
