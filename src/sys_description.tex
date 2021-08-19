@@ -65,6 +65,9 @@ This error can be iteratively minimized using Cholesky decomposition.
 For more details, please refer to~\citep{Pomerleau2015}.
 Once the optimal transform is found, $\readpc$ can be registered to $\refpc$ by applying it to every point of $\readpc$. 
 The resulting points can then be appended to $\refpc$ and the resulting transform \transform{\lidarf}{\mapf} can be used to express the 3D robot pose in $\mapf$ by chaining with \transform{\lidarf}{\robotf}, since this transform is constant.
+Output filters are then computed on $\refpc$. 
+The first consisting of computing the surface normals for all points in order to allow point-to-plane minimization.
+The second one is used to filter out dynamic points in the map, following what was proposed by~\citet{Pomerleau2014}.
 An overview of the \ac{ICP} pipeline is shown in~\autoref{fig:icp_pipeline}.
 Our implementation is strongly based on the \texttt{libpointmatcher}\footnote{\url{https://github.com/ethz-asl/libpointmatcher}}~\citep{Pomerleau2013}.
 The parameters that were used on our system are detailed in~\autoref{tab:icp_params}.
@@ -83,17 +86,36 @@ The parameters that were used on our system are detailed in~\autoref{tab:icp_par
 \begin{table}[htpb]
 	\caption{\ac{ICP} parameters} \label{tab:icp_params}
 	\begin{center}
-		\begin{tabular}{|c|c|c|c|c|c|}
+		\begin{tabular}{c c c c}
 			\hline
 			% after \\: \hline or \cline{col1-col2} \cline{col3-col4} ...
-			& $k_{g}$ & $k_{o}$ & $c_{3}$ & $c_{4}$ & $c_{5}$ \\
-			\hline\hline
-			Careful/Sparse & 0.334 & 0.597 & 1.101 & 9.621 & 8.170 \\ \hline
-			Careful/Dense & 3.124 & 3.195 & 1.094 & 5.899 & 7.318 \\ \hline
-			Aggressive/Sparse & 0.840 & 9.153 & 2.853 & 8.274 & 0.187 \\ \hline
-			Aggressive/Dense & 4.838 & 2.841 & 0.670 & 7.952 & 0.386 \\ \hline
-			Hand-Tuned & 0.767 & 0.060 & 0.340 & 2.000 & 0.250 \\
+			ICP block & Function & Parameters & \\
 			\hline
+			Input filters & BoundingBoxDataPointsFilter & xMin: -1.5 & xMax: 0.5\\
+			 & & yMin: -1 & yMax: 1  \\
+			 & & zMin: -1 & zMax: 0.5 \\
+			 & & removeInside: 1 \\
+			 & BoundingBoxDataPointsFilter & xMin: -10 & xMax: -1.5\\
+			 & & yMin: -2.5 & yMax: 2.5  \\
+			& & zMin: -1 & zMax: 1 \\
+			& & removeInside: 1 \\
+			 & RandomSamplingDataPointsFilter & prob: 0.7 & \\
+			\hline
+			Matcher & KDTreeMatcher & knn: 7 & maxDist: 2.0 \\
+			 & & epsilon: 1 \\
+			\hline
+			Outlier filter & TrimmedDistOutlierFilter & ratio: 0.7 & \\
+			\hline
+			Cost function & PointToPlaneErrorMinimizer & force4DOF: 1 & \\
+			\hline
+			Transformation & DifferentialTransformationChecker & minDiffRotErr: 0.001 & minDiffTransErr: 0.01 \\
+			checkers & & smoothLength: 2 \\
+			 & CounterTransformationChecker & maxIterationCount: 40 \\
+			\hline
+			Output filters & SurfaceNormalDataPointsFilter & knn: 15 \\
+			 & CutAtDescriptorThreshold & descName: probabilityDynamic \\
+			 & & useLargerThan: 1 \\
+			 & & threshold: 0.8 \\
 		\end{tabular}
 	\end{center}
 \end{table}
