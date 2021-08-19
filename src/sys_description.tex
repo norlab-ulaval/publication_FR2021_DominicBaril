@@ -113,12 +113,25 @@ The parameters that were used on our system are detailed in~\autoref{tab:icp_par
 			 & CounterTransformationChecker & maxIterationCount: 40 \\
 			\hline
 			Output filters & SurfaceNormalDataPointsFilter & knn: 15 \\
-			 & CutAtDescriptorThreshold & descName: probabilityDynamic \\
-			 & & useLargerThan: 1 \\
+			 & CutAtDescriptorThreshold & descName: probabilityDynamic & useLargerThan: 1 \\
 			 & & threshold: 0.8 \\
 		\end{tabular}
 	\end{center}
 \end{table}
+
+\subsubsection{\ac{IMU} and wheel odometry and point cloud de-skewing}
+\label{sec:imu_wheel_odom}
+
+As specified above, the \ac{ICP} algorithm requires high-frequency odometry to produce a prior estimate $_{\lidarf}^{\mapf}\bm{\check{T}}$.
+This estimate is produced by estimating the robot displacement between lidar scans. 
+Robot orientation is estimated using the Madwick filter\footnote{\url{https://github.com/bjohnsonfl/Madgwick_Filter}}~\citep{Madgwick2011} based on gyroscope and accelerometer measurements.
+Linear displacement is estimated through vehicle body velocity commands.
+Each command is propagated with the robot orientation between scans, yielding $_{\lidarf}^{\mapf}\bm{\check{T}}$ at a frequency of \SI{100}{Hz}.
+In addition, lidar sensors typically make the assumption that the lidar frame $\lidarf$ is static during each scan, which is incorrect for applications such as \ac{LTR}.
+Hence, a point cloud de-skewing approach was added to our system in order to a de-skewed point cloud $\hat{\readpc}$.
+First proposed by~\citet{Zhang2014}, such algorithms use the the high-frequency odometry to correct the location of each point before registration.
+Following the same idea, our high-frequency odometry is used to estimate the de-skewed point cloud $\hat{\readpc}$, which is the one that is used in the \ac{ICP} algorithm.
+
 
 \subsection{Teach phase}
 \label{sec:teach_phase}
@@ -251,18 +264,23 @@ The parameters for the \ac{ORTHEXP} controller were tuned empirically by having 
 \subsection{Hardware description}
 \label{sec:hardware}
 
-Our system was deployed on a Clearpath Robotics Warthog \ac{UGV}. 
+Our system was deployed on a Clearpath Robotics Warthog \ac{UGV}, which is shown in~\autoref{fig:warthog}. 
 The Warthog is a \ac{SSMR} using two drive units located on each side of its chassis. 
 For \acp{SSMR}, steering is done by sending rotating the wheels on each side of the vehicle at different velocities to creating a skidding effect, effectively turning the vehicle.
-The Warthog can be equipped with wheels or tracks, for this work, we selected the latter in order to maximize mobility. 
+Vehicle motion control is done through a sub-servo system allowing to control each side's wheel velocity through Sevcon Gen4 drives and aformentionned wheel encoders signal.
+A kinematic linear mapping between wheel velocities and body velocities allows to send body-velocity commands directly to the platform.
+Finally, the platform is symmetrical, meaning that it is able to drive along each path both forwards and backwards.
+The Warthog can be mounted wheels or tracks, for this work, we selected CAMSO ATV T4S tracks in order to maximize mobility. 
 The Warthog is also equipped with a differential suspension, maximizing track or wheel traction when navigating steep terrain.
-The warthog is also equipped with a standard sensor suite for autonomous navigation. 
+Our vehicle is also equipped with a standard sensor suite for autonomous navigation. 
 In order to enable the \ac{LTR} framework, a Robosense RS-32 3D lidar is mounted in front of the robot, for this work, it is the only lidar used for localization.
+This lidar has a \SI{200}{m} detection range and produces about \SI{600000}{} points per second.
 3 Hall effect sensors are added to each motor to provide wheel odometry for the robot. 
 Finally, an XSens MTi-10 \ac{IMU} provides angular velocity, body linear acceleration and gravitational acceleration measurements. 
-Additional sensors used for recording in this work include a Dalsa C1920 camera and two Emlid Reach-RS+ \ac{GPS} receivers.
+Additional sensors used for recording in this work include a Dalsa C1920 camera and two Emlid Reach-RS+ \ac {RTK} \ac{GPS} receivers.
 Two Robosense RS-16 lidars were added to the rear of the platform to collect measurements on tree canopy but no data was recorded through those sensors. 
 All technical specifications for the platform are given in~\autoref{tab:warthog_specs}.
+
 
 \begin{table}[htpb]
 	\caption{Warthog specifications} \label{tab:warthog_specs}
