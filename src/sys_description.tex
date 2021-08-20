@@ -129,7 +129,7 @@ Linear displacement is estimated through vehicle body velocity commands.
 Each command is propagated with the robot orientation between scans, yielding $_{\lidarf}^{\mapf}\bm{\check{T}}$ at a frequency of \SI{100}{Hz}.
 In addition, it should be noted that lidar sensors typically make the assumption that the lidar frame $\lidarf$ is static during each scan, which is incorrect for applications such as \ac{LTR}.
 Hence, a point cloud de-skewing approach was added to our system in order to a de-skewed point cloud $\hat{\readpc}$.
-First proposed by~\citet{Zhang2014}, such algorithms use the the high-frequency odometry to correct the location of each point before registration.
+First proposed by~\citet{Bosse2009}, such algorithms use the the high-frequency odometry to correct the location of each point before registration.
 Following the same idea, our high-frequency odometry is used to estimate the de-skewed point cloud $\hat{\readpc}$, which is the one that is used in the \ac{ICP} algorithm.
 
 

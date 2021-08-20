@@ -15,7 +15,7 @@ The path network is illustrated in~\autoref{fig:forest}.
 \begin{figure}[htpb]
 	\begin{center}
 		\begin{subfigure}[b]{0.45\textwidth}
-			\includegraphics[width=\linewidth]{figs/fm_mnt.png}
+			\includegraphics[width=\linewidth]{figs/map-dem.pdf}
 			%\caption{A view from above the \textit{Montmorency} forest, which covers \SI{400}{km^2}.}
 			\label{fig:view_above}
 		\end{subfigure}%
@@ -49,10 +49,10 @@ During the five days deployment, we completed
 		All times are defined in the local Eastern Standard Time. 
 		The column $\Delta t$ defines the elapsed time since the teach run of the associated path.} \label{tab:all_runs}
 	\begin{center}
-		\begin{tabular}{c c c c c c c}
+		\begin{tabular}{c c c c c c}
 			\hline
 			% after \\: \hline or \cline{col1-col2} \cline{col3-col4} ...
-			ID & Path & Start time & Duration & $\Delta t$ & Meteo A & Meteo B \\
+			ID & Path & Start time & Duration & $\Delta t$ & Number of scans \\
 			\hline
 			TeachA & A & \DTMdate{2021-03-30} \DTMtime{11:04:00} & \DTMtime{00:25:00} & Teach Pass \\
 			TeachB & B' & \DTMdate{2021-03-29} \DTMtime{15:45:00} & \DTMtime{00:31:00} & Teach Pass \\
@@ -77,5 +77,10 @@ During the five days deployment, we completed
 \end{table}
 
 % Validate run durations through bag files
+
+% Number of points per maps : 
+%Map A: 1729505 points
+%Map B: 2423769 points
+%Map C: 637690 points
 
 \lightlipsum[1]
