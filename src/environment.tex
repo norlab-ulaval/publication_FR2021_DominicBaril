@@ -34,7 +34,8 @@ The path network is illustrated in~\autoref{fig:forest}.
 	\end{center}
 \end{figure}
 
-During the deployment, which lasted throughout five days, 
+During the five days deployment, we completed
+% Discuss weather
 
 \begin{figure} [htpb]
 	\centering
@@ -42,5 +43,39 @@ During the deployment, which lasted throughout five days,
 	\caption{Johann's various runs and meteo figure}
 	\label{fig:meteo_runs}
 \end{figure}
+
+\begin{table}[htpb]
+	\caption{Overview of all runs realized in this work. 
+		All times are defined in the local Eastern Standard Time. 
+		The column $\Delta t$ defines the elapsed time since the teach run of the associated path.} \label{tab:all_runs}
+	\begin{center}
+		\begin{tabular}{c c c c c c c}
+			\hline
+			% after \\: \hline or \cline{col1-col2} \cline{col3-col4} ...
+			ID & Path & Start time & Duration & $\Delta t$ & Meteo A & Meteo B \\
+			\hline
+			TeachA & A & \DTMdate{2021-03-30} \DTMtime{11:04:00} & \DTMtime{00:25:00} & Teach Pass \\
+			TeachB & B' & \DTMdate{2021-03-29} \DTMtime{15:45:00} & \DTMtime{00:31:00} & Teach Pass \\
+			TeachC & C & \DTMdate{2021-03-30} \DTMtime{07:28:00} & \DTMtime{00:15:00} & Teach Pass \\
+			R1 & C & \DTMdate{2021-03-31} \DTMtime{10:42:00} & \DTMtime{00:22:00} & \DTMtime{27:14:00} &  \\
+			R2 & B & \DTMdate{2021-03-31} \DTMtime{14:03:00} & \DTMtime{00:26:00} & \DTMtime{30:35:00} &  \\
+			R3 & A' & \DTMdate{2021-03-31} \DTMtime{15:02:00} & \DTMtime{00:27:00} & \DTMtime{31:34:00} &  \\
+			R4 & A & \DTMdate{2021-03-31} \DTMtime{20:42:00} & \DTMtime{00:26:00} & \DTMtime{37:14:00} &  \\
+			R5 & B' & \DTMdate{2021-03-31} \DTMtime{21:12:00} & \DTMtime{00:33:00} & \DTMtime{37:44:00} &  \\
+			R6 & B & \DTMdate{2021-03-31} \DTMtime{22:00:00} & \DTMtime{00:35:00} & \DTMtime{38:32:00} &  \\
+			R7 & A' & \DTMdate{2021-03-31} \DTMtime{22:47:00} & Battery breakdown & \DTMtime{39:19:00} &  \\
+			R8 & A & \DTMdate{2021-04-01} \DTMtime{09:21:00} & \DTMtime{00:16:00} & \DTMtime{49:53:00} &  \\
+			R9 & B' & \DTMdate{2021-04-01} \DTMtime{10:19:00} & \DTMtime{00:29:00} & \DTMtime{50:51:00} &  \\
+			R10 & C & \DTMdate{2021-04-01} \DTMtime{11:01:00} & \DTMtime{00:23:00} & \DTMtime{51:33:00} &  \\
+			R11 & B & \DTMdate{2021-04-01} \DTMtime{18:13:00} & \DTMtime{00:23:00} & \DTMtime{58:45:00} &  \\
+			R12 & A' & \DTMdate{2021-04-01} \DTMtime{19:09:00} & \DTMtime{00:00:00} & \DTMtime{59:41:00} &  \\
+			R13 & A & \DTMdate{2021-04-02} \DTMtime{06:53:00} & \DTMtime{00:26:00} & \DTMtime{71:25:00} &  \\
+			R14 & B' & \DTMdate{2021-04-02} \DTMtime{07:25:00} & \DTMtime{00:29:00} & \DTMtime{71:57:00} &  \\
+			
+		\end{tabular}
+	\end{center}
+\end{table}
+
+% Validate run durations through bag files
 
 \lightlipsum[1]

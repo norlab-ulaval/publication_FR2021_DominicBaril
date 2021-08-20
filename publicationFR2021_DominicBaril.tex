@@ -12,6 +12,15 @@
 % Add figure with caption at the side
 \usepackage{sidecap}
 
+% For dates and time
+\usepackage{datetime2}
+\DTMnewtimestyle{custom}{
+	\renewcommand{\DTMdisplaytime}[3]{
+		\DTMtexorpdfstring{\DTMtwodigits{##1}:\DTMtwodigits{##2}}
+	}
+}
+\DTMsettimestyle{custom}
+
 %For tikz figure
 \usepackage{tikz}
 \usepackage{pgfplots}
@@ -119,7 +128,7 @@ Qu\'{e}bec, QC, Canada G1V 0A6 \\
 \acrodef{GeRoNa}{Generic Robot Navigation}
 \acrodef{ORTHEXP}{Orthogonal-Exponential}
 \acrodef{DD-ORTHEXP}{Differential-Drive-ORTHEXP}
-\acrodef{POI}{Point of Interest}
+\acrodef{POI}{Points of Interest}
 
 \begin{document}
 
