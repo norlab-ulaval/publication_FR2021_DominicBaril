@@ -41,13 +41,14 @@ Incoming lidar scans, or reading point clouds $\readpc$ registered to a referenc
 Pioneered by~\citet{Besl1992} and~\citet{Chen1991}, this algorithm iteratively matches points between two point clouds and looks for a rigid transform minimizing the distance between each matched points.
 The first data processing step in our implementation is to randomly subsample $\readpc$ in order to decrease computation time.
 In our implementation, we know that $\readpc$ is observed in the lidar frame $\lidarf$ and that $\refpc$ is defined in the map frame $\mapf$. 
-Thus, in our implementation, the \ac{ICP} algorithm estimates the transform $_{\lidarf}^{\mapf}\bm{T}$ by minimizing an error function $\text{error}(\readpc, \refpc)$:
+We first transform $\readpc$ to $\robotf$ through \transform{\lidarf}{\robotf}.
+Thus, the \ac{ICP} algorithm estimates the transform $_{\robotf}^{\mapf}\bm{T}$ by minimizing an error function $\text{error}(\readpc, \refpc)$:
 
 \begin{equation}
-	_{\lidarf}^{\mapf}\bm{\hat{T}} = \argmin_{\bm T} (\text{error} \left(\readpc, \refpc, _{\lidarf}^{\mapf}\bm{\check{T}} \right))
+	_{\robotf}^{\mapf}\bm{\hat{T}} = \argmin_{\bm T} (\text{error} \left(\readpc, \refpc, _{\robotf}^{\mapf}\bm{\check{T}} \right))
 \end{equation}
 
-where $_{\lidarf}^{\mapf}\bm{\check{T}}$ is the prior transformation, estimated via the \ac{IMU} and wheel odometry.
+where $_{\robotf}^{\mapf}\bm{\check{T}}$ is the prior transformation, estimated via the \ac{IMU} and wheel odometry.
 In order to compute the error function, we associate points between $\readpc$ and $\refpc$.
 This association is the done by finding the closest point in $\refpc$ for each point in $\readpc$.
 In order to accelerate this step, nearest neighbour search is done via the use of a kd-tree, as proposed by~\citet{Elseberg2012}.
@@ -64,7 +65,7 @@ $\bm n_k$ is the normal vector around the 3D point $\bm q_k$ in $\refpc$, which 
 This error can be iteratively minimized using Cholesky decomposition.
 For more details, please refer to~\citep{Pomerleau2015}.
 Once the optimal transform is found, $\readpc$ can be registered to $\refpc$ by applying it to every point of $\readpc$. 
-The resulting points can then be appended to $\refpc$ and the resulting transform \transform{\lidarf}{\mapf} can be used to express the 3D robot pose in $\mapf$ by chaining with \transform{\lidarf}{\robotf}, since this transform is constant.
+The resulting points can then be appended to $\refpc$ and the resulting transform \transform{\robotf}{\mapf} can be used to express the 3D robot pose in $\mapf$.
 Output filters are then computed on $\refpc$. 
 The first consisting of computing the surface normals for all points in order to allow point-to-plane minimization.
 The second one is used to filter out dynamic points in the map, following what was proposed by~\citet{Pomerleau2014}.
@@ -90,6 +91,9 @@ The parameters that were used on our system are detailed in~\autoref{tab:icp_par
 			\hline
 			% after \\: \hline or \cline{col1-col2} \cline{col3-col4} ...
 			ICP block & Function & Parameters & \\
+			\hline
+			General & & sensor\_max\_range = 80 \\			 
+			& & min\_dist\_new\_point = 0.1 \\
 			\hline
 			Input filters & BoundingBoxDataPointsFilter & xMin: -1.5 & xMax: 0.5\\
 			 & & yMin: -1 & yMax: 1  \\
@@ -122,11 +126,11 @@ The parameters that were used on our system are detailed in~\autoref{tab:icp_par
 \subsubsection{\ac{IMU} and wheel odometry and point cloud de-skewing}
 \label{sec:imu_wheel_odom}
 
-As specified above, the \ac{ICP} algorithm requires high-frequency odometry to produce a prior estimate $_{\lidarf}^{\mapf}\bm{\check{T}}$.
+As specified above, the \ac{ICP} algorithm requires high-frequency odometry to produce a prior estimate $_{\robotf}^{\mapf}\bm{\check{T}}$.
 This estimate is produced by estimating the robot displacement between lidar scans. 
 Robot orientation is estimated using the Madwick filter\footnote{\url{https://github.com/bjohnsonfl/Madgwick_Filter}}~\citep{Madgwick2011} based on gyroscope and accelerometer measurements.
 Linear displacement is estimated through vehicle body velocity commands.
-Each command is propagated with the robot orientation between scans, yielding $_{\lidarf}^{\mapf}\bm{\check{T}}$ at a frequency of \SI{100}{Hz}.
+Each command is propagated with the robot orientation between scans, yielding $_{\robotf}^{\mapf}\bm{\check{T}}$ at a frequency of \SI{100}{Hz}.
 In addition, it should be noted that lidar sensors typically make the assumption that the lidar frame $\lidarf$ is static during each scan, which is incorrect for applications such as \ac{LTR}.
 Hence, a point cloud de-skewing approach was added to our system in order to a de-skewed point cloud $\hat{\readpc}$.
 First proposed by~\citet{Bosse2009}, such algorithms use the the high-frequency odometry to correct the location of each point before registration.
@@ -194,8 +198,8 @@ This controller was later adapted for omnidirectional mobile robots by~\citet{Li
 More recently,~\citet{Huskic2017} improved the algorithm's path following performance through heuristic linear velocity control.
 To implement this controller, we used the open-source \ac{GeRoNa}\footnote{\url{https://github.com/cogsys-tuebingen/gerona}} library, created by~\citet{Huskic2019}.
 
-Knowing the robot's 2D pose $\bm x_{\text{2D}}$ and reference trajectory $\bm x_{\text{ref}}$, it is possible to compute the orthogonal projection $\bm P$ of the robot on the reference path.
-A Frenet-Serret frame $\pathf$ is defined within the map frame with its origin corresponding to the point $\bm P$.
+%Knowing the robot's 2D pose $\bm x_{\text{2D}}$ and reference trajectory $\bm x_{\text{ref}}$, it is possible to compute the orthogonal projection $\bm P$ of the robot on the reference path.
+A Frenet-Serret frame $\pathf$ is defined within the map frame with its origin corresponding to the orthogonal projection of the robot on the reference pat.
 For Frenet-Serret frame, abscissa $\bm x_t$ and ordinate $\bm x_n$ are unit tangent and unit normal vectors respectively. 
 The orthogonal distance from the origin of the robot frame $\robotf$ and the Frenet-Serret frame $\pathf$ along the $\bm x_n$ axis is denoted with $x_n$ and the tangential distance with $x_t$.
 The tangential angle of the Frenet-Serret frame $\pathf$ with respect to the map frame $\mapf$ is defined as $\theta_t$.
