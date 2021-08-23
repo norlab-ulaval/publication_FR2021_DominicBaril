@@ -36,7 +36,8 @@
 *.dvi
 *-converted-to.*
 
-
+## ltr maps figure data:
+figs/ltr_map_traj/data
 
 
 
