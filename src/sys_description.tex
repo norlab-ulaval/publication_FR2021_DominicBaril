@@ -21,7 +21,7 @@ First, a map frame $\mapf$ is defined representing the world in which the robot 
 Second, a robot frame $\robotf$ is defined with its origin at the base of the robot chassis and the $x$-axis parallel to the longitudinal direction and the $y$-axis parallel to the lateral direction of the vehicle.
 %The rigid transform \transform{\robotf}{\odomf} is updated at the rate of the \ac{IMU} and wheel odometry and used as a prior for the \ac{ICP} algorithm.
 Thirdly, a lidar frame $\lidarf$ is defined at the origin of the lidar sensor. 
-The rigid transform from the lidar frame to the robot frame \transform{\lidarf}{\robotf} is assumed to be constant and found through system calibration.
+The rigid transform from the robot frame to the lidar frame \transform{\robotf}{\lidarf} is assumed to be constant and found through system calibration.
 Reading point clouds $\readpc$ are originally observed in the lidar frame $\lidarf$ and reference point clouds are expressed in the map frame $\mapf$.
 The transform between $\robotf$ and $\mapf$ \transform{\robotf}{\mapf} is updated via the \ac{ICP} algorithm and is used as odometry for the robot.
 Lastly, for path following algorithm, a Frenet-Serret frame $\pathf$ is defined directly on the path.
@@ -41,17 +41,15 @@ Incoming lidar scans, or reading point clouds $\readpc$ registered to a referenc
 Pioneered by~\citet{Besl1992} and~\citet{Chen1991}, this algorithm iteratively matches points between two point clouds and looks for a rigid transform minimizing the distance between each matched points.
 The first data processing step in our implementation is to randomly subsample $\readpc$ in order to decrease computation time.
 In our implementation, we know that $\readpc$ is observed in the lidar frame $\lidarf$ and that $\refpc$ is defined in the map frame $\mapf$. 
-We first transform $\readpc$ to $\robotf$ through \transform{\lidarf}{\robotf}.
-Thus, the \ac{ICP} algorithm estimates the transform $_{\robotf}^{\mapf}\bm{T}$ by minimizing an error function $\text{error}(\readpc, \refpc)$:
+Thus, the \ac{ICP} algorithm estimates the transform $_{\lidarf}^{\mapf}\bm{T}$ by minimizing an error function $\text{error}(\readpc, \refpc)$:
 
 \begin{equation}
-	_{\robotf}^{\mapf}\bm{\hat{T}} = \argmin_{\bm T} (\text{error} \left(\readpc, \refpc, _{\robotf}^{\mapf}\bm{\check{T}} \right))
+	_{\lidarf}^{\mapf}\bm{\hat{T}} = \argmin_{\bm T} (\text{error} \left(\readpc, \refpc, _{\lidarf}^{\mapf}\bm{\check{T}} \right))
 \end{equation}
 
-where $_{\robotf}^{\mapf}\bm{\check{T}}$ is the prior transformation, estimated via the \ac{IMU} and wheel odometry.
+where $_{\lidarf}^{\mapf}\bm{\check{T}}$ is the prior transformation, estimated via the \ac{IMU} and wheel odometry.
 In order to compute the error function, we associate points between $\readpc$ and $\refpc$.
-This association is the done by finding the closest point in $\refpc$ for each point in $\readpc$.
-% There are multiple matches in Q for every point in P (7)
+This association is the done by finding the closest points in $\refpc$ for each point in $\readpc$, thus multiple points of $\refpc$ can be associated to each point of $\readpc$.
 In order to accelerate this step, nearest neighbour search is done via the use of a kd-tree, as proposed by~\citet{Elseberg2012}.
 In addition, binary weights are added to each point match in order to remove the outlier matches from the error function.
 Formally, let $\match = \text{match}(\readpc, \refpc) = \{(\bm p, \bm q) : \bm p \in \readpc, \bm q \in \refpc \}$ be the set of matches between $\readpc$ and $\refpc$ and $\weight = \text{outlier}(\readpc, \refpc) = \{w(\bm p, \bm q) : \forall(\bm p, \bm q) \in \match\}$ be the weights associated to these matches.
@@ -61,12 +59,12 @@ Our system uses point-to-plane error, which can be computed as follows
 	\text{error}(\readpc, \refpc) = \sum_{k=1}^{K} w(\bm p_k, \bm q_k) \lVert (\bm p_k - \bm q_k) \cdot \bm n_k \rVert_2
 \end{equation}
 
-where $K$ is the number of matches in $\match$. 
+where $K$ is the number of matches in $\match$ and $\lVert \cdot \rVert_2$ is the L2 norm. 
 $\bm n_k$ is the normal vector around the 3D point $\bm q_k$ in $\refpc$, which needs to be computed prior to the \ac{ICP} algorithm.
 This error can be iteratively minimized by recomputing $\match$ and $\weight$ at each iteration.
 For more details, please refer to~\citep{Pomerleau2015}.
 Once the optimal transform is found, $\readpc$ can be registered to $\refpc$ by applying it to every point of $\readpc$. 
-The resulting points can then be appended to $\refpc$ and the resulting transform \transform{\robotf}{\mapf} can be used to express the 3D robot pose in $\mapf$.
+The resulting points can then be appended to $\refpc$ and the resulting transform \transform{\lidarf}{\mapf} can be used to express the 3D robot pose in $\mapf$ by chaining \transform{\lidarf}{\mapf} \transform{\robotf}{\lidarf} since the latter is known through calibration.
 Post filters are then computed on $\refpc$. 
 The first consisting of computing the surface normals for all points in order to allow point-to-plane minimization.
 The second one is used to filter out dynamic points in the map, following what was proposed by~\citet{Pomerleau2014}.
@@ -129,15 +127,15 @@ The parameters that were used on our system are detailed in~\autoref{tab:icp_par
 %% Move before ICP
 %% Skewed PC is inverse hat
 
-As specified above, the \ac{ICP} algorithm requires high-frequency odometry to produce a prior estimate $_{\robotf}^{\mapf}\bm{\check{T}}$.
+As specified above, the \ac{ICP} algorithm requires high-frequency odometry to produce a prior estimate $_{\lidarf}^{\mapf}\bm{\check{T}}$.
 This estimate is produced by estimating the robot displacement between lidar scans. 
 Robot orientation is estimated using the Madwick filter\footnote{\url{https://github.com/bjohnsonfl/Madgwick_Filter}}~\citep{Madgwick2011} based on gyroscope and accelerometer measurements.
 Linear displacement is estimated through vehicle body velocity commands.
-Each command is propagated with the robot orientation between scans, yielding $_{\robotf}^{\mapf}\bm{\check{T}}$ at a frequency of \SI{100}{Hz}.
-In addition, it should be noted that lidar sensors typically make the assumption that the lidar frame $\lidarf$ is static during each scan, which is incorrect for applications such as \ac{LTR}.
-Hence, a point cloud de-skewing approach was added to our system in order to a de-skewed point cloud $\hat{\readpc}$.
+Each command is propagated with the robot orientation between scans, yielding $_{\lidarf}^{\mapf}\bm{\check{T}}$ at a frequency of \SI{100}{Hz}.
+In addition, it should be noted that lidar sensors typically make the assumption that the lidar frame $\lidarf$ is static during each scan, which is incorrect when the lidar sensors is subject to motion, yielding a skewed reading point cloud $\skreadpc$.
+Hence, a point cloud de-skewing approach was added to our system.
 First proposed by~\citet{Bosse2009}, such algorithms use the the high-frequency odometry to correct the location of each point before registration.
-Following the same idea, our high-frequency odometry is used to estimate the de-skewed point cloud $\hat{\readpc}$, which is the one that is used in the \ac{ICP} algorithm.
+Following the same idea, our high-frequency odometry is used to estimate the de-skewed point cloud $\readpc$, which is the one that is used in the \ac{ICP} algorithm.
 
 
 \subsection{Teach phase}
