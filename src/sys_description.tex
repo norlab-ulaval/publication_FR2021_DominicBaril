@@ -51,22 +51,23 @@ Thus, the \ac{ICP} algorithm estimates the transform $_{\robotf}^{\mapf}\bm{T}$ 
 where $_{\robotf}^{\mapf}\bm{\check{T}}$ is the prior transformation, estimated via the \ac{IMU} and wheel odometry.
 In order to compute the error function, we associate points between $\readpc$ and $\refpc$.
 This association is the done by finding the closest point in $\refpc$ for each point in $\readpc$.
+% There are multiple matches in Q for every point in P (7)
 In order to accelerate this step, nearest neighbour search is done via the use of a kd-tree, as proposed by~\citet{Elseberg2012}.
 In addition, binary weights are added to each point match in order to remove the outlier matches from the error function.
 Formally, let $\match = \text{match}(\readpc, \refpc) = \{(\bm p, \bm q) : \bm p \in \readpc, \bm q \in \refpc \}$ be the set of matches between $\readpc$ and $\refpc$ and $\weight = \text{outlier}(\readpc, \refpc) = \{w(\bm p, \bm q) : \forall(\bm p, \bm q) \in \match\}$ be the weights associated to these matches.
 Our system uses point-to-plane error, which can be computed as follows
 
 \begin{equation}
-	\text{error}(\readpc, \refpc) = \sum_{k=1}^{K} w(\bm p, \bm q) \lVert (\bm p_k - \bm q_k) \cdot \bm n_k \rVert_2
+	\text{error}(\readpc, \refpc) = \sum_{k=1}^{K} w(\bm p_k, \bm q_k) \lVert (\bm p_k - \bm q_k) \cdot \bm n_k \rVert_2
 \end{equation}
 
 where $K$ is the number of matches in $\match$. 
 $\bm n_k$ is the normal vector around the 3D point $\bm q_k$ in $\refpc$, which needs to be computed prior to the \ac{ICP} algorithm.
-This error can be iteratively minimized using Cholesky decomposition.
+This error can be iteratively minimized by recomputing $\match$ and $\weight$ at each iteration.
 For more details, please refer to~\citep{Pomerleau2015}.
 Once the optimal transform is found, $\readpc$ can be registered to $\refpc$ by applying it to every point of $\readpc$. 
 The resulting points can then be appended to $\refpc$ and the resulting transform \transform{\robotf}{\mapf} can be used to express the 3D robot pose in $\mapf$.
-Output filters are then computed on $\refpc$. 
+Post filters are then computed on $\refpc$. 
 The first consisting of computing the surface normals for all points in order to allow point-to-plane minimization.
 The second one is used to filter out dynamic points in the map, following what was proposed by~\citet{Pomerleau2014}.
 An overview of the \ac{ICP} pipeline is shown in~\autoref{fig:icp_pipeline}.
@@ -116,7 +117,7 @@ The parameters that were used on our system are detailed in~\autoref{tab:icp_par
 			checkers & & smoothLength: 2 \\
 			 & CounterTransformationChecker & maxIterationCount: 40 \\
 			\hline
-			Output filters & SurfaceNormalDataPointsFilter & knn: 15 \\
+			Post filters & SurfaceNormalDataPointsFilter & knn: 15 \\
 			 & CutAtDescriptorThreshold & descName: probabilityDynamic & useLargerThan: 1 \\
 			 & & threshold: 0.8 \\
 		\end{tabular}
@@ -125,6 +126,8 @@ The parameters that were used on our system are detailed in~\autoref{tab:icp_par
 
 \subsubsection{\ac{IMU} and wheel odometry and point cloud de-skewing}
 \label{sec:imu_wheel_odom}
+%% Move before ICP
+%% Skewed PC is inverse hat
 
 As specified above, the \ac{ICP} algorithm requires high-frequency odometry to produce a prior estimate $_{\robotf}^{\mapf}\bm{\check{T}}$.
 This estimate is produced by estimating the robot displacement between lidar scans. 
@@ -280,7 +283,7 @@ Our vehicle is also equipped with a standard sensor suite for autonomous navigat
 In order to enable the \ac{LTR} framework, a Robosense RS-32 3D lidar is mounted in front of the robot, for this work, it is the only lidar used for localization.
 This lidar has a \SI{200}{m} detection range and produces about \SI{600000}{} points per second.
 3 Hall effect sensors are added to each motor to provide wheel odometry for the robot. 
-Finally, an XSens MTi-10 \ac{IMU} provides angular velocity, body linear acceleration and gravitational acceleration measurements. 
+Finally, an XSens MTi-10 \ac{IMU} provides angular velocity and body linear acceleration measurements. 
 Additional sensors used for recording in this work include a Dalsa C1920 camera and two Emlid Reach-RS+ \ac {RTK} \ac{GPS} receivers.
 Two Robosense RS-16 lidars were added to the rear of the platform to collect measurements on tree canopy but no data was recorded through those sensors. 
 All technical specifications for the platform are given in~\autoref{tab:warthog_specs}.
