@@ -1,0 +1,60 @@
+\documentclass[tikz, dvipsnames]{standalone}
+\usepackage{times}
+\usepackage{amssymb,amsfonts,amsmath,amscd}
+\usepackage{bm}
+\usetikzlibrary{calc,trees,positioning,arrows.meta,shapes.geometric,%
+    decorations.pathreplacing,decorations.pathmorphing,shapes,%
+    matrix,shapes.symbols, bending}
+
+\newcommand{\tr}[2]{$_{#1}^{#2}\bm{T}$}
+\newcommand{\tri}[2]{$_{#1}^{#2}\bm{\check{T}}$}
+
+\tikzset{
+  >={Stealth[length=2mm, width=2mm,round]},
+filter/.style={
+    rectangle, 
+    rounded corners, 
+    fill=black!10,
+    draw=black, very thick,
+    text width=6em, 
+    minimum height=3em, 
+    text centered},
+}
+
+\begin{document}
+\begin{tikzpicture}[auto, node distance=12em, every node/.style={align=center}]
+
+  %nodes 
+  \node (P) {\Large $^{\mathcal{R}}\mathcal{P}$ \\ Reading};
+  \node[below=1em of P] (Q) {\Large $^{\mathcal{G}}\mathcal{Q}$ \\ Reference};
+  \node[filter, right=3em of P] (f_subs) {Subsample}; 
+  \node[right=4em of f_subs, circle, draw, text width=.5em, thick] (p3) {}; 
+  \node[filter, right=4em of p3, minimum height=8em, yshift=-2em] (f_asso) {Association solver};
+  \node[filter, right=4em of f_asso, yshift=2em] (f_outliers) {Outlier filter};
+  \node[filter, right=4em of f_outliers, minimum height=8em, yshift=-2em, align=center] (f_errorM) {Error \\minimizer};
+
+  \node[above=2em of P] (init_reading) {Initial \\ transformation};
+  \node[circle, fill=gray, draw, thick] (p1) at (init_reading-|p3) {};
+  \node[circle, fill=gray, draw, thick] (p2) at (init_reading-|f_errorM) {};
+
+  %connections
+  \draw[->] (P) -- (f_subs);
+  \draw[->] (f_subs) --node{\Large $^{\mathcal{R}}\mathcal{P}'$} (p3);
+  \draw[->] (p3) --node{\Large $^{\mathcal{G}}\mathcal{P}'$} (p3-|f_asso.west);
+  \draw[->] (Q) -- (Q-|f_asso.west);
+  \draw[->] (f_outliers-|f_asso.east) --node[near end](M){\hskip-2.5em\Large$\mathcal{M}$} (f_outliers);
+  \draw[->] (M) |- (Q-|f_errorM.west);
+  \draw[->] (f_outliers) --node(W){\Large$\mathcal{W}$} (f_outliers-|f_errorM.west);
+  \draw[->] (f_errorM) -- (p2);
+
+  \draw[->] (init_reading) --node{\Large \tri{\mathcal{R}}{\mathcal{G}}} (p1);
+  \draw[->] (p1) -- (p3);
+  \draw[->] (p2) -- node{\Large \tr{\mathcal{R}}{\mathcal{G}}}++(5em,0);
+  \draw (p1) to[bend left=15] (p2);
+
+  %iteration symbol
+  \draw[-{Latex[length=1.5mm, round]}, thick] ($(p1)!0.5!(p2) + (0,.25)$) arc(220:550:.2);
+
+
+\end{tikzpicture}
+\end{document}
