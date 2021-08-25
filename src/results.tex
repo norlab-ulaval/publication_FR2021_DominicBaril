@@ -1,15 +1,11 @@
 \section{Results}
 \label{sec:results}
 
-\lightlipsum[1]
-
-\begin{figure} [htpb]
-	\centering
-	\includegraphics[height=2.0in]{example-image}
-	\caption{Reference maps and trajectories for all paths}
-	\label{fig:ref_paths}
-\end{figure}
-
+The goal of this section is to quantify the performance of our \ac{LTR} framework when deployed in the environment described in~\autoref{sec:env}.
+We achieve this by evaluating the localization accuracy of the \ac{ICP} algorithm through various metrics.
+We also show our camera and \ac{GNSS} measurements to demonstrate navigation approaches using these sensors as primary mean of localization would suffer significant performance loss in a subarctic forest.
+Afterwards, we evaluate the path-following performance of our controller and quantify our \ac{UGV}'s energy consumption for each run.
+Lastly, we identify failure cases for our system and they were handled in the field.
 
 \subsection{Localization}
 \label{sec:res_loc}
@@ -87,3 +83,8 @@
 	\caption{Power consumption / motion efficiency figure.}
 	\label{fig:moiton_power}
 \end{figure}
+
+\subsection{Failure cases}
+\label{sec:fail}
+
+\lightlipsum[1]

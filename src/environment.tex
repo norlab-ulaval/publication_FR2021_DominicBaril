@@ -34,8 +34,11 @@ The path network is illustrated in~\autoref{fig:forest}.
 	\end{center}
 \end{figure}
 
-During the five days deployment, we completed
-% Discuss weather
+During the five days deployment, we completed a total of 14 repeat runs split between all paths, going in both directions.
+The last repeat run was started a little under \SI{72}{h} after it's respective teach run. 
+During the deployment week, our \ac{LTR} system was subject to fluctuating weather, ranging from snowstorm to heavy rain, with temperatures going from \SI{-10}{\celsius} to \SI{10}{\celsius}, as shown in~\autoref{fig:meteo_runs}.
+We also deployed our system during daytime and nighttime, with varying cloud coverage.
+More details about each run are given in~\autoref{tab:all_runs}.
 
 \begin{figure} [htpb]
 	\centering
@@ -47,36 +50,42 @@ During the five days deployment, we completed
 \begin{table}[htpb]
 	\caption{Overview of all runs realized in this work. 
 		All times are defined in the local Eastern Standard Time. 
-		The column $\Delta t$ defines the elapsed time since the teach run of the associated path.} \label{tab:all_runs}
+		The column $\Delta t$ defines the elapsed time since the teach run of the associated path.
+		The column \# $\readpc$ shows the number of scans for each run, with each scan consisting of \SI{64 000}{} points.} 
+	\label{tab:all_runs}
 	\begin{center}
-		\begin{tabular}{c c c c c c}
+		\begin{tabular}{c c c c c c c c}
 			\hline
 			% after \\: \hline or \cline{col1-col2} \cline{col3-col4} ...
-			ID & Path & Start time & Duration & $\Delta t$ & Number of scans \\
+			ID & Path & Start time & Duration & $\Delta t$ & \# $\readpc$ & Autonomy & Camera \\
+			 &  &  & (hh:mm) & (hh:mm) &  & (\%) \\
 			\hline
-			TeachA & A & \DTMdate{2021-03-30} \DTMtime{11:04:00} & \DTMtime{00:25:00} & Teach Pass &  \\
-			TeachB & B' & \DTMdate{2021-03-29} \DTMtime{15:45:00} & \DTMtime{00:31:00} & Teach Pass \\
-			TeachC & C & \DTMdate{2021-03-30} \DTMtime{07:28:00} & \DTMtime{00:15:00} & Teach Pass \\
-			R1 & C & \DTMdate{2021-03-31} \DTMtime{10:42:00} & \DTMtime{00:22:00} & \DTMtime{27:14:00} & 17273  \\
-			R2 & B & \DTMdate{2021-03-31} \DTMtime{14:03:00} & \DTMtime{00:26:00} & \DTMtime{30:35:00} & 22106  \\
-			R3 & A' & \DTMdate{2021-03-31} \DTMtime{15:02:00} & \DTMtime{00:27:00} & \DTMtime{31:34:00} & 16851  \\
-			R4 & A & \DTMdate{2021-03-31} \DTMtime{20:42:00} & \DTMtime{00:26:00} & \DTMtime{37:14:00} & 16740  \\
-			R5 & B' & \DTMdate{2021-03-31} \DTMtime{21:12:00} & \DTMtime{00:33:00} & \DTMtime{37:44:00} & 18476 \\
-			R6 & B & \DTMdate{2021-03-31} \DTMtime{22:00:00} & \DTMtime{00:35:00} & \DTMtime{38:32:00} & 19296 \\
-			R7 & A' & \DTMdate{2021-03-31} \DTMtime{22:47:00} & Battery breakdown & \DTMtime{39:19:00} & 10601  \\
-			R8 & A & \DTMdate{2021-04-01} \DTMtime{09:21:00} & \DTMtime{00:16:00} & \DTMtime{49:53:00} & 18442  \\
-			R9 & B' & \DTMdate{2021-04-01} \DTMtime{10:19:00} & \DTMtime{00:29:00} & \DTMtime{50:51:00} & 20941 \\
-			R10 & C & \DTMdate{2021-04-01} \DTMtime{11:01:00} & \DTMtime{00:23:00} & \DTMtime{51:33:00} & 14208 \\
-			R11 & B & \DTMdate{2021-04-01} \DTMtime{18:13:00} & \DTMtime{00:23:00} & \DTMtime{58:45:00} & 23214 \\
-			R12 & A' & \DTMdate{2021-04-01} \DTMtime{19:09:00} & \DTMtime{00:00:00} & \DTMtime{59:41:00} & 23602 \\
-			R13 & A & \DTMdate{2021-04-02} \DTMtime{06:53:00} & \DTMtime{00:26:00} & \DTMtime{71:25:00} & 16840 \\
-			R14 & B' & \DTMdate{2021-04-02} \DTMtime{07:25:00} & \DTMtime{00:29:00} & \DTMtime{71:57:00} & 18049 \\
+			TeachA & A & \DTMdate{2021-03-30} \DTMtime{11:04:00} & \DTMtime{00:27:00} & \DTMtime{00:00:00} & & Teach Pass & \cmark \\
+			TeachB & B' & \DTMdate{2021-03-29} \DTMtime{15:45:00} & \DTMtime{00:31:00} & \DTMtime{00:00:00} & \SI{19513}{} & Teach Pass & \cmark \\
+			TeachC & C & \DTMdate{2021-03-30} \DTMtime{07:28:00} & \DTMtime{00:15:00} & \DTMtime{00:00:00} & \SI{13770}{} & Teach Pass & \cmark \\
+			R1 & C & \DTMdate{2021-03-31} \DTMtime{10:42:00} & \DTMtime{00:28:00} & \DTMtime{27:14:00} & \SI{17273}{} &  & \xmark  \\
+			R2 & B & \DTMdate{2021-03-31} \DTMtime{14:03:00} & \DTMtime{00:36:00} & \DTMtime{30:35:00} & \SI{22106}{} &  & \xmark  \\
+			R3 & A' & \DTMdate{2021-03-31} \DTMtime{15:02:00} & \DTMtime{00:28:00} & \DTMtime{31:34:00} & \SI{16851}{} &  & \xmark  \\
+			R4 & A & \DTMdate{2021-03-31} \DTMtime{20:42:00} & \DTMtime{00:26:00} & \DTMtime{37:14:00} & \SI{16740}{} &  & \xmark  \\
+			R5 & B' & \DTMdate{2021-03-31} \DTMtime{21:12:00} & \DTMtime{00:33:00} & \DTMtime{37:44:00} & \SI{18476}{} &  & \xmark \\
+			R6 & B & \DTMdate{2021-03-31} \DTMtime{22:00:00} & \DTMtime{00:35:00} & \DTMtime{38:32:00} & \SI{19296}{} &  & \xmark \\
+			R7 & A' & \DTMdate{2021-03-31} \DTMtime{22:47:00} & Battery breakdown & \DTMtime{39:19:00} & \SI{10601}{} &  & \xmark \\
+			R8 & A & \DTMdate{2021-04-01} \DTMtime{09:21:00} & \DTMtime{00:16:00} & \DTMtime{49:53:00} & \SI{18442}{} &  & \cmark \\
+			R9 & B' & \DTMdate{2021-04-01} \DTMtime{10:19:00} & \DTMtime{00:29:00} & \DTMtime{50:51:00} & \SI{20941}{} &  & \cmark \\
+			R10 & C & \DTMdate{2021-04-01} \DTMtime{11:01:00} & \DTMtime{00:23:00} & \DTMtime{51:33:00} & \SI{14208}{} &  & \cmark \\
+			R11 & B & \DTMdate{2021-04-01} \DTMtime{18:13:00} & \DTMtime{00:23:00} & \DTMtime{58:45:00} & \SI{23214}{} &  & \cmark \\
+			R12 & A' & \DTMdate{2021-04-01} \DTMtime{19:09:00} & \DTMtime{00:00:00} & \DTMtime{59:41:00} & \SI{23602}{} &  & \cmark \\
+			R13 & A & \DTMdate{2021-04-02} \DTMtime{06:53:00} & \DTMtime{00:26:00} & \DTMtime{71:25:00} & \SI{16840}{} &  & \cmark \\
+			R14 & B' & \DTMdate{2021-04-02} \DTMtime{07:25:00} & \DTMtime{00:29:00} & \DTMtime{71:57:00} & \SI{18049}{} &  & \xmark \\
+			\hline
+			Total & -- & -- & \DTMtime{07:25:00} & -- &  & -- \\
 			
 		\end{tabular}
 	\end{center}
 \end{table}
 
 % Check the labels
+% Try to add alpha to maps
 
 \begin{figure}[htpb]
 	\begin{center}
@@ -84,21 +93,21 @@ During the five days deployment, we completed
 			\includegraphics[width=\linewidth]{figs/ltr_map_traj/path_a.pdf}
 			%\caption{A view from above the \textit{Montmorency} forest, which covers \SI{400}{km^2}.}
 			\label{fig:ltr_a}
-			\caption{Path A}
+			\caption{Path A (\SI{1729505} points)}
 		\end{subfigure}%
 		~
 		\begin{subfigure}[b]{0.32\textwidth}
 			\includegraphics[width=\linewidth]{figs/ltr_map_traj/path_b.pdf}
 			%\caption{An example of a snowy path, in which our system performed \ac{LTR}.}
 			\label{fig:ltr_b}
-			\caption{Path B}
+			\caption{Path B (\SI{2423769} points)}
 		\end{subfigure}%
 		~
 		\begin{subfigure}[b]{0.32\textwidth}
 			\includegraphics[width=\linewidth]{figs/ltr_map_traj/path_c.pdf}
 			%\caption{An example of a snowy path, in which our system performed \ac{LTR}.}
 			\label{fig:ltr_c}
-			\caption{Path C}
+			\caption{Path C (\SI{637690} points)}
 		\end{subfigure}%
 		%% Maybe change with a camera image?
 		\caption{All reference trajectories and maps recorder for this work.
@@ -115,5 +124,3 @@ During the five days deployment, we completed
 %Map A: 1729505 points
 %Map B: 2423769 points
 %Map C: 637690 points
-
-\lightlipsum[1]
