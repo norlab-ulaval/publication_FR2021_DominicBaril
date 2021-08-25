@@ -27,6 +27,12 @@
 \usepackage{csvsimple}
 \usetikzlibrary{shapes}
 
+% For checkmarks
+\usepackage{pifont}% http://ctan.org/pkg/pifont
+\newcommand{\cmark}{\ding{51}}%
+\newcommand{\xmark}{\ding{55}}%
+
+
 % Text commands
 \newcommand{\laverdiere}{Laverdi\`{e}re} % Laverdière
 \newcommand{\quebec}{Qu\'{e}bec} % Québec
@@ -38,6 +44,7 @@
 \newcommand{\robotf}{\mathcal{R}} % robot reference frame
 \newcommand{\lidarf}{\mathcal{L}} % lidar reference frame
 \newcommand{\pathf}{\mathcal{S}} % path Frenet-Serret frame
+\newcommand{\skreadpc}{\check{\mathcal{P}}} % Skewed reading point cloud
 \newcommand{\readpc}{\mathcal{P}} % reading point cloud
 \newcommand{\refpc}{\mathcal{Q}} % reference point cloud
 \newcommand{\match}{\mathcal{M}} % set of point matches
@@ -50,7 +57,7 @@
 %JL: is there a specific reason for this notation? I find the notation _^{R1}T_{R2} somewhat better, but it might be personal!
 
 
-\title{Autonomous refuelling mission in subarctic conditions}
+\title{Lidar-based teach-and-repeat in subarctic conditions}
 
 \author{
 Dominic Baril\thanks{ Use footnote for providing further information
