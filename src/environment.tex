@@ -7,9 +7,9 @@ Characteristics of boreal forests include dense closed-crown conifer vegetation~
 Dense vegetation is known to cause an issue for real-time mapping due to static antenna signal being blocked for \ac{RTK} \ac{GNSS}~\citep{Babin2019}.
 Snow cover, illumination variation and the uniformity of the environment are also known to be challenging for vision-based approaches~\citep{Paton2017}.
 Three different one-way paths were defined, all link 2 \acp{POI}.
-The A  and B paths link the Garage and \laverdiere~\acp{POI} through cross-country ski trails, measuring \SI{1.5}{km} and \SI{1.5}{km} respectively.
+The A  and B paths link the Garage and \laverdiere~\acp{POI} through cross-country ski trails, measuring \SI{1.4}{km} and \SI{1.5}{km} respectively.
 In order to maximize \ac{UGV} and prevent immobilization, the A and B paths was previously driven on by a snowmobile operator.
-The C path connects the Garage and Gazebo \acp{POI} mostly in a larger road network, measuring \SI{0.6}{km}.
+The C path connects the Garage and Gazebo \acp{POI} mostly in a larger road network, measuring \SI{0.5}{km}.
 The path network is illustrated in~\autoref{fig:forest}.
 
 \begin{figure}[htpb]
@@ -27,7 +27,7 @@ The path network is illustrated in~\autoref{fig:forest}.
 		\end{subfigure}%
 		%% Maybe change with a camera image?
 		\caption{A digital terrain model of the area where our \ac{LTR} system was deployed.
-		We see the three different paths, both the A (\SI{1.5}{km}) and B path ({1.5}{km}) going from the garage \ac{POI} to the \laverdiere~\ac{POI}, while the C path (\SI{0.6}{km}) goes to the Gazebo \ac{POI}.
+		We see the three different paths, both the A (\SI{1.4}{km}) and B path ({1.5}{km}) going from the garage \ac{POI} to the \laverdiere~\ac{POI}, while the C path (\SI{0.5}{km}) goes to the Gazebo \ac{POI}.
 		The image on the right is an example of the A and B paths, which mostly consists of cross-country sky trails.
 		Image credit : \foretmo.} 
 		\label{fig:forest}
@@ -39,6 +39,7 @@ The last repeat run was started a little under \SI{72}{h} after it's respective 
 During the deployment week, our \ac{LTR} system was subject to fluctuating weather, ranging from snowstorm to heavy rain, with temperatures going from \SI{-10}{\celsius} to \SI{10}{\celsius}, as shown in~\autoref{fig:meteo_runs}.
 We also deployed our system during daytime and nighttime, with varying cloud coverage.
 More details about each run are given in~\autoref{tab:all_runs}.
+All maps that were recorded during the teach phase are illustrated~\autoref{fig:ref_ltr}.
 
 \begin{figure} [htpb]
 	\centering
@@ -51,34 +52,35 @@ More details about each run are given in~\autoref{tab:all_runs}.
 	\caption{Overview of all runs realized in this work. 
 		All times are defined in the local Eastern Standard Time. 
 		The column $\Delta t$ defines the elapsed time since the teach run of the associated path.
-		The column \# $\readpc$ shows the number of scans for each run, with each scan consisting of \SI{64 000}{} points.} 
+		The column \# $\readpc$ shows the number of scans for each run, with each scan consisting of \SI{64 000}{} points.
+		* Teach runs are not accounted for in the total autonomous distance recorded.
+		** A battery breakdown prevented us from finishing run R7, it is therefore interrupted.} 
 	\label{tab:all_runs}
 	\begin{center}
 		\begin{tabular}{c c c c c c c c}
-			\hline
 			% after \\: \hline or \cline{col1-col2} \cline{col3-col4} ...
-			ID & Path & Start time & Duration & $\Delta t$ & \# $\readpc$ & Autonomy & Camera \\
-			 &  &  & (hh:mm) & (hh:mm) &  & (\%) \\
+			ID & Path & Start time & Duration & $\Delta t$ & \# $\readpc$ & Distance & Camera \\
+			 &  &  & (hh:mm) & (hh:mm) &  & (\SI{}{km}) \\
 			\hline
-			TeachA & A & \DTMdate{2021-03-30} \DTMtime{11:04:00} & \DTMtime{00:27:00} & \DTMtime{00:00:00} & \SI{16367}{} & Teach Pass & \cmark \\
-			TeachB & B' & \DTMdate{2021-03-29} \DTMtime{15:45:00} & \DTMtime{00:31:00} & \DTMtime{00:00:00} & \SI{19513}{} & Teach Pass & \cmark \\
-			TeachC & C & \DTMdate{2021-03-30} \DTMtime{07:28:00} & \DTMtime{00:15:00} & \DTMtime{00:00:00} & \SI{13770}{} & Teach Pass & \cmark \\
-			R1 & C & \DTMdate{2021-03-31} \DTMtime{10:42:00} & \DTMtime{00:28:00} & \DTMtime{27:14:00} & \SI{17273}{} &  & \xmark  \\
-			R2 & B & \DTMdate{2021-03-31} \DTMtime{14:03:00} & \DTMtime{00:36:00} & \DTMtime{30:35:00} & \SI{22106}{} &  & \xmark  \\
-			R3 & A' & \DTMdate{2021-03-31} \DTMtime{15:02:00} & \DTMtime{00:28:00} & \DTMtime{31:34:00} & \SI{16851}{} &  & \xmark  \\
-			R4 & A & \DTMdate{2021-03-31} \DTMtime{20:42:00} & \DTMtime{00:26:00} & \DTMtime{37:14:00} & \SI{16740}{} &  & \xmark  \\
-			R5 & B' & \DTMdate{2021-03-31} \DTMtime{21:12:00} & \DTMtime{00:33:00} & \DTMtime{37:44:00} & \SI{18476}{} &  & \xmark \\
-			R6 & B & \DTMdate{2021-03-31} \DTMtime{22:00:00} & \DTMtime{00:35:00} & \DTMtime{38:32:00} & \SI{19296}{} &  & \xmark \\
-			R7 & A' & \DTMdate{2021-03-31} \DTMtime{22:47:00} & Battery breakdown & \DTMtime{39:19:00} & \SI{10601}{} &  & \xmark \\
-			R8 & A & \DTMdate{2021-04-01} \DTMtime{09:21:00} & \DTMtime{00:16:00} & \DTMtime{49:53:00} & \SI{18442}{} &  & \cmark \\
-			R9 & B' & \DTMdate{2021-04-01} \DTMtime{10:19:00} & \DTMtime{00:29:00} & \DTMtime{50:51:00} & \SI{20941}{} &  & \cmark \\
-			R10 & C & \DTMdate{2021-04-01} \DTMtime{11:01:00} & \DTMtime{00:23:00} & \DTMtime{51:33:00} & \SI{14208}{} &  & \cmark \\
-			R11 & B & \DTMdate{2021-04-01} \DTMtime{18:13:00} & \DTMtime{00:23:00} & \DTMtime{58:45:00} & \SI{23214}{} &  & \cmark \\
-			R12 & A' & \DTMdate{2021-04-01} \DTMtime{19:09:00} & \DTMtime{00:00:00} & \DTMtime{59:41:00} & \SI{23602}{} &  & \cmark \\
-			R13 & A & \DTMdate{2021-04-02} \DTMtime{06:53:00} & \DTMtime{00:26:00} & \DTMtime{71:25:00} & \SI{16840}{} &  & \cmark \\
-			R14 & B' & \DTMdate{2021-04-02} \DTMtime{07:25:00} & \DTMtime{00:29:00} & \DTMtime{71:57:00} & \SI{18049}{} &  & \xmark \\
+			TeachA & A & \DTMdate{2021-03-30} \DTMtime{11:04:00} & \DTMtime{00:27:00} & \DTMtime{00:00:00} & \SI{16367}{} & \SI{1.4}{}* & \cmark \\
+			TeachB & B' & \DTMdate{2021-03-29} \DTMtime{15:45:00} & \DTMtime{00:33:00} & \DTMtime{00:00:00} & \SI{19513}{} & \SI{1.5}{}* & \cmark \\
+			TeachC & C & \DTMdate{2021-03-30} \DTMtime{07:28:00} & \DTMtime{00:23:00} & \DTMtime{00:00:00} & \SI{13770}{} & \SI{0.5}{}* & \cmark \\
+			R1 & C & \DTMdate{2021-03-31} \DTMtime{10:42:00} & \DTMtime{00:28:00} & \DTMtime{27:14:00} & \SI{17273}{} & \SI{0.5}{} & \xmark  \\
+			R2 & B & \DTMdate{2021-03-31} \DTMtime{14:03:00} & \DTMtime{00:36:00} & \DTMtime{30:35:00} & \SI{22106}{} & \SI{1.5}{} & \xmark  \\
+			R3 & A' & \DTMdate{2021-03-31} \DTMtime{15:02:00} & \DTMtime{00:28:00} & \DTMtime{31:34:00} & \SI{16851}{} & \SI{1.4}{} & \xmark  \\
+			R4 & A & \DTMdate{2021-03-31} \DTMtime{20:42:00} & \DTMtime{00:28:00} & \DTMtime{37:14:00} & \SI{16740}{} & \SI{1.4}{} & \xmark  \\
+			R5 & B' & \DTMdate{2021-03-31} \DTMtime{21:12:00} & \DTMtime{00:31:00} & \DTMtime{37:44:00} & \SI{18476}{} &\SI{1.5}{}  & \xmark \\
+			R6 & B & \DTMdate{2021-03-31} \DTMtime{22:00:00} & \DTMtime{00:32:00} & \DTMtime{38:32:00} & \SI{19296}{} & \SI{1.5}{} & \xmark \\
+			R7** & A' & \DTMdate{2021-03-31} \DTMtime{22:47:00} & \DTMtime{00:17:00} & \DTMtime{39:19:00} & \SI{10601}{} & \SI{1.4}{} & \xmark \\
+			R8 & A & \DTMdate{2021-04-01} \DTMtime{09:21:00} & \DTMtime{00:30:00} & \DTMtime{49:53:00} & \SI{18442}{} & \SI{1.4}{} & \cmark \\
+			R9 & B' & \DTMdate{2021-04-01} \DTMtime{10:19:00} & \DTMtime{00:34:00} & \DTMtime{50:51:00} & \SI{20941}{} & \SI{1.5}{} & \cmark \\
+			R10 & C & \DTMdate{2021-04-01} \DTMtime{11:01:00} & \DTMtime{00:23:00} & \DTMtime{51:33:00} & \SI{14208}{} & \SI{0.5}{} & \cmark \\
+			R11 & B & \DTMdate{2021-04-01} \DTMtime{18:13:00} & \DTMtime{00:38:00} & \DTMtime{58:45:00} & \SI{23214}{} & \SI{1.5}{} & \cmark \\
+			R12 & A' & \DTMdate{2021-04-01} \DTMtime{19:09:00} & \DTMtime{00:38:00} & \DTMtime{59:41:00} & \SI{23602}{} & \SI{1.4}{} & \cmark \\
+			R13 & A & \DTMdate{2021-04-02} \DTMtime{06:53:00} & \DTMtime{00:28:00} & \DTMtime{71:25:00} & \SI{16840}{} & \SI{1.4}{} & \cmark \\
+			R14 & B' & \DTMdate{2021-04-02} \DTMtime{07:25:00} & \DTMtime{00:30:00} & \DTMtime{71:57:00} & \SI{18049}{} & \SI{1.5}{} & \xmark \\
 			\hline
-			Total & -- & -- & \DTMtime{07:25:00} & -- &  & -- \\
+			Total & -- & -- & \DTMtime{08:24:00} & -- & \SI{306289}{} & \SI{18.4}{} \\
 			
 		\end{tabular}
 	\end{center}
@@ -113,7 +115,8 @@ More details about each run are given in~\autoref{tab:all_runs}.
 		\caption{All reference trajectories and maps recorder for this work.
 		In yellow are points with the surface normals pointing upwards, typically representing the ground.
 		In green are points with surface normals pointing sideways, typically representing walls or trees.
-		In red is the reference trajectory and their respective \acp{POI}.} 
+		In red is the reference trajectory and their respective \acp{POI}.
+		The coordinates are defined within the map frame $\mapf$ for each reference trajectory.} 
 		\label{fig:ref_ltr}
 	\end{center}
 \end{figure}

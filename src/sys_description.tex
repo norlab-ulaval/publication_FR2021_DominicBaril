@@ -39,7 +39,8 @@ Lastly, for path following algorithm, a Frenet-Serret frame $\pathf$ is defined 
 
 Incoming lidar scans, or reading point clouds $\readpc$ registered to a reference map, or reference point cloud $\refpc$ using the \ac{ICP} algorithm in order to localize the robot and build a map of the environment during the teach phase.
 Pioneered by~\citet{Besl1992} and~\citet{Chen1991}, this algorithm iteratively matches points between two point clouds and looks for a rigid transform minimizing the distance between each matched points.
-The first data processing step in our implementation is to randomly subsample $\readpc$ in order to decrease computation time.
+The first data processing step in our implementation is to apply input filters to $\readpc$ in order to decrease computation time and remove outlier points.
+We apply two input filters to $\readpc$ : Random sub-sampling $\readpc$ and removing points that are located within pre-defined bounding boxes to remove points corresponding to the robot's body and bystanders walking behind the robot.
 In our implementation, we know that $\readpc$ is observed in the lidar frame $\lidarf$ and that $\refpc$ is defined in the map frame $\mapf$. 
 Thus, the \ac{ICP} algorithm estimates the transform $_{\lidarf}^{\mapf}\bm{T}$ by minimizing an error function $\text{error}(\readpc, \refpc)$:
 
@@ -74,7 +75,6 @@ The parameters that were used on our system are detailed in~\autoref{tab:icp_par
 
 %% Need to write on point cloud preprocessing, matching, minimization (point-to-plane) and post-processing (might be added to mapping).
 
-%% TODO : Re-do this figure to suit our needs for the paper
 \begin{figure} [htpb]
 	\centering
 	\includegraphics[width=\linewidth]{figs/icp_pipeline/icp_pipeline.pdf}
@@ -87,7 +87,6 @@ The parameters that were used on our system are detailed in~\autoref{tab:icp_par
 	\caption{\ac{ICP} parameters} \label{tab:icp_params}
 	\begin{center}
 		\begin{tabular}{c c c c}
-			\hline
 			% after \\: \hline or \cline{col1-col2} \cline{col3-col4} ...
 			ICP block & Function & Parameters & \\
 			\hline
@@ -278,7 +277,7 @@ The Warthog can be mounted wheels or tracks, for this work, we selected CAMSO AT
 The Warthog is also equipped with a differential suspension, maximizing track or wheel traction when navigating steep terrain.
 Our vehicle is also equipped with a standard sensor suite for autonomous navigation. 
 In order to enable the \ac{LTR} framework, a Robosense RS-32 3D lidar is mounted in front of the robot, for this work, it is the only lidar used for localization.
-This lidar has a \SI{200}{m} detection range and produces about \SI{600000}{} points per second.
+This lidar has a \SI{200}{m} detection range and produces about \SI{640000}{} points per second.
 3 Hall effect sensors are added to each motor to provide wheel odometry for the robot. 
 Finally, an XSens MTi-10 \ac{IMU} provides angular velocity and body linear acceleration measurements. 
 Additional sensors used for recording in this work include a Dalsa C1920 camera and two Emlid Reach-RS+ \ac {RTK} \ac{GPS} receivers.

@@ -55,6 +55,10 @@ Lastly, we identify failure cases for our system and they were handled in the fi
 
 In order to characterize the performance of our path-following controller, we computed the cross track error for each measured position in each repeat run.
 Our definition of the cross-track error is the distance between the robot frame $\robotf$'s origin and it's orthogonal projection on the path, as defined in~\citep{Mondoloni2005}.
+The results for the cross-track error are displayed in~\autoref{fig:pf_error}.
+It can be seen that for all trajectories, the cross-track error mostly remains below \SI{0.1}{m} for most of the runs.
+Path curvature can be correlated with an increased cross-track error, with a maximum observed error of \SI{0.8}{m}.
+In terms of different runs, it can be observed that cross-track error is stable, despite varying meteorological conditions. 
 
 \begin{figure}[htpb]
 	\begin{center}

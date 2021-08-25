@@ -27,10 +27,10 @@ filter/.style={
   %nodes 
   \node (P) {\Large $^{\mathcal{L}}\mathcal{P}$ \\ Reading};
   \node[below=1em of P] (Q) {\Large $^{\mathcal{G}}\mathcal{Q}$ \\ Reference};
-  \node[filter, right=3em of P] (f_subs) {Subsample}; 
+  \node[filter, right=3em of P] (f_subs) {Input filters}; 
   \node[right=4em of f_subs, circle, draw, text width=.5em, thick] (p3) {}; 
   \node[filter, right=4em of p3, minimum height=8em, yshift=-2em] (f_asso) {Association solver};
-  \node[filter, right=4em of f_asso, yshift=2em] (f_outliers) {Outlier filter};
+  \node[filter, right=4em of f_asso, yshift=2em] (f_outliers) {Post filter};
   \node[filter, right=4em of f_outliers, minimum height=8em, yshift=-2em, align=center] (f_errorM) {Error \\minimizer};
 
   \node[above=2em of P] (init_reading) {Initial \\ transformation};
