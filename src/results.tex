@@ -48,34 +48,36 @@ Lastly, we identify failure cases for our system and they were handled in the fi
 	\label{fig:icp_error}
 \end{figure}
 
-\begin{figure} [htpb]
-	\centering
-	\includegraphics[height=2.0in]{example-image}
-	\caption{Figure explaining special cases when mapping needed to be enabled.}
-	\label{fig:icp_failure}
-\end{figure}
+
 
 \subsection{Motion and control}
 \label{sec:res_motion}
 
-\lightlipsum[1]
+In order to characterize the performance of our path-following controller, we computed the cross track error for each measured position in each repeat run.
+Our definition of the cross-track error is the distance between the robot frame $\robotf$'s origin and it's orthogonal projection on the path, as defined in~\citep{Mondoloni2005}.
 
-\subsubsection{Path following error}
-\label{sec:cmd_error}
-
-\lightlipsum[1]
-
-\begin{figure} [htpb]
-	\centering
-	\includegraphics[height=2.0in]{example-image}
-	\caption{Dominic's path following error figure}
-	\label{fig:pf_error}
+\begin{figure}[htpb]
+	\begin{center}
+		\begin{subfigure}[b]{\textwidth}
+			\centering
+			\includegraphics[height=2.5in]{figs/ref_traj_errors.pdf}
+			\caption{Mean cross-track error with respect to the reference trajectories.}
+			\label{fig:pf_error_traj}
+		\end{subfigure}
+		\\
+		\begin{subfigure}[b]{\textwidth}
+			\centering
+			\includegraphics[height=1.6in]{figs/pf_error_runs.pdf}
+			\caption{Cross-track error for all runs.}
+			\label{fig:pf_error_runs}
+		\end{subfigure}
+		\caption{Cross-track error during the deployment.
+		The cross-track error was computed for every localization position recorded during each repeat run.
+		For each map, the coordinates are defined in the reference map frame $\mapf$, which are the same as shown in~\autoref{fig:ref_ltr}.} 
+		\label{fig:pf_error}
+	\end{center}
 \end{figure}
 
-\subsubsection{Command error and power consumption}
-\label{sec:cmd_error}
-
-\lightlipsum[1]
 
 \begin{figure} [htpb]
 	\centering
@@ -86,5 +88,13 @@ Lastly, we identify failure cases for our system and they were handled in the fi
 
 \subsection{Failure cases}
 \label{sec:fail}
+%% Discuss Laverdiere failure and garage failurecd
 
 \lightlipsum[1]
+
+\begin{figure} [htpb]
+	\centering
+	\includegraphics[height=1.8in]{example-image}
+	\caption{Figure explaining special cases when mapping needed to be enabled.}
+	\label{fig:icp_failure}
+\end{figure}
