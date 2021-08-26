@@ -131,14 +131,15 @@ Following the same idea, our high-frequency odometry is used to estimate the de-
 \label{sec:teach_phase}
 
 During the teach phase, the robot is driven along a specific path by a human operator, while all sensors are used to collect data.
-The \ac{ICP} algorithm is used to solve the \ac{SLAM} problem in real time, hence incoming reading point clouds $\readpc$ are registered to the reference point cloud $\refpc$ and then appended to the reference, effectively building a map.
+The \ac{ICP} algorithm is used to solve the \ac{SLAM} problem in real time, hence incoming reading point clouds $\readpc$ are registered to the reference point cloud $\refpc$ and then appended to the latter, effectively building a map.
 The other output of the \ac{ICP} algorithm, the transform that allows to register the reading point cloud to the reference point cloud \transform{\lidarf}{\mapf} represents the pose of the robot $\bm x$.
-By logging all robot poses, we build a reference trajectory
+By logging all robot poses, we build a reference trajectory $\bm x_{\text{2D}}$.
+The teach pipeline is illustrated in~\autoref{fig:teach_pipeline}.
 
 
 \begin{figure} [htpb]
 	\centering
-	\includegraphics[height=2.0in]{example-image}
+	\includegraphics[height=2.0in]{figs/teach_pipeline/teach_pipeline.pdf}
 	\caption{Teach phase pipeline}
 	\label{fig:teach_pipeline}
 \end{figure}
@@ -148,7 +149,7 @@ By logging all robot poses, we build a reference trajectory
 
 When a lidar scan, or input point cloud, $\readpc$ is acquired, it is fed to the mapping algorithm, along with the estimated lidar pose $_{\robotf}^{\mapf}\bm{\check{T}}$.
 The estimated pose is provided by the odometry system decribed in~\autoref{sec:imu_wheel_odom}.
-The input point cloud  $\readpc$ is first cropped to the user-defined lidar maximum range.
+The input point cloud  $\readpc$ is first cropped to the user-defined lidar maximum range $r$.
 This parameter allows to take only a portion of $\readpc$ into account when computational power is limited.
 The cropped input point cloud is then registered, following the algorithm described in~\autoref{sec:ICP}, and merged into the map.
 This step allows robot localization in the map and keeps the latter up to date when new portions of the environment are explored.
@@ -158,29 +159,35 @@ The first consists of computing the surface normals for all points in order to a
 The second one is used to filter out dynamic points, following what was proposed by~\citet{Pomerleau2014}.
 This filtered point cloud then becomes the map $\refpc$ for the next iteration of the mapping algorithm, as shown in~\autoref{fig:tiled_map}.
 
-\begin{figure} [htpb]
+\begin{SCfigure}
 	\centering
-	\includegraphics[height=2.0in]{example-image}
-	\caption{Figure explaining Simon-Pierre's tiled mapping framework}
+	\includegraphics[height=2.5in]{figs/tiled_mapping/tiled_mapping.pdf}
+	\caption{Our large-scale mapping concept illustrated.
+	In green are the voxels within sensor range $r$, which constitute $\refpc$.
+	In red are the voxels out of sensor range $r$, which are stored on disk.
+	Voxel size is represented as $v_s$.}
 	\label{fig:tiled_map}
-\end{figure}
+\end{SCfigure}
 
-In order to save some computational power, the map is divided into \SI{20}{m} large voxels and only those which are inside or near the user-defined lidar maximum range are kept.
-The map voxels which are farther from the robot are saved on disk.
-A video-game-inspired algorithm is used to manage which voxels are loaded and unloaded depending on the robot position in the map.
+In order to save some computational power, the map is divided into voxels and only those which are inside or near the user-defined lidar maximum range considered to build $\refpc$.
+The dimension of voxels is defined as $v_s$, in m.
+The map voxels which are farther from the robot are saved on disk and are loaded if they are within sensor range.
+The sum of the voxels constitute the global map $\refpc'$.
+A video-game-inspired algorithm is used to manage which voxels are loaded and unloaded from $\refpc'$ depending on the robot position in the map \transform{\robotf}{\mapf}.
 This map segmentation technique allows us to map and localize in real time in arbitrarily large environments.
-
 The different mapping parameters we used are listed in~\autoref{tab:mapping_params}.
+
+%% Variables for local vs. global Q
 
 \begin{table}[htpb]
 	\caption{Mapping parameters}
 	\begin{center}
 		\begin{tabular}{c c c}
-			\hline
 			Mapping block & Function & Parameter \\
 			\hline
 			General & & sensor\_max\_range = 80 \\			 
 			& & min\_dist\_new\_point = 0.1 \\
+			& & voxel\_size = 20 \\
 			\hline
 			Post filters & SurfaceNormalDataPointsFilter & knn: 15 \\
 			& CutAtDescriptorThreshold & descName: probabilityDynamic \\
@@ -194,7 +201,7 @@ The different mapping parameters we used are listed in~\autoref{tab:mapping_para
 \subsection{Repeat phase}
 \label{sec:repeat_phase}
 
-During the teach phase, the path map is loaded and used directly as the reference point cloud $\refpc$.
+During the repeat phase, the path map is loaded and used directly as the reference point cloud $\refpc$.
 During this phase, the previously built maps are used to localize the robot while it follows the reference path.
 Our system allows to repeat paths in both directions, going forwards or backwards. 
 No obstacle detection feature was implemented on the system.
@@ -202,15 +209,10 @@ The repeat pipeline is shown in~\autoref{fig:repeat_pipeline}.
 
 \begin{figure} [htpb]
 	\centering
-	\includegraphics[height=2.0in]{figs/repeat_pipeline.pdf}
+	\includegraphics[height=2.0in]{figs/repeat_pipeline/repeat_pipeline.pdf}
 	\caption{Repeat phase pipeline}
 	\label{fig:repeat_pipeline}
 \end{figure}
-
-\subsubsection{Repeat localization}
-\label{sec:rep_loc}
-
-\lightlipsum[1]
 
 \subsubsection{Path following}
 \label{sec:orthexp}
@@ -252,14 +254,13 @@ where $\theta_e$ is the error between the robot angle $\theta_r$ and the path fr
 The $K_h$ parameter is a gain on commanded angular velocity that was added after we empirically observed that the robot stabilizes at an angular velocity significantly lower than the commanded angular velocity, based on \ac{IMU} measurements.
 A summary of the geometrical representation of the variables affecting the angular velocity command is shown in~\autoref{fig:diff_orthexp}.
 
-% TODO : Replace with our own version of this figure
-\begin{figure} [htpb]
+\begin{SCfigure}
 	\centering
 	\includegraphics[height=2.5in]{figs/path_follower/orthexp.pdf}
 	\caption{Main components of the \ac{ORTHEXP} path following algorithm used in this work.
 	In red is the reference trajectory.}
 	\label{fig:diff_orthexp}
-\end{figure}
+\end{SCfigure}
 
 In the \ac{GeRoNa} library, commanded longitudinal velocity $v_x$ can be computed based on multiple factors such as upcoming path curvature, current vehicle angular velocity, proximity of obstacles and distance from the end goal.
 Due to \ac{ICP} localization noise in the teach phase, the upcoming path curvature would sometimes peak causing the robot to stop on the spot, we therefore removed this factor.
