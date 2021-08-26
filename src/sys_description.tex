@@ -53,7 +53,8 @@ In order to compute the error function, we associate points between $\readpc$ an
 This association is the done by finding the closest points in $\refpc$ for each point in $\readpc$, thus multiple points of $\refpc$ can be associated to each point of $\readpc$.
 In order to accelerate this step, nearest neighbour search is done via the use of a kd-tree, as proposed by~\citet{Elseberg2012}.
 In addition, binary weights are added to each point match in order to remove the outlier matches from the error function.
-Formally, let $\match = \text{match}(\readpc, \refpc) = \{(\bm p, \bm q) : \bm p \in \readpc, \bm q \in \refpc \}$ be the set of matches between $\readpc$ and $\refpc$ and $\weight = \text{outlier}(\readpc, \refpc) = \{w(\bm p, \bm q) : \forall(\bm p, \bm q) \in \match\}$ be the weights associated to these matches.
+%Formally, let $\match = \text{match}(\readpc, \refpc) = \{(\bm p, \bm q) : \bm p \in \readpc, \bm q \in \refpc \}$ be the set of matches between $\readpc$ and $\refpc$ and $\weight = \text{outlier}(\readpc, \refpc) = \{w(\bm p, \bm q) : \forall(\bm p, \bm q) \in \match\}$ be the weights associated to these matches.
+Formally, let $\match = \text{match}(\readpc, \refpc) = \{(\bm p, \bm q) : \bm p \in \readpc, \bm q \in \refpc \}$ be the set of matches between $\readpc$ and $\refpc$ and $\weight = \text{outlier}(\readpc, \refpc) = \{w(\bm p, \bm q) : (\bm p, \bm q) \in \match\}$ be the weights associated to these matches.
 Our system uses point-to-plane error, which can be computed as follows
 
 \begin{equation}
