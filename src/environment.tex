@@ -34,7 +34,7 @@ The path network is illustrated in~\autoref{fig:forest}.
 	\end{center}
 \end{figure}
 
-During the five days deployment, we completed a total of 14 repeat runs split between all paths, going in both directions.
+During the five days deployment, we completed a total of 14 repeat runs split between all paths, going in both directions, summing to \SI{18.4}{km} and \SI{8}{h} \SI{24}{min} of autonomous repeating.
 The last repeat run was started a little under \SI{72}{h} after it's respective teach run. 
 During the deployment week, our \ac{LTR} system was subject to fluctuating weather, ranging from snowstorm to heavy rain, with temperatures going from \SI{-10}{\celsius} to \SI{10}{\celsius}, as shown in~\autoref{fig:meteo_runs}.
 We also deployed our system during daytime and nighttime, with varying cloud coverage.
@@ -88,6 +88,12 @@ All maps that were recorded during the teach phase are illustrated~\autoref{fig:
 
 % Check the labels
 % Try to add alpha to maps
+Teach runs were done in order to record $\refpc'$ and $\reftraj$ for all three paths.
+The A path was recorded going from the Garage \ac{POI} to the \laverdiere \ac{POI}, with the map containing \SI{1729505} points).
+The B path was recorded going from the \laverdiere \ac{POI} to the Garage \ac{POI}, with the map containing \SI{2423769} points).
+The C path was recorded going from the Garage \ac{POI} to the Gazebo \ac{POI}, with the map containing \SI{637690} points).
+The recorded maps overlaid with the reference trajectories for all three paths are shown in~\autoref{fig:ref_ltr}.
+In this figure, the coordinates are defined in the local $\mapf$.
 
 \begin{figure}[htpb]
 	\begin{center}
@@ -120,10 +126,3 @@ All maps that were recorded during the teach phase are illustrated~\autoref{fig:
 		\label{fig:ref_ltr}
 	\end{center}
 \end{figure}
-
-% Validate run durations through bag files
-
-% Number of points per maps : 
-%Map A: 1729505 points
-%Map B: 2423769 points
-%Map C: 637690 points

@@ -134,7 +134,7 @@ Following the same idea, our high-frequency odometry is used to estimate the de-
 During the teach phase, the robot is driven along a specific path by a human operator, while all sensors are used to collect data.
 The \ac{ICP} algorithm is used to solve the \ac{SLAM} problem in real time, hence incoming reading point clouds $\readpc$ are registered to the reference point cloud $\refpc$ and then appended to the latter, effectively building a map.
 The other output of the \ac{ICP} algorithm, the transform that allows to register the reading point cloud to the reference point cloud \transform{\lidarf}{\mapf} represents the pose of the robot $\bm x$.
-By logging all robot poses, we build a reference trajectory $\bm x_{\text{2D}}$.
+By logging all robot poses, we build a reference trajectory $\reftraj$.
 The teach pipeline is illustrated in~\autoref{fig:teach_pipeline}.
 
 
@@ -167,13 +167,14 @@ This filtered point cloud then becomes the map $\refpc$ for the next iteration o
 	In green are the voxels within sensor range $r$, which constitute $\refpc$.
 	In red are the voxels out of sensor range $r$, which are stored on disk.
 	Voxel size is represented as $v_s$.}
+%% Mention not to scale, 2D top view
 	\label{fig:tiled_map}
 \end{SCfigure}
 
 In order to save some computational power, the map is divided into voxels and only those which are inside or near the user-defined lidar maximum range considered to build $\refpc$.
-The dimension of voxels is defined as $v_s$, in m.
+The dimension of voxels is defined as $v_s$, in meters.
 The map voxels which are farther from the robot are saved on disk and are loaded if they are within sensor range.
-The sum of the voxels constitute the global map $\refpc'$.
+The sum of the voxels constitute the global map $\refpc'$, we can therefore state that $\refpc \subseteq \refpc'$.
 A video-game-inspired algorithm is used to manage which voxels are loaded and unloaded from $\refpc'$ depending on the robot position in the map \transform{\robotf}{\mapf}.
 This map segmentation technique allows us to map and localize in real time in arbitrarily large environments.
 The different mapping parameters we used are listed in~\autoref{tab:mapping_params}.
@@ -202,9 +203,10 @@ The different mapping parameters we used are listed in~\autoref{tab:mapping_para
 \subsection{Repeat phase}
 \label{sec:repeat_phase}
 
-During the repeat phase, the path map is loaded and used directly as the reference point cloud $\refpc$.
-During this phase, the previously built maps are used to localize the robot while it follows the reference path.
-Our system allows to repeat paths in both directions, going forwards or backwards. 
+During the repeat phase, the corresponding global map $\refpc'$ and reference trajectories $\reftraj$ are first loaded and voxels are re-built.
+In this phase, no points are appended, meaning that the \ac{ICP} algorithm is only used to localize the robot.
+The estimated pose of the robot \transform{\robotf}{\mapf} is then subsampled as a planar pose $\poseplane$, and then used by a path following algorithm to compute system commands $\bm u$ for the \ac{UGV} to track $\reftraj$.
+Similarly as explained in~\autoref{sec:tiled_map}, only the local map $\refpc$ within sensor range $r$ is taken into account by the \ac{ICP} algorithm.
 No obstacle detection feature was implemented on the system.
 The repeat pipeline is shown in~\autoref{fig:repeat_pipeline}.
 
@@ -228,7 +230,7 @@ This controller was later adapted for omnidirectional mobile robots by~\citet{Li
 More recently,~\citet{Huskic2017} improved the algorithm's path following performance through heuristic linear velocity control.
 To implement this controller, we used the open-source \ac{GeRoNa}\footnote{\url{https://github.com/cogsys-tuebingen/gerona}} library, created by~\citet{Huskic2019}.
 
-%Knowing the robot's 2D pose $\bm x_{\text{2D}}$ and reference trajectory $\bm x_{\text{ref}}$, it is possible to compute the orthogonal projection $\bm P$ of the robot on the reference path.
+%Knowing the robot's 2D pose $\poseplane$ and reference trajectory $\reftraj$, it is possible to compute the orthogonal projection $\bm P$ of the robot on the reference path.
 A Frenet-Serret frame $\pathf$ is defined within the map frame with its origin corresponding to the orthogonal projection of the robot on the reference pat.
 For Frenet-Serret frame, abscissa $\bm x_t$ and ordinate $\bm x_n$ are unit tangent and unit normal vectors respectively. 
 The orthogonal distance from the origin of the robot frame $\robotf$ and the Frenet-Serret frame $\pathf$ along the $\bm x_n$ axis is denoted with $x_n$ and the tangential distance with $x_t$.
@@ -274,7 +276,7 @@ Thus, the commanded linear velocity $v_x$ is computed as
 v_x = v_n \exp\left(-\left(\frac{K_g}{d_g}\right)\right),
 \end{equation}
 where $v_n$ is the target vehicle velocity and $d_g$ is the distance between the robot's pose and the last pose of the final reference trajectory pose. 
-At each time step, a new exponential function and command $\bm u$ are computed using the control laws shown in~\autoref{eq:exp_PD} and~\autoref{eq:exp_lin_vel}, using the robot's 2D pose $x_{\text{2D}}$ and reference trajectory $\bm x_{\text{ref}}$ as input.
+At each time step, a new exponential function and command $\bm u$ are computed using the control laws shown in~\autoref{eq:exp_PD} and~\autoref{eq:exp_lin_vel}, using the robot's 2D pose $\poseplane$ and reference trajectory $\reftraj$ as input.
 The parameters for the \ac{ORTHEXP} controller were tuned empirically by having the robot repeating arbitrary short trajectories and minimizing error, these parameters are detailed in~\autoref{tab:orthexp_params}.
 
 
@@ -332,8 +334,8 @@ All technical specifications for the platform are given in~\autoref{tab:warthog_
 			\hline
 			\ac{LTR} & & Computer & Acrosser AIV-Q170V1FL  \\
 			Front lidar & Robosense RS-32 (\SI{10}{Hz}) & CPU & i7-6700 TE \\
-			\ac{IMU} & XSens MTi-10 (\SI{100}{Hz}) \\ 
-			Wheel encoders & 3 x hall effect sensors (\SI{4}{Hz}) \\
+			\ac{IMU} & XSens MTi-10 (\SI{100}{Hz}) & RAM \\ 
+			Wheel encoders & 3 x hall effect sensors (\SI{4}{Hz}) & Memory \\
 			Recording & &   \\
 			Camera & Dalsa C1920 (\SI{8}{Hz})  \\
 			\ac{GPS} & Emlid Reach-RS+ (\SI{5}{Hz}) \\
