@@ -64,11 +64,7 @@ where $K$ is the number of matches in $\match$ and $\lVert \cdot \rVert_2$ is th
 $\bm n_k$ is the normal vector around the 3D point $\bm q_k$ in $\refpc$, which needs to be computed prior to the \ac{ICP} algorithm.
 This error can be iteratively minimized by recomputing $\match$ and $\weight$ at each iteration.
 For more details, please refer to~\citep{Pomerleau2015}.
-Once the optimal transform is found, $\readpc$ can be registered to $\refpc$ by applying it to every point of $\readpc$. 
-The resulting points can then be appended to $\refpc$ and the resulting transform \transform{\lidarf}{\mapf} can be used to express the 3D robot pose in $\mapf$ by chaining \transform{\lidarf}{\mapf} \transform{\robotf}{\lidarf} since the latter is known through calibration.
-Post filters are then computed on $\refpc$. 
-The first consisting of computing the surface normals for all points in order to allow point-to-plane minimization.
-The second one is used to filter out dynamic points in the map, following what was proposed by~\citet{Pomerleau2014}.
+The resulting transform \transform{\lidarf}{\mapf} can be used to express the 3D robot pose in $\mapf$ by chaining \transform{\lidarf}{\mapf} \transform{\robotf}{\lidarf} since the latter is known through calibration.
 An overview of the \ac{ICP} pipeline is shown in~\autoref{fig:icp_pipeline}.
 Our implementation is strongly based on the \texttt{libpointmatcher}\footnote{\url{https://github.com/ethz-asl/libpointmatcher}}~\citep{Pomerleau2013}.
 The parameters that were used on our system are detailed in~\autoref{tab:icp_params}.
@@ -84,14 +80,11 @@ The parameters that were used on our system are detailed in~\autoref{tab:icp_par
 
 
 \begin{table}[htpb]
-	\caption{\ac{ICP} parameters} \label{tab:icp_params}
+	\caption{\ac{ICP} parameters}
 	\begin{center}
 		\begin{tabular}{c c c c}
 			% after \\: \hline or \cline{col1-col2} \cline{col3-col4} ...
 			ICP block & Function & Parameters & \\
-			\hline
-			General & & sensor\_max\_range = 80 \\			 
-			& & min\_dist\_new\_point = 0.1 \\
 			\hline
 			Input filters & BoundingBoxDataPointsFilter & xMin: -1.5 & xMax: 0.5\\
 			 & & yMin: -1 & yMax: 1  \\
@@ -113,12 +106,9 @@ The parameters that were used on our system are detailed in~\autoref{tab:icp_par
 			Transformation & DifferentialTransformationChecker & minDiffRotErr: 0.001 & minDiffTransErr: 0.01 \\
 			checkers & & smoothLength: 2 \\
 			 & CounterTransformationChecker & maxIterationCount: 40 \\
-			\hline
-			Post filters & SurfaceNormalDataPointsFilter & knn: 15 \\
-			 & CutAtDescriptorThreshold & descName: probabilityDynamic & useLargerThan: 1 \\
-			 & & threshold: 0.8 \\
 		\end{tabular}
 	\end{center}
+	\label{tab:icp_params}
 \end{table}
 
 \subsubsection{\ac{IMU} and wheel odometry and point cloud de-skewing}
@@ -141,7 +131,7 @@ Following the same idea, our high-frequency odometry is used to estimate the de-
 \label{sec:teach_phase}
 
 During the teach phase, the robot is driven along a specific path by a human operator, while all sensors are used to collect data.
-The \ac{ICP} algorithm is used to solve the \ac{SLAM} problem, hence incoming reading point clouds $\readpc$ are registered to the reference point cloud $\refpc$ and then appended to the reference, effectively building a map.
+The \ac{ICP} algorithm is used to solve the \ac{SLAM} problem in real time, hence incoming reading point clouds $\readpc$ are registered to the reference point cloud $\refpc$ and then appended to the reference, effectively building a map.
 The other output of the \ac{ICP} algorithm, the transform that allows to register the reading point cloud to the reference point cloud \transform{\lidarf}{\mapf} represents the pose of the robot $\bm x$.
 By logging all robot poses, we build a reference trajectory
 
@@ -153,9 +143,20 @@ By logging all robot poses, we build a reference trajectory
 	\label{fig:teach_pipeline}
 \end{figure}
 
-\subsubsection{Tiled mapping for large scale}
+\subsubsection{Large-scale mapping}
 \label{sec:tiled_map}
-\lightlipsum[1]
+
+When a lidar scan, or input point cloud, $\readpc$ is acquired, it is fed to the mapping algorithm, along with the estimated lidar pose $_{\robotf}^{\mapf}\bm{\check{T}}$.
+The estimated pose is provided by the odometry system decribed in~\autoref{sec:imu_wheel_odom}.
+The input point cloud  $\readpc$ is first cropped to the user-defined lidar maximum range.
+This parameter allows to take only a portion of $\readpc$ into account when computational power is limited.
+The cropped input point cloud is then registered, following the algorithm described in~\autoref{sec:ICP}, and merged into the map.
+This step allows robot localization in the map and keeps the latter up to date when new portions of the environment are explored.
+In order to keep a reasonable map point density, a point is only appended to the map if its distance to an existing point is above the user-defined minimal distance between two points.
+After merging the input point cloud into the map, some post filters are applied to the resulting point cloud.
+The first consists of computing the surface normals for all points in order to allow point-to-plane minimization.
+The second one is used to filter out dynamic points, following what was proposed by~\citet{Pomerleau2014}.
+This filtered point cloud then becomes the map $\refpc$ for the next iteration of the mapping algorithm, as shown in~\autoref{fig:tiled_map}.
 
 \begin{figure} [htpb]
 	\centering
@@ -163,6 +164,32 @@ By logging all robot poses, we build a reference trajectory
 	\caption{Figure explaining Simon-Pierre's tiled mapping framework}
 	\label{fig:tiled_map}
 \end{figure}
+
+In order to save some computational power, the map is divided into \SI{20}{m} large voxels and only those which are inside or near the user-defined lidar maximum range are kept.
+The map voxels which are farther from the robot are saved on disk.
+A video-game-inspired algorithm is used to manage which voxels are loaded and unloaded depending on the robot position in the map.
+This map segmentation technique allows us to map and localize in real time in arbitrarily large environments.
+
+The different mapping parameters we used are listed in~\autoref{tab:mapping_params}.
+
+\begin{table}[htpb]
+	\caption{Mapping parameters}
+	\begin{center}
+		\begin{tabular}{c c c}
+			\hline
+			Mapping block & Function & Parameter \\
+			\hline
+			General & & sensor\_max\_range = 80 \\			 
+			& & min\_dist\_new\_point = 0.1 \\
+			\hline
+			Post filters & SurfaceNormalDataPointsFilter & knn: 15 \\
+			& CutAtDescriptorThreshold & descName: probabilityDynamic \\
+			& & useLargerThan: 1 \\
+			& & threshold: 0.8 \\
+		\end{tabular}
+	\end{center}
+	\label{tab:mapping_params}
+\end{table}
 
 \subsection{Repeat phase}
 \label{sec:repeat_phase}
