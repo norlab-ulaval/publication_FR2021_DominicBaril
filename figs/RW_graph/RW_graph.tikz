@@ -1,49 +1,49 @@
 \newcommand\mycite[1]{\AtNextCite{\defcounter{maxnames}{1}}\citeauthor{#1}, \citeyear{#1}}
 \begin{tikzpicture}[
-  lidar/.style={shape=circle, draw=black, line width=1, fill=BrickRed},
-  camera/.style={shape=rectangle, draw=black, line width=1, fill=BlueViolet},
-  gps/.style={shape=diamond, draw=black, line width=1, fill=ForestGreen, scale=.7}]
-  \def\lidar{circle(1pt)}
-  \def\camera{(0,0) rectangle ++(5pt,5pt)}
-  \def\gps{circle(1pt)}
+lidar/.style={shape=circle, draw=black, line width=1, fill=BrickRed},
+camera/.style={shape=rectangle, draw=black, line width=1, fill=BlueViolet},
+gps/.style={shape=diamond, draw=black, line width=1, fill=ForestGreen, scale=.7}]
+\def\lidar{circle(1pt)}
+\def\camera{(0,0) rectangle ++(5pt,5pt)}
+\def\gps{circle(1pt)}
 
-  %def figure size
-  \def\sx{12.5}
-  \def\sy{7}
+%def figure size
+\def\sx{12.5}
+\def\sy{7}
 
-  %draw axis
-  \draw[latex-latex, align=left, ultra thick] 
-    (0,\sy) node[above left]{Weather\\ conditions} -- (0,0) -- 
-    (\sx,0) node[below right]{Environment\\ density};
+%draw axis
+\draw[latex-latex, align=left, ultra thick] 
+(0,\sy) node[above left]{Weather\\ conditions} -- (0,0) -- 
+(\sx,0) node[below right]{Environment\\ density};
 
-  %If needed, you can add ticks to the axis
-  
-  % X-axis ticks
-  \draw (.7*\sx, 0) -- ++ (0, -.01*\sy) node[below]{\small Tight};
-  \draw (.5*\sx, 0) -- ++ (0, -.01*\sy) node[below]{\small Constrained};
-  \draw (.25*\sx, 0) -- ++ (0, -.01*\sy) node[below]{\small Open};
-  
-  % Y-axis ticks
-  \draw (0,.9*\sy) -- ++ (-.01*\sx,0) node[left]{\small Rough};
-  \draw (0,.5*\sy) -- ++ (-.01*\sx,0) node[left]{\small Moderate};
-  \draw (0,.1*\sy) -- ++ (-.01*\sx,0) node[left]{\small Light};
+%If needed, you can add ticks to the axis
 
-  %Add citations from csv file
-  \csvreader[head to column names]{figs/RW_graph/citations.csv}{}{%
-    \node[\sensor] at (\sx*\x,\sy*\y) {}; %draw point
-    \node[below, yshift=-.1cm] at (\sx*\x,\sy*\y) {\mycite{\citationKey}}; %add label
-  }
+% X-axis ticks
+\draw (.7*\sx, 0) -- ++ (0, -.01*\sy) node[below]{\small Tight};
+\draw (.5*\sx, 0) -- ++ (0, -.01*\sy) node[below]{\small Constrained};
+\draw (.25*\sx, 0) -- ++ (0, -.01*\sy) node[below]{\small Open};
 
-    % This paper
-    \node[lidar] at (\sx*.6,\sy*.9) {}; %draw point
-    \node[below, yshift=-.1cm] at (\sx*.6,\sy*.9) {LTR 2021}; %add label
+% Y-axis ticks
+\draw (0,.9*\sy) -- ++ (-.01*\sx,0) node[left]{\small Rough};
+\draw (0,.5*\sy) -- ++ (-.01*\sx,0) node[left]{\small Moderate};
+\draw (0,.1*\sy) -- ++ (-.01*\sx,0) node[left]{\small Light};
 
-  %Add a legend
-  \matrix [draw, below left, nodes={anchor=center}] at (current bounding box.north east) {
-    \node [lidar] {}; & \node[text width=2.1cm] {Lidar-based}; \\
-    \node [camera] {}; & \node[text width=2.1cm] {Camera-based}; \\
-    \node [gps] {}; & \node[text width=2.1cm] {GPS-based}; \\
-  };
+%Add citations from csv file
+\csvreader[head to column names]{figs/RW_graph/citations.csv}{}{%
+	\node[\sensor] at (\sx*\x,\sy*\y) {}; %draw point
+	\node[below, yshift=-.1cm] at (\sx*\x,\sy*\y) {\mycite{\citationKey}}; %add label
+}
+
+% This paper
+\node[lidar] at (\sx*.6,\sy*.9) {}; %draw point
+\node[below, yshift=-.1cm] at (\sx*.6,\sy*.9) {LTR 2021}; %add label
+
+%Add a legend
+\matrix [draw, below left, nodes={anchor=center}] at (current bounding box.north east) {
+	\node [lidar] {}; & \node[text width=2.1cm] {Lidar-based}; \\
+	\node [camera] {}; & \node[text width=2.1cm] {Camera-based}; \\
+	\node [gps] {}; & \node[text width=2.1cm] {GPS-based}; \\
+};
 
 
 
