@@ -3,9 +3,11 @@ Field Report for the SNOW project Lidar Teach and Repeat in a subarctic forest.
 
 After cloning, you need to init and update the `latexGoodPractices` submodule with
 
-``` bash 
+```bash 
 git submodule init
 git submodule update
+
+# If ever there is a problem with the submodule version
 cd latexGoodPractices
-git checkout apa_citations
+git checkout fr2021 
 ```
