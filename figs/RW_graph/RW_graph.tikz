@@ -1,3 +1,4 @@
+\newcommand\mycite[1]{\AtNextCite{\defcounter{maxnames}{1}}\citeauthor{#1}, \citeyear{#1}}
 \begin{tikzpicture}[
   lidar/.style={shape=circle, draw=black, line width=1, fill=BrickRed},
   camera/.style={shape=rectangle, draw=black, line width=1, fill=BlueViolet},
@@ -30,11 +31,12 @@
   %Add citations from csv file
   \csvreader[head to column names]{figs/RW_graph/citations.csv}{}{%
     \node[\sensor] at (\sx*\x,\sy*\y) {}; %draw point
-    \node[below, yshift=-.1cm] at (\sx*\x,\sy*\y) {\citet{\citationKey}}; %add label
+    \node[below, yshift=-.1cm] at (\sx*\x,\sy*\y) {\mycite{\citationKey}}; %add label
   }
 
     % This paper
-	\draw[black, fill] (\sx*.6, \sy*.9) circle (5pt) node [above, yshift=.1cm] {LTR 2021};
+    \node[lidar] at (\sx*.6,\sy*.9) {}; %draw point
+    \node[below, yshift=-.1cm] at (\sx*.6,\sy*.9) {LTR 2021}; %add label
 
   %Add a legend
   \matrix [draw, below left, nodes={anchor=center}] at (current bounding box.north east) {
