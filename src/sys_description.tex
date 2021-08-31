@@ -314,38 +314,46 @@ Additional sensors used for recording in this work include a Dalsa C1920 camera 
 Two Robosense RS-16 lidars were added to the rear of the platform to collect measurements on tree canopy but no data was recorded through those sensors. 
 All technical specifications for the platform are given in~\autoref{tab:warthog_specs}.
 
-
-\begin{table}[htpb]
-	\caption{Warthog specifications} \label{tab:warthog_specs}
-	\begin{center}
-		\begin{tabular}{c c | c c}
-			\textbf{Physical} &  & \textbf{Power} & \\
-			\hline
-			% after \\: \hline or \cline{col1-col2} \cline{col3-col4} ...
-			Mass & \SI{590}{kg} & Chemistry & AGM sealed lead acid \\ 
-			Footprint & 2.13 x 1.52 m & Voltage & \SI{48}{V} \\ 
-			Top speed & \SI{18}{km/h} & Capacity & \SI{105}{Ah} \\ 
-			Steering geometry & Skid-steering  & Drive & Sevcon Gen4 \\
-			Locomotion & CAMSO ATV T4S Tracks \\
-			Suspension & Geometric Passive Articulation \\
-			\hline
-			\textbf{Sensors} & & \textbf{Computing} \\
-			\hline
-			\ac{LTR} & & Computer & Acrosser AIV-Q170V1FL  \\
-			Front lidar & Robosense RS-32 (\SI{10}{Hz}) & CPU & i7-6700 TE \\
-			\ac{IMU} & XSens MTi-10 (\SI{100}{Hz}) & RAM \\ 
-			Wheel encoders & 3 x hall effect sensors (\SI{4}{Hz}) & Memory \\
-			Recording & &   \\
-			Camera & Dalsa C1920 (\SI{8}{Hz})  \\
-			\ac{GPS} & Emlid Reach-RS+ (\SI{5}{Hz}) \\
-		\end{tabular}
-	\end{center}
-\end{table}
-
-\begin{SCfigure}
+\begin{figure} [tbp]
 	\centering
-	\includegraphics[height=2.5in]{figs/warthog_hardware.pdf}
+	\begin{minipage}[b]{1.0\linewidth}
+		\centering
+		
+%		\begin{table}
+%			\caption{Warthog specifications} \label{tab:warthog_specs}
+%			\begin{center}
+				\begin{tabular}[b]{c c}
+					\textbf{Physical} & \\
+					\hline
+					% after \\: \hline or \cline{col1-col2} \cline{col3-col4} ...
+					Mass & \SI{590}{kg} \\
+					Footprint & 2.13 x 1.52 m \\
+					Top speed & \SI{18}{km/h} \\
+					Steering geometry & Skid-steering \\
+					Locomotion & CAMSO ATV T4S Tracks \\
+					Suspension & Geometric Passive Articulation \\
+					\textbf{Power} \\
+					Chemistry & AGM sealed lead acid \\
+					Voltage & \SI{48}{V} \\
+					Drive & Sevcon Gen4 \\
+					\textbf{Sensors} \\
+					\ac{LTR}  \\
+					Front lidar & Robosense RS-32 (\SI{10}{Hz}) \\
+					\ac{IMU} & XSens MTi-10 (\SI{100}{Hz}) \\ 
+					Wheel encoders & 3 x hall effect sensors (\SI{4}{Hz}) \\
+					Recording &  \\
+					Camera & Dalsa C1920 (\SI{8}{Hz})  \\
+					\ac{GPS} & Emlid Reach-RS+ (\SI{5}{Hz}) \\
+					\textbf{Computing} \\
+					Computer & Acrosser AIV-Q170V1FL  \\
+					CPU & i7-6700 TE \\
+					RAM \\ 
+					Memory \\
+				\end{tabular}
+%			\end{center}
+%		\end{table}
+		\qquad
+		\includegraphics[height=3in]{figs/warthog_hardware.pdf}
+	\end{minipage}
 	\caption{The experimental setup for \ac{LTR} on our Clearpath Robotics Warthog \ac{UGV}: (1) Robosense RS-32 lidar, (2) XSens MTi-10 \ac{IMU}, (3) Acrosser AIV-Q170V1FL computer, (4) Dalsa C1920 color camera, (5) 2 Emlid Reach-RS+ \ac{GPS} antennas.}
-	\label{fig:warthog}
-\end{SCfigure}
-%% To do : Edit Figure to add pointers for all sensors
+\end{figure}
