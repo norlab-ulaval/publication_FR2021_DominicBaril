@@ -83,10 +83,10 @@ The parameters that were used on our system are detailed in~\autoref{tab:icp_par
 \begin{table}[htpb]
 	\caption{\ac{ICP} parameters}
 	\begin{center}
-		\begin{tabular}{c c c c}
+		\begin{tabular}{c c c c} \toprule
 			% after \\: \hline or \cline{col1-col2} \cline{col3-col4} ...
 			ICP block & Function & Parameters & \\
-			\hline
+			\midrule
 			Input filters & BoundingBoxDataPointsFilter & xMin: -1.5 & xMax: 0.5\\
 			 & & yMin: -1 & yMax: 1  \\
 			 & & zMin: -1 & zMax: 0.5 \\
@@ -96,17 +96,18 @@ The parameters that were used on our system are detailed in~\autoref{tab:icp_par
 			& & zMin: -1 & zMax: 1 \\
 			& & removeInside: 1 \\
 			 & RandomSamplingDataPointsFilter & prob: 0.7 & \\
-			\hline
+			\midrule
 			Matcher & KDTreeMatcher & knn: 7 & maxDist: 2.0 \\
 			 & & epsilon: 1 \\
-			\hline
+			\midrule
 			Outlier filter & TrimmedDistOutlierFilter & ratio: 0.7 & \\
-			\hline
+			\midrule
 			Cost function & PointToPlaneErrorMinimizer & force4DOF: 1 & \\
-			\hline
+			\midrule
 			Transformation & DifferentialTransformationChecker & minDiffRotErr: 0.001 & minDiffTransErr: 0.01 \\
 			checkers & & smoothLength: 2 \\
 			 & CounterTransformationChecker & maxIterationCount: 40 \\
+			\bottomrule
 		\end{tabular}
 	\end{center}
 	\label{tab:icp_params}
@@ -183,17 +184,18 @@ The different mapping parameters we used are listed in~\autoref{tab:mapping_para
 \begin{table}[htpb]
 	\caption{Mapping parameters}
 	\begin{center}
-		\begin{tabular}{c c c}
+		\begin{tabular}{c c c} \toprule
 			Mapping block & Function & Parameter \\
-			\hline
+			\midrule
 			General & & sensor\_max\_range = 80 \\			 
 			& & min\_dist\_new\_point = 0.1 \\
 			& & voxel\_size = 20 \\
-			\hline
+			\midrule
 			Post filters & SurfaceNormalDataPointsFilter & knn: 15 \\
 			& CutAtDescriptorThreshold & descName: probabilityDynamic \\
 			& & useLargerThan: 1 \\
 			& & threshold: 0.8 \\
+			\bottomrule
 		\end{tabular}
 	\end{center}
 	\label{tab:mapping_params}
@@ -282,14 +284,15 @@ The parameters for the \ac{ORTHEXP} controller were tuned empirically by having 
 \begin{table}[htpb]
 	\caption{\ac{ORTHEXP} controller parameters} \label{tab:orthexp_params}
 	\begin{center}
-		\begin{tabular}{c c c c c c}
+		\begin{tabular}{c c c c c c} \toprule
 			% after \\: \hline or \cline{col1-col2} \cline{col3-col4} ...
 			General & & Angular velocity & & Linear velocity \\
-			\hline
+			\midrule
 			Waypoint tolerance & \SI{1.0}{m} & $k$ & 0.4 & $K_g$ & 0.5 \\
 			Goal tolerance & \SI{0.15}{m} & $K_g$ & 0.5 & $v_n$ & \SI{1.5}{m/s} \\
 			 & & $K_h$ & 3.0 & $v_{min}$ & \SI{0.5}{m/s} \\
 			 & & Max angular velocity & \SI{1.0}{rad/s} & $v_{max}$ & \SI{1.5}{m/s} \\
+			\bottomrule
 		\end{tabular}
 	\end{center}
 \end{table}
@@ -297,7 +300,7 @@ The parameters for the \ac{ORTHEXP} controller were tuned empirically by having 
 \subsection{Hardware description}
 \label{sec:hardware}
 
-Our system was deployed on a Clearpath Robotics Warthog \ac{UGV}, which is shown in~\autoref{fig:warthog}. 
+Our system was deployed on a Clearpath Robotics Warthog \ac{UGV}. 
 The Warthog is a \ac{SSMR} using two drive units located on each side of its chassis. 
 For \acp{SSMR}, steering is done by sending rotating the wheels on each side of the vehicle at different velocities to creating a skidding effect, effectively turning the vehicle.
 Vehicle motion control is done through a sub-servo system allowing to control each side's wheel velocity through Sevcon Gen4 drives and aformentionned wheel encoders signal.
@@ -312,48 +315,46 @@ This lidar has a \SI{200}{m} detection range and produces about \SI{640000}{} po
 Finally, an XSens MTi-10 \ac{IMU} provides angular velocity and body linear acceleration measurements. 
 Additional sensors used for recording in this work include a Dalsa C1920 camera and two Emlid Reach-RS+ \ac {RTK} \ac{GPS} receivers.
 Two Robosense RS-16 lidars were added to the rear of the platform to collect measurements on tree canopy but no data was recorded through those sensors. 
-All technical specifications for the platform are given in~\autoref{tab:warthog_specs}.
+All technical specifications for the platform are given in~\autoref{fig:warthog}.
 
-\begin{figure} [tbp]
+\begin{figure} [htbp]
 	\centering
 	\begin{minipage}[b]{1.0\linewidth}
 		\centering
-		
-%		\begin{table}
-%			\caption{Warthog specifications} \label{tab:warthog_specs}
-%			\begin{center}
-				\begin{tabular}[b]{c c}
-					\textbf{Physical} & \\
-					\hline
-					% after \\: \hline or \cline{col1-col2} \cline{col3-col4} ...
-					Mass & \SI{590}{kg} \\
-					Footprint & 2.13 x 1.52 m \\
-					Top speed & \SI{18}{km/h} \\
-					Steering geometry & Skid-steering \\
-					Locomotion & CAMSO ATV T4S Tracks \\
-					Suspension & Geometric Passive Articulation \\
-					\textbf{Power} \\
-					Chemistry & AGM sealed lead acid \\
-					Voltage & \SI{48}{V} \\
-					Drive & Sevcon Gen4 \\
-					\textbf{Sensors} \\
-					\ac{LTR}  \\
-					Front lidar & Robosense RS-32 (\SI{10}{Hz}) \\
-					\ac{IMU} & XSens MTi-10 (\SI{100}{Hz}) \\ 
-					Wheel encoders & 3 x hall effect sensors (\SI{4}{Hz}) \\
-					Recording &  \\
-					Camera & Dalsa C1920 (\SI{8}{Hz})  \\
-					\ac{GPS} & Emlid Reach-RS+ (\SI{5}{Hz}) \\
-					\textbf{Computing} \\
-					Computer & Acrosser AIV-Q170V1FL  \\
-					CPU & i7-6700 TE \\
-					RAM \\ 
-					Memory \\
-				\end{tabular}
-%			\end{center}
-%		\end{table}
+		\begin{tabular}[b]{c c} \toprule
+			\textbf{Physical} & \\
+			% after \\: \hline or \cline{col1-col2} \cline{col3-col4} ...
+			Mass & \SI{590}{kg} \\
+			Footprint & 2.13 x 1.52 m \\
+			Top speed & \SI{18}{km/h} \\
+			Steering geometry & Skid-steering \\
+			Locomotion & CAMSO ATV T4S Tracks \\
+			Suspension & Geometric Passive Articulation \\
+			\midrule
+			\textbf{Power} \\
+			Chemistry & AGM sealed lead acid \\
+			Voltage & \SI{48}{V} \\
+			Drive & Sevcon Gen4 \\
+			\midrule
+			\textbf{Sensors} \\
+			\ac{LTR}  \\
+			Front lidar & Robosense RS-32 (\SI{10}{Hz}) \\
+			\ac{IMU} & XSens MTi-10 (\SI{100}{Hz}) \\ 
+			Wheel encoders & 3 x hall effect sensors (\SI{4}{Hz}) \\
+			Recording &  \\
+			Camera & Dalsa C1920 (\SI{8}{Hz})  \\
+			\ac{GPS} & Emlid Reach-RS+ (\SI{5}{Hz}) \\
+			\midrule
+			\textbf{Computing} \\
+			Computer & Acrosser AIV-Q170V1FL  \\
+			CPU & i7-6700 TE \\
+			RAM \\ 
+			Memory \\
+			\bottomrule
+		\end{tabular}
 		\qquad
 		\includegraphics[height=3in]{figs/warthog_hardware.pdf}
 	\end{minipage}
 	\caption{The experimental setup for \ac{LTR} on our Clearpath Robotics Warthog \ac{UGV}: (1) Robosense RS-32 lidar, (2) XSens MTi-10 \ac{IMU}, (3) Acrosser AIV-Q170V1FL computer, (4) Dalsa C1920 color camera, (5) 2 Emlid Reach-RS+ \ac{GPS} antennas.}
+	\label{fig:warthog}
 \end{figure}
