@@ -133,10 +133,9 @@ Following the same idea, our high-frequency odometry is used to estimate the de-
 
 During the teach phase, the robot is driven along a specific path by a human operator, while all sensors are used to collect data.
 The \ac{ICP} algorithm is used to solve the \ac{SLAM} problem in real time, hence incoming reading point clouds $\readpc$ are registered to the reference point cloud $\refpc$ and then appended to the latter, effectively building a map.
-The other output of the \ac{ICP} algorithm, the transform that allows to register the reading point cloud to the reference point cloud \transform{\lidarf}{\mapf} represents the pose of the robot $\bm x$.
-By logging all robot poses, we build a reference trajectory $\reftraj$.
+The other output of the \ac{ICP} algorithm, the transform that allows to register the reading point cloud to the reference point cloud \transform{\lidarf}{\mapf} represents the pose of the robot $\bm x$. %JL: hard to read, simplifies sentence
+By logging all robot poses, we build a reference trajectory $\reftraj$. %JL: x is a pose, but x_ref is a set(or function) of poses?  Update: ok it seems to be standard in MPC for instance. I guess just say clearly what is x_ref, like x_ref = {x_i}_i\in[0,N-1]?
 The teach pipeline is illustrated in~\autoref{fig:teach_pipeline}.
-
 
 \begin{figure} [htpb]
 	\centering
@@ -148,9 +147,9 @@ The teach pipeline is illustrated in~\autoref{fig:teach_pipeline}.
 \subsubsection{Large-scale mapping}
 \label{sec:tiled_map}
 
-When a lidar scan, or input point cloud, $\readpc$ is acquired, it is fed to the mapping algorithm, along with the estimated lidar pose $_{\robotf}^{\mapf}\bm{\check{T}}$.
+When a lidar scan, or input point cloud, $\readpc$ is acquired, it is fed to the mapping algorithm, along with the estimated lidar pose $_{\robotf}^{\mapf}\bm{\check{T}}$. %JL: too much ',' 
 The estimated pose is provided by the odometry system decribed in~\autoref{sec:imu_wheel_odom}.
-The input point cloud  $\readpc$ is first cropped to the user-defined lidar maximum range $r$.
+The input point cloud  $\readpc$ is first cropped to the user-defined lidar maximum range $r$. %JL: I would always define in which realm the variable lives in, but in this case it's pretty straightforward, but I'd do it anyway ! \mathbb{R}_{>0} in this case
 This parameter allows to take only a portion of $\readpc$ into account when computational power is limited.
 The cropped input point cloud is then registered, following the algorithm described in~\autoref{sec:ICP}, and merged into the map.
 This step allows robot localization in the map and keeps the latter up to date when new portions of the environment are explored.
@@ -172,10 +171,10 @@ This filtered point cloud then becomes the map $\refpc$ for the next iteration o
 \end{SCfigure}
 
 In order to save some computational power, the map is divided into voxels and only those which are inside or near the user-defined lidar maximum range considered to build $\refpc$.
-The dimension of voxels is defined as $v_s$, in meters.
+The dimension of voxels is defined as $v_s$, in meters. %same, v_s is a real positive number
 The map voxels which are farther from the robot are saved on disk and are loaded if they are within sensor range.
-The sum of the voxels constitute the global map $\refpc'$, we can therefore state that $\refpc \subseteq \refpc'$.
-A video-game-inspired algorithm is used to manage which voxels are loaded and unloaded from $\refpc'$ depending on the robot position in the map \transform{\robotf}{\mapf}.
+The sum of the voxels constitute the global map $\refpc'$, we can therefore state that $\refpc \subseteq \refpc'$. %sum or aggregation ? 'Sum of voxels' might be confusing
+A video-game-inspired algorithm is used to manage which voxels are loaded and unloaded from $\refpc'$ depending on the robot position in the map \transform{\robotf}{\mapf}. %Interesting, but miss a citation to the video-game algorithm! Otherwise there is little information in this sentence
 This map segmentation technique allows us to map and localize in real time in arbitrarily large environments.
 The different mapping parameters we used are listed in~\autoref{tab:mapping_params}.
 

@@ -1,12 +1,12 @@
 \section{Environment}
 \label{sec:env}
 
-The main focus of this work is deploy our \ac{LTR} framework in a subarctic environment and evaluate it's performance when subject to complex weather conditions.
+The main focus of this work is deploy our \ac{LTR} framework in a subarctic environment and evaluate its performance when subject to complex weather conditions.
 In order to do so, we conducted our deployments within the \textit{Montmorency} boreal forest, located \SI{70}{km} North of \quebec~city, Canada.
 Characteristics of boreal forests include dense closed-crown conifer vegetation~\citep{Russell1988} and long, cold winters leading to a high snow cover on the ground.
 Dense vegetation is known to cause an issue for real-time mapping due to static antenna signal being blocked for \ac{RTK} \ac{GNSS}~\citep{Babin2019}.
 Snow cover, illumination variation and the uniformity of the environment are also known to be challenging for vision-based approaches~\citep{Paton2017}.
-Three different one-way paths were defined, all link 2 \acp{POI}.
+Three different one-way paths were defined, all link 2 \acp{POI}. %JL: the page break is weird: I had a lot of trouble finding the continuation of the sentence on the next page. Maybe move up fig11
 The A  and B paths link the Garage and \laverdiere~\acp{POI} through cross-country ski trails, measuring \SI{1.4}{km} and \SI{1.5}{km} respectively.
 In order to maximize \ac{UGV} and prevent immobilization, the A and B paths was previously driven on by a snowmobile operator.
 The C path connects the Garage and Gazebo \acp{POI} mostly in a larger road network, measuring \SI{0.5}{km}.
@@ -36,16 +36,26 @@ The path network is illustrated in~\autoref{fig:forest}.
 
 During the five days deployment, we completed a total of 14 repeat runs split between all paths, going in both directions, summing to \SI{18.4}{km} and \SI{8}{h} \SI{24}{min} of autonomous repeating.
 The last repeat run was started a little under \SI{72}{h} after it's respective teach run. 
-During the deployment week, our \ac{LTR} system was subject to fluctuating weather, ranging from snowstorm to heavy rain, with temperatures going from \SI{-10}{\celsius} to \SI{10}{\celsius}, as shown in~\autoref{fig:meteo_runs}.
-We also deployed our system during daytime and nighttime, with varying cloud coverage.
+During the deployment week, our \ac{LTR} system was subject to fluctuating weather, ranging from snowstorm to heavy rain, with temperatures going from \SI{-10}{\celsius} to \SI{10}{\celsius}, as shown in~\autoref{fig:meteo_weather}. 
+We also deployed our system during daytime and nighttime, with varying cloud coverage as seen in \autoref{fig:meteo_ISWR}.
 More details about each run are given in~\autoref{tab:all_runs}.
 All maps that were recorded during the teach phase are illustrated~\autoref{fig:ref_ltr}.
 
 \begin{figure} [htpb]
 	\centering
-	\includegraphics[height=2.0in]{example-image}
-	\caption{Johann's various runs and meteo figure}
-	\label{fig:meteo_runs}
+         \includegraphics[]{figs/weatherCodes_withRunsNumbers.pdf}
+         \caption{Temperature and weather during the deployment.
+         Teach runs are depicted in green squares whereas Repeat runs are depicted in blue circles.
+         Teach runs have been performed in relatively clear weather whist teach runs suffered from rain and different levels of snowfall.}
+	\label{fig:meteo_weather}
+\end{figure}
+\begin{figure} [htpb]
+	\centering
+        \includegraphics[]{figs/ISWR_withRunsNumbers.pdf} %the size is already setup will creating the figure in python/plt
+         \caption{Illumination of the environment during the deployment.
+         Teach runs are depicted in green squares whereas Repeat runs are depicted in blue circles.
+         Both teach and repeat runs have been performed at different illumination levels.}
+	\label{fig:meteo_ISWR}
 \end{figure}
 
 \begin{table}[htpb]
@@ -88,12 +98,12 @@ All maps that were recorded during the teach phase are illustrated~\autoref{fig:
 
 % Check the labels
 % Try to add alpha to maps
-Teach runs were done in order to record $\refpc'$ and $\reftraj$ for all three paths.
-The A path was recorded going from the Garage \ac{POI} to the \laverdiere \ac{POI}, with the map containing \SI{1729505} points).
-The B path was recorded going from the \laverdiere \ac{POI} to the Garage \ac{POI}, with the map containing \SI{2423769} points).
-The C path was recorded going from the Garage \ac{POI} to the Gazebo \ac{POI}, with the map containing \SI{637690} points).
+Teach runs were done in order to record $\refpc'$ and $\reftraj$ for all three paths. %JL: always recall what is the mathematical object before saying it: the trajectory x_ref [...] instead of xref [...]
+The A path was recorded going from the Garage \ac{POI} to the \laverdiere \ac{POI}, with the map containing \SI{1729505} points). %JL: parenthesis bug
+The B path was recorded going from the \laverdiere \ac{POI} to the Garage \ac{POI}, with the map containing \SI{2423769} points). %JL: same
+The C path was recorded going from the Garage \ac{POI} to the Gazebo \ac{POI}, with the map containing \SI{637690} points). %JL: same
 The recorded maps overlaid with the reference trajectories for all three paths are shown in~\autoref{fig:ref_ltr}.
-In this figure, the coordinates are defined in the local $\mapf$.
+In this figure, the coordinates are defined in the local $\mapf$. %JL: the local *frame* G?
 
 \begin{figure}[htpb]
 	\begin{center}
