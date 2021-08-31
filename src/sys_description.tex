@@ -9,9 +9,9 @@ Next, the teach phase is described, explaining how the reference trajectory and 
 Subsequently, the repeat phase is described, when the robot localizes within the map a simple controller allows computing commands that allow to repeat the reference trajectory.
 Finally, the hardware used to deploy the \ac{LTR} system, including the \ac{UGV}, sensing and computing hardware is described.
 
-\begin{figure} [htpb]
+\begin{figure} [h!]
 	\centering
-	\includegraphics[height=3.2in]{figs/LTR_flowchart.pdf}
+	\includegraphics[height=2.8in]{figs/LTR_flowchart.pdf}
 	\caption{Flowchart for LTR}
 	\label{fig:ltr_flow}
 \end{figure}
@@ -29,7 +29,7 @@ Lastly, for path following algorithm, a Frenet-Serret frame $\pathf$ is defined 
 %% TODO : Replace with our version of the figure
 \begin{figure} [htpb]
 	\centering
-	\includegraphics[width=.7\linewidth]{figs/warthog_frames/warthog_frames.pdf}
+	\includegraphics[width=.6\linewidth]{figs/warthog_frames/warthog_frames.pdf}
         \caption{Coordinate frames used for \ac{LTR}. The path of the robot is depicted in light blue. \todo{Describe the other frames}}
 	\label{fig:ltr_frames}
 \end{figure}
@@ -123,6 +123,7 @@ This estimate is produced by estimating the robot displacement between lidar sca
 Robot orientation is estimated using the Madwick filter\footnote{\url{https://github.com/bjohnsonfl/Madgwick_Filter}}~\citep{Madgwick2011} based on gyroscope and accelerometer measurements.
 Linear displacement is estimated through vehicle body velocity commands.
 Each command is propagated with the robot orientation between scans, yielding $_{\lidarf}^{\mapf}\bm{\check{T}}$ at a frequency of \SI{100}{Hz}.
+The "force4DOF" parameter is enabled, meaning that the prior "roll" and "pitch" angle are assumed to be exact during the \ac{ICP} minimization.
 In addition, it should be noted that lidar sensors typically make the assumption that the lidar frame $\lidarf$ is static during each scan, which is incorrect when the lidar sensors is subject to motion, yielding a skewed reading point cloud $\skreadpc$.
 Hence, a point cloud de-skewing approach was added to our system.
 First proposed by~\citet{Bosse2009}, such algorithms use the the high-frequency odometry to correct the location of each point before registration.
@@ -140,7 +141,7 @@ The teach pipeline is illustrated in~\autoref{fig:teach_pipeline}.
 
 \begin{figure} [htpb]
 	\centering
-	\includegraphics[height=2.0in]{figs/teach_pipeline/teach_pipeline.pdf}
+	\includegraphics[height=1.8in]{figs/teach_pipeline/teach_pipeline.pdf}
 	\caption{Teach phase pipeline}
 	\label{fig:teach_pipeline}
 \end{figure}
@@ -162,7 +163,7 @@ This filtered point cloud then becomes the map $\refpc$ for the next iteration o
 
 \begin{SCfigure}
 	\centering
-	\includegraphics[height=2.5in]{figs/tiled_mapping/tiled_mapping.pdf}
+	\includegraphics[height=2in]{figs/tiled_mapping/tiled_mapping.pdf}
 	\caption{Our large-scale mapping concept illustrated.
 	In green are the voxels within sensor range $r$, which constitute $\refpc$.
 	In red are the voxels out of sensor range $r$, which are stored on disk.
@@ -213,7 +214,7 @@ The repeat pipeline is shown in~\autoref{fig:repeat_pipeline}.
 
 \begin{figure} [htpb]
 	\centering
-	\includegraphics[height=2.0in]{figs/repeat_pipeline/repeat_pipeline.pdf}
+	\includegraphics[height=1.8in]{figs/repeat_pipeline/repeat_pipeline.pdf}
 	\caption{Repeat phase pipeline}
 	\label{fig:repeat_pipeline}
 \end{figure}
@@ -233,7 +234,7 @@ To implement this controller, we used the open-source \ac{GeRoNa}\footnote{\url{
 
 %Knowing the robot's 2D pose $\poseplane$ and reference trajectory $\reftraj$, it is possible to compute the orthogonal projection $\bm P$ of the robot on the reference path.
 A Frenet-Serret frame $\pathf$ is defined within the map frame with its origin corresponding to the orthogonal projection of the robot on the reference pat.
-For Frenet-Serret frame, abscissa $\bm x_t$ and ordinate $\bm x_n$ are unit tangent and unit normal vectors respectively. 
+For the Frenet-Serret frame, abscissa $\bm x_t$ and ordinate $\bm x_n$ are unit tangent and unit normal vectors respectively. 
 The orthogonal distance from the origin of the robot frame $\robotf$ and the Frenet-Serret frame $\pathf$ along the $\bm x_n$ axis is denoted with $x_n$ and the tangential distance with $x_t$.
 The tangential angle of the Frenet-Serret frame $\pathf$ with respect to the map frame $\mapf$ is defined as $\theta_t$.
 The angle of robot frame $\robotf$'s $\bm x$ axis with respect to the map frame $\mapf$ is defined $\theta_r$. %JL robot frame R's -> hard to read
@@ -260,7 +261,7 @@ A summary of the geometrical representation of the variables affecting the angul
 
 \begin{SCfigure}
 	\centering
-	\includegraphics[height=2.5in]{figs/path_follower/orthexp.pdf}
+	\includegraphics[height=1.6in]{figs/path_follower/orthexp.pdf}
 	\caption{Main components of the \ac{ORTHEXP} path following algorithm used in this work.
 	In red is the reference trajectory.}
 	\label{fig:diff_orthexp}
@@ -306,7 +307,7 @@ For \acp{SSMR}, steering is done by sending rotating the wheels on each side of 
 Vehicle motion control is done through a sub-servo system allowing to control each side's wheel velocity through Sevcon Gen4 drives and aformentionned wheel encoders signal.
 A kinematic linear mapping between wheel velocities and body velocities allows to send body-velocity commands directly to the platform.
 Finally, the platform is symmetrical, meaning that it is able to drive along each path both forwards and backwards.
-The Warthog can be mounted wheels or tracks, for this work, we selected CAMSO ATV T4S tracks in order to maximize mobility. 
+The Warthog is mounted on CAMSO ATV T4S tracks in order to maximize mobility. 
 The Warthog is also equipped with a differential suspension, maximizing track or wheel traction when navigating steep terrain.
 Our vehicle is also equipped with a standard sensor suite for autonomous navigation. 
 In order to enable the \ac{LTR} framework, a Robosense RS-32 3D lidar is mounted in front of the robot, for this work, it is the only lidar used for localization.
@@ -317,7 +318,7 @@ Additional sensors used for recording in this work include a Dalsa C1920 camera 
 Two Robosense RS-16 lidars were added to the rear of the platform to collect measurements on tree canopy but no data was recorded through those sensors. 
 All technical specifications for the platform are given in~\autoref{fig:warthog}.
 
-\begin{figure} [htbp]
+\begin{figure} [h!]
 	\centering
 	\begin{minipage}[b]{1.0\linewidth}
 		\centering
@@ -337,11 +338,9 @@ All technical specifications for the platform are given in~\autoref{fig:warthog}
 			Drive & Sevcon Gen4 \\
 			\midrule
 			\textbf{Sensors} \\
-			\ac{LTR}  \\
 			Front lidar & Robosense RS-32 (\SI{10}{Hz}) \\
 			\ac{IMU} & XSens MTi-10 (\SI{100}{Hz}) \\ 
 			Wheel encoders & 3 x hall effect sensors (\SI{4}{Hz}) \\
-			Recording &  \\
 			Camera & Dalsa C1920 (\SI{8}{Hz})  \\
 			\ac{GPS} & Emlid Reach-RS+ (\SI{5}{Hz}) \\
 			\midrule
