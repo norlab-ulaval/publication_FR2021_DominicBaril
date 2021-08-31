@@ -1,0 +1,57 @@
+\documentclass[tikz]{standalone}
+
+\usepackage{tikz-3dplot}
+\usetikzlibrary{calc,trees,positioning,arrows.meta,shapes.geometric,%
+    decorations.pathreplacing,decorations.pathmorphing,shapes,%
+    matrix,shapes.symbols, bending}
+
+\tikzset{
+  >={Stealth[length=2mm, width=2mm,round]},
+  axis/.style={every node/.append style={text=black},line cap=round},
+  pics/frame/.style  args={#1}{
+    code ={
+    \draw[red, axis, -{Stealth[length=#1*2mm, width=#1*2mm,round]}, line width=2pt*#1] (0,0,0) -- (#1*.5,0,0); 
+    \draw[green, axis, -{Stealth[length=#1*2mm, width=#1*2mm,round]}, line width=2pt*#1] (0,0,0) -- (0,#1*.5,0); 
+    \draw[blue, axis, -{Stealth[length=#1*2mm, width=#1*2mm,round]}, line width=2pt*#1] (0,0,0) -- (0,0,#1*.5); 
+    \draw[fill=black] (0,0,0) circle(#1*1pt);
+}}
+}
+
+\begin{document}
+
+\tdplotsetmaincoords{90}{130}
+\begin{tikzpicture}[tdplot_main_coords]
+
+  \node at (0,0) {\includegraphics[width=6.5in]{warthog_path.jpg}};
+
+%robot
+\tdplotsetrotatedcoords{10}{-5}{0}
+  \coordinate (R) at (-1,2,-1);
+  \pic[tdplot_rotated_coords] at (R) {frame=2};
+  \node[tdplot_rotated_coords, xshift=.6cm, yshift=.6cm] at (R) {\Huge $\mathcal{R}$};
+
+%frenet
+\tdplotsetrotatedcoords{5}{18}{0}
+  \coordinate (S) at (20,15,-3.85);
+  \pic[tdplot_rotated_coords] at (S) {frame=2};
+  \node[tdplot_rotated_coords, xshift=.5cm, yshift=.5cm] at (S) {\Huge $\mathcal{S}$};
+
+%lidar
+\tdplotsetrotatedcoords{10}{-20}{160}
+  \coordinate (L) at (-2.85,0,1.55);
+  \pic[tdplot_rotated_coords] at (L) {frame=2};
+  \node[tdplot_rotated_coords, xshift=.7cm, yshift=.5cm] at (L) {\Huge $\mathcal{L}$};
+
+%world
+\tdplotsetrotatedcoords{15}{5}{0}
+  \coordinate (W) at (0,-6,-2.1);
+  \pic[tdplot_rotated_coords] at (W) {frame=2};
+  \node[tdplot_rotated_coords, xshift=.5cm, yshift=.5cm] at (W) {\Huge $\mathcal{G}$};
+
+
+   
+
+\end{tikzpicture}
+
+\end{document}
+
