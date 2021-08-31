@@ -39,6 +39,8 @@
 ## ltr maps figure data:
 figs/ltr_map_traj/data
 
+## gimp files (huge)
+*.xcf
 
 
 
