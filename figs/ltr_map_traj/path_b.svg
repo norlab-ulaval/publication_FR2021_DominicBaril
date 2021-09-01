@@ -41,9 +41,9 @@
      inkscape:window-height="1025"
      id="namedview150"
      showgrid="false"
-     inkscape:zoom="0.32779902"
-     inkscape:cx="293.37532"
-     inkscape:cy="1076.0077"
+     inkscape:zoom="1.3111961"
+     inkscape:cx="880.88703"
+     inkscape:cy="1035.1823"
      inkscape:window-x="1147"
      inkscape:window-y="1107"
      inkscape:window-maximized="1"
@@ -2074,33 +2074,33 @@ CreationDate: Mon Aug 23 11:31:20 2021
        id="text1877">Y Axis</text>
   </g>
   <rect
-     style="fill:#ffffff;stroke:#ffffff;stroke-width:4.00622"
+     style="fill:#ffffff;stroke:#ffffff;stroke-width:4.51096"
      id="rect903"
-     width="97.956863"
-     height="33.995441"
-     x="352.80914"
-     y="7.9089866" />
+     width="97.721542"
+     height="43.204842"
+     x="352.92679"
+     y="3.3005426" />
   <rect
-     style="fill:#ffffff;stroke:#ffffff;stroke-width:3.99348"
+     style="fill:#ffffff;stroke:#ffffff;stroke-width:6.78423"
      id="rect905"
-     width="81.57029"
-     height="31.656647"
-     x="11.622765"
-     y="788.47662" />
+     width="87.780182"
+     height="84.898239"
+     x="4.8051419"
+     y="765.49664" />
   <rect
-     style="fill:#ffffff;stroke:#ffffff;stroke-width:3.75"
+     style="fill:#ffffff;stroke:#ffffff;stroke-width:5.68862"
      id="rect907"
-     width="104.93767"
-     height="22.75696"
-     x="344.73883"
-     y="1570.0579" />
+     width="132.51083"
+     height="41.471149"
+     x="330.81812"
+     y="1554.5148" />
   <rect
-     style="fill:#ffffff;stroke:#ffffff;stroke-width:3.75"
+     style="fill:#ffffff;stroke:#ffffff;stroke-width:7.16876"
      id="rect911"
-     width="83.958237"
-     height="24.171396"
-     x="712.04498"
-     y="790.38818" />
+     width="82.404747"
+     height="89.999184"
+     x="712.82172"
+     y="761.13861" />
   <g
      ns6:version="1.2.0"
      ns6:texconverter="pdflatex"

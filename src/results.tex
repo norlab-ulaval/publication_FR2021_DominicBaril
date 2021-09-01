@@ -104,9 +104,55 @@ In terms of different runs, it can be observed that cross-track error is stable,
 
 \lightlipsum[1]
 
-\begin{figure} [htpb]
-	\centering
-	\includegraphics[height=1.8in]{example-image}
-	\caption{Figure explaining special cases when mapping needed to be enabled.}
-	\label{fig:icp_failure}
+\begin{figure}[h!]
+	\begin{center}
+		\begin{subfigure}[b]{0.3\textwidth}
+			\includegraphics[width=\linewidth]{figs/run10_init_fail/run_6.pdf}
+			%\caption{A view from above the \textit{Montmorency} forest, which covers \SI{400}{km^2}.}
+			\label{fig:r6_pcl}
+			\caption{R6 (Mean error = \SI{0.0607}{m})}
+			\vspace{0.2in}
+		\end{subfigure}%
+		~
+		\begin{subfigure}[b]{0.3\textwidth}
+			\includegraphics[width=\linewidth]{figs/run10_init_fail/run_10.pdf}
+			%\caption{An example of a snowy path, in which our system performed \ac{LTR}.}
+			\label{fig:r10_pcl}
+			\caption{R10 (Mean error = \SI{0.1072}{m})}
+			\vspace{0.2in}
+		\end{subfigure}%
+		~
+		\begin{subfigure}[b]{0.3\textwidth}
+			\includegraphics[width=\linewidth]{figs/run10_init_fail/run_15.pdf}
+			%\caption{An example of a snowy path, in which our system performed \ac{LTR}.}
+			\label{fig:r15_pcl}
+			\caption{R15 (Mean error = \SI{0.0698}{m})}
+			\vspace{0.2in}
+		\end{subfigure}%
+		~
+		\begin{subfigure}[b]{0.07\textwidth}
+			\includegraphics[width=\linewidth]{figs/run10_init_fail/colorbar.pdf}
+			%\caption{An example of a snowy path, in which our system performed \ac{LTR}.}
+			\label{fig:cbar_run10}
+			\vspace{0.2in}
+		\end{subfigure}%
+		\\
+		\begin{subfigure}[b]{0.45\textwidth}
+			\includegraphics[width=\linewidth]{figs/run10_init_fail/run10_init.pdf}
+			\caption{Camera view of R10 initialization.}
+			\label{fig:r10_cam}
+		\end{subfigure}%
+		~
+		\begin{subfigure}[b]{0.45\textwidth}
+			\includegraphics[width=\linewidth]{figs/run10_init_fail/run15_init.pdf}
+			\caption{Camera view of R15 initialization.}
+			\label{fig:r15_cam}
+		\end{subfigure}%
+		%% Maybe change with a camera image?
+		\caption{Initial scans for R6, R10 and R15, with the camera view for R10 and R15 (no camera images were recorded during R6).
+		Our \ac{LTR} system was unable to localize within the reference map at the start of R10.
+		After multiple attempts, we managed to successfully initialize the run and were able to repeat it completely autonomously.
+		Snow accumulation in R10 on the ground creates a significant change in perspective for the lidar, causing a much higher registration error than the other.} 
+		\label{fig:icp_failure_r10}
+	\end{center}
 \end{figure}
