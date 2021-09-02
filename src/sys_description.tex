@@ -25,6 +25,7 @@ The rigid transform from the robot frame to the lidar frame \transform{\robotf}{
 Reading point clouds $\readpc$ are originally observed in the lidar frame $\lidarf$ and reference point clouds are expressed in the map frame $\mapf$.
 The transform between $\robotf$ and $\mapf$ \transform{\robotf}{\mapf} is updated via the \ac{ICP} algorithm and is used as odometry for the robot.
 Lastly, for path following algorithm, a Frenet-Serret frame $\pathf$ is defined directly on the path.
+\todo{define 3d and 2d pose components}
 
 %% TODO : Replace with our version of the figure
 \begin{figure} [htpb]
