@@ -38,28 +38,56 @@ Run 1's column demonstrates clearly that the lack of light prevents the camera f
 \subsubsection{GNSS}
 \label{sec:res_gnss}
 
-\lightlipsum[1]
+As explained in the previous sections, \ac{GNSS} positionning was not used for the teach and repeat because of the lack of precision of the \ac{GNNS} in cluted environnement such as fores trails.
+
+\autoref{fig:gnss_error_path} shows some qualitative examples of positionning error given along the path A and Bd during the run 4 and 5.
+On the bottom right side picture, we can clearly see that the \ac{GNSS} positionning is not good in the garage when the run start. 
+This is due to the few number of satellite seen by the antennas and the lack of signal received to do the localization accurately.
+Others pictures in this figure show some miss-alignement of the path of the robot into the forest trails.
+The path computed by the \ac{GNSS} are located into the trees and not on the forest trail.
 
 \begin{figure} [htpb]
 	\centering
-	\includegraphics[height=4.0in]{./figs/GPS/FR_gps_data_fails2.pdf}
+	\includegraphics[height=3.0in]{./figs/GPS/FR_gps_data_fails2.pdf}
 	\caption{Examples of GPS positioning error along the path A and B.}
 	\label{fig:gnss_error_path}
 \end{figure}
 
+After this quanlitative analyzis, we also did a quantitative analyzis of the \ac{GNSS} error obtained for each run and according to each path.
+The \ac{GNSS} error can be estimated by taking the computing distance between the two antennas and compare it to the one measured by a precise instrument such as a total station \citep{Vaidis2021}.
+For each run, we computed this distance for each timestamp of the \ac{GNSS} data and substract it by the theoritical one.
+\autoref{fig:gnss_run_error} shows the box plot of the \ac{GNSS} error for each run and with their conresponding path.
+We can observe that some paths produced a different spread of the error.
+It's the case for the path C, where the precision of the \ac{GNSS} is very high compare to the one of the path B.
+Also, for some paths the errors in localization can be higher than the width of the forest trails.
+Because of this, the teach and repeat would not have worked properly if our localization was based on \ac{GNSS} positionning.
+This quantitative analyzis confirms the observations done with the qualitative analyzis.
+
+By relying only on \autoref{fig:meteo_all}, we are not able to give the reason of the error difference observed for each path and run.
+Based on \autoref{fig:gnss_satellite_number}, we can give some answers.
+This figure represents some boxplot about the satellite number seen by the \ac{GNSS} antennas during each run for each path.
+The number varie between 2 to 21.
+The run C has the highest average number of satellite seen during its runs.
+This can explain why the precision of the \ac{GNSS} is higher than the other paths.
+For the run 4, 2, 6 and 9, we can also link the result of the \ac{GNSS} precision to the number of satellites seen.
+In these runs, the number was lower in average than the other runs, which leads to an increase of the uncertainty about the localization as seen in \autoref{fig:gnss_run_error}.
+For all the others runs, their results are almost the same with an accuracy around 1 meter and a good precision.
+
 \begin{figure} [htpb]
 	\centering
-	\includegraphics[height=2.0in]{./figs/GPS/RTK_error.pdf}
+	\includegraphics[height=1.6in]{./figs/GPS/RTK_error.pdf}
 	\caption{GNSS error for each runs.}
 	\label{fig:gnss_run_error}
 \end{figure}
 
 \begin{figure} [htpb]
 	\centering
-	\includegraphics[height=2.0in]{./figs/GPS/Satellite_number.pdf}
+	\includegraphics[height=1.6in]{./figs/GPS/Satellite_number.pdf}
 	\caption{GNSS satellite number for each run.}
 	\label{fig:gnss_satellite_number}
 \end{figure}
+
+
 
 \subsubsection{ICP}
 \label{sec:ICP}
@@ -68,7 +96,7 @@ Run 1's column demonstrates clearly that the lack of light prevents the camera f
 
 \begin{figure} [htpb]
 	\centering
-	\includegraphics[height=2.0in]{example-image}
+	\includegraphics[height=1.6in]{example-image}
 	\caption{Figure explaining ICP error for every run (correlated with meteo).}
 	\label{fig:icp_error}
 \end{figure}
