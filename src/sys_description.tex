@@ -160,7 +160,7 @@ In order to keep a reasonable map point density, a point is only appended to the
 After merging the input point cloud into the map, some post filters are applied to the resulting point cloud.
 The first consists of computing the surface normals for all points in order to allow point-to-plane minimization.
 The second one is used to filter out dynamic points, following what was proposed by~\citet{Pomerleau2014}.
-This filtered point cloud then becomes the map $\refpc$ for the next iteration of the mapping algorithm, as shown in~\autoref{fig:tiled_map}.
+This filtered point cloud then becomes the map $\refpc$ for the next iteration of the mapping algorithm.
 
 \begin{SCfigure}
 	\centering
@@ -173,11 +173,18 @@ This filtered point cloud then becomes the map $\refpc$ for the next iteration o
 	\label{fig:tiled_map}
 \end{SCfigure}
 
-In order to save some computational power, the map is divided into voxels and only those which are inside or near the user-defined lidar maximum range considered to build $\refpc$.
+In order to save some computational power, the map is divided into voxels and only those which are inside or near the user-defined lidar maximum range are comprised in $\refpc$.
 The dimension of voxels is defined as $v_s$, in meters. %same, v_s is a real positive number
-The map voxels which are farther from the robot are saved on disk and are loaded if they are within sensor range.
-The sum of the voxels constitute the global map $\refpc'$, we can therefore state that $\refpc \subseteq \refpc'$. %sum or aggregation ? 'Sum of voxels' might be confusing
-A video-game-inspired algorithm is used to manage which voxels are loaded and unloaded from $\refpc'$ depending on the robot position in the map \transform{\robotf}{\mapf}. %Interesting, but miss a citation to the video-game algorithm! Otherwise there is little information in this sentence
+Each voxel is given an integer 3D coordinate $\begin{bmatrix} v_{x}, v_{y}, v_{z} \end{bmatrix}^T \in \mathcal{Z}^3$ computed as follows:
+\begin{equation*}
+	\begin{bmatrix} v_{x}, v_{y}, v_{z} \end{bmatrix}^T = \floor(^{\mapf}\bm{v_o} / v_s),
+\end{equation*}
+where $\floor$ is a function that only keeps the integer part of the elements of a real-valued vector and $^{\mapf}\bm{v_o}$ is the position in the map frame of the origin of the voxel, which is located in its back lower left corner.
+The map voxels which are farther from the robot are saved on disk for later in case they are back again near the sensor range.
+When a voxel is saved on disk, it is saved in a file named: cell\_$v_x$\_$v_y$\_$v_z$.
+The sum of all the voxels constitute the global map $\refpc'$, we can therefore state that $\refpc \subseteq \refpc'$. %sum or aggregation ? 'Sum of voxels' might be confusing
+%A video-game-inspired algorithm is used to manage which voxels are loaded and unloaded from $\refpc'$ depending on the robot position in the map \transform{\robotf}{\mapf}. %Interesting, but miss a citation to the video-game algorithm! Otherwise there is little information in this sentence
+
 This map segmentation technique allows us to map and localize in real time in arbitrarily large environments.
 The different mapping parameters we used are listed in~\autoref{tab:mapping_params}.
 
