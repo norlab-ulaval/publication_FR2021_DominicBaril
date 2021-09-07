@@ -1,0 +1,103 @@
+\documentclass[tikz, dvipsnames, margin=1mm]{standalone}
+\usepackage{times}
+\usepackage{amssymb,amsfonts,amsmath,amscd}
+\usepackage{bm}
+\usetikzlibrary{calc,trees,positioning,arrows.meta,shapes.geometric,%
+    decorations.pathreplacing,decorations.pathmorphing,shapes,%
+    matrix,shapes.symbols, bending, backgrounds}
+
+\newcommand{\tr}[2]{$_{#1}^{#2}\bm{T}$}
+\newcommand{\tri}[2]{$_{#1}^{#2}\bm{\check{T}}$}
+
+\tikzset{
+  >={Stealth[length=2mm, width=2mm,round]},
+box/.style={
+    rectangle, 
+    rounded corners, 
+    fill=black!10,
+    draw=black, very thick,
+    text width=7em, 
+    minimum height=3em, 
+    text centered},
+database/.style={
+    cylinder, 
+    draw=black,
+    thick,
+    aspect=0.2,
+    minimum height=1.5cm,
+    minimum width=1cm,
+    text width=6em, 
+    shape border rotate=90,
+    cylinder uses custom fill, 
+    cylinder body fill=black!10,
+    cylinder end fill=black!20,
+    text centered},
+arrow/.style={thick, ->}
+}
+
+\def\distx{11em}
+\def\disty{5em}
+
+\begin{document}
+\begin{tikzpicture}[auto, node distance=\dist, every node/.style={align=center}]
+
+  %----------------------------------------------------------------------------
+  %TEACH-----------------------------------------------------------------------
+  %----------------------------------------------------------------------------
+  %nodes 
+  \node[box] (LS) {3D lidar scans};
+  \node[box] (IMU) at ($(LS)+(0,-\disty)$) {IMU and wheel odometry};
+  \node[box] (Reg) at ($(LS)!0.5!(IMU) + (\distx,0)$)  {Register scan to the map};
+
+  \node[box] (Epose) at ($(Reg|-LS) + (\distx,0)$) {Extract new robot pose};
+  \node[box] (Append) at ($(Epose)+(0,-\disty)$) {Append scan to map};
+  \node[database] (Database) at ($(Epose)!0.5!(Append) + (\distx,0)$)  {Maps and trajectories database};
+  
+  %connections
+  \draw[arrow] (LS) -- ++(\distx/2,0) |- (Reg);
+  \draw[arrow] (IMU) -- ++(\distx/2,0) |- (Reg);
+
+  \draw[arrow] (Reg) -- ++(\distx/2,0) |- (Epose);
+  \draw[arrow] (Reg) -- ++(\distx/2,0) |- (Append);
+
+  \draw[arrow] (Epose) -- ++(0,\disty/2) -|node[above, near start]{3D pose} (Reg);
+  \draw[arrow] (Append) -- ++(0,-\disty/2) -|node[below, near start]{Local 3D map} (Reg);
+
+  \draw[arrow] (Epose) -- ++(\distx/2,0) |- (Database);
+  \draw[arrow] (Append) -- ++(\distx/2,0) |- (Database);
+
+  %----------------------------------------------------------------------------
+  %REPEAT----------------------------------------------------------------------
+  %----------------------------------------------------------------------------
+\begin{scope}[yshift=-2.5*\disty]
+  %nodes 
+  \node[box] (LS) {3D lidar scans};
+  \node[box] (IMU) at ($(LS)+(0,-\disty)$) {IMU and wheel odometry};
+  \node[box] (Reg) at ($(LS)!0.5!(IMU) + (\distx,0)$)  {Register scan to the map};
+  \node[box] (Loc) at ($(Reg)+(\distx,0)$) {Localization};
+  \node[box] (PM) at (LS-|Database) {Path manager};
+  \node[box] (PF) at ($(PM|-Loc)+(\distx,0)$) {Path follower};
+
+  %connections
+  \draw[arrow] (LS) -- ++(\distx/2,0) |- (Reg);
+  \draw[arrow] (IMU) -- ++(\distx/2,0) |- (Reg);
+  \draw[arrow] (Reg) -- (Loc);
+  \draw[arrow] (Loc) -- ++(0,-\disty/2) -|node[below, near start]{3D pose} (Reg);
+  \draw[arrow] (PM) -|node[near start, above]{Local 3D map} (Reg);
+  \draw[arrow] (PM) -|node[near start, above, xshift=.5em]{2D reference path} (PF);
+  \draw[arrow] (Loc) --node[midway, below]{2D pose} (PF);
+\end{scope}
+
+\draw[arrow] (Database) -- (PM);
+
+%add rectangles and global legend
+\begin{scope}[on background layer]
+  \draw[very thick, fill=MidnightBlue!10] (-2,1.5) rectangle ++(20,-4.8);
+\node[anchor=east, xshift=-1em, yshift=1em] at (18,-3.3) {\large Teach Phase};
+
+\draw[very thick, fill=BrickRed!10] (-2,-3.5) rectangle ++(20,-3.5);
+\node[anchor=east, xshift=-1em, yshift=1em] at (18,-7) {\large Repeat Phase};
+\end{scope}
+
+\end{tikzpicture}
+\end{document}
