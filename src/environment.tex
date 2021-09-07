@@ -11,16 +11,26 @@ The A  and B paths link the Garage and \laverdiere~\acp{POI} through cross-count
 In order to maximize \ac{UGV} and prevent immobilization, the A and B paths was previously driven on by a snowmobile operator.
 The C path connects the Garage and Gazebo \acp{POI} mostly in a larger road network, measuring \SI{0.5}{km}.
 The path network is illustrated in~\autoref{fig:forest}.
+During the five days deployment, we completed a total of 14 repeat runs split between all paths, going in both directions, summing to \SI{18.4}{km} and \SI{8}{h} \SI{24}{min} of autonomous repeating.
+More details about each run are given in~\autoref{tab:all_runs}.
+The last repeat run was started a little under \SI{72}{h} after it's respective teach run. 
+
+During the deployment week, our \ac{LTR} system was subject to fluctuating weather, ranging from including light and heavy snow, hail and drizzle. 
+Temperatures were going from \SI{-10}{\celsius} to \SI{10}{\celsius}
+A more detailed weather description is depicted in~\autoref{fig:meteo_weather}. 
+We also deployed our \ac{LTR} system in varying lighting conditions during the week. 
+Deployments were conducted at varying times during the day and under various cloud coverage. 
+Sun radiation and cloud coverage for each run is shown in~\autoref{fig:meteo_ISWR}.
 
 \begin{figure}[htpb]
 	\begin{center}
-		\begin{subfigure}[b]{0.45\textwidth}
+		\begin{subfigure}[b]{0.49\textwidth}
 			\includegraphics[width=\linewidth]{figs/map-dem.pdf}
 			%\caption{A view from above the \textit{Montmorency} forest, which covers \SI{400}{km^2}.}
 			\label{fig:view_above}
 		\end{subfigure}%
 		~~
-		\begin{subfigure}[b]{0.45\textwidth}
+		\begin{subfigure}[b]{0.49\textwidth}
 			\includegraphics[width=\linewidth]{figs/foret-montmorency-path.pdf}
 			%\caption{An example of a snowy path, in which our system performed \ac{LTR}.}
 			\label{fig:view_path}
@@ -28,37 +38,13 @@ The path network is illustrated in~\autoref{fig:forest}.
 		%% Maybe change with a camera image?
 		\caption{A digital terrain model of the area where our \ac{LTR} system was deployed.
 		We see the three different paths, both the A (\SI{1.4}{km}) and B path ({1.5}{km}) going from the garage \ac{POI} to the \laverdiere~\ac{POI}, while the C path (\SI{0.5}{km}) goes to the Gazebo \ac{POI}.
-		The image on the right is an example of the A and B paths, which mostly consists of cross-country sky trails.
+		The image on the right is an example of the A and B paths, which mostly consists of cross-country ski trails.
 		Image credit : \foretmo.} 
 		\label{fig:forest}
 	\end{center}
 \end{figure}
 
-During the five days deployment, we completed a total of 14 repeat runs split between all paths, going in both directions, summing to \SI{18.4}{km} and \SI{8}{h} \SI{24}{min} of autonomous repeating.
-The last repeat run was started a little under \SI{72}{h} after it's respective teach run. 
-During the deployment week, our \ac{LTR} system was subject to fluctuating weather, ranging from snowstorm to heavy rain, with temperatures going from \SI{-10}{\celsius} to \SI{10}{\celsius}, as shown in~\autoref{fig:meteo_weather}. 
-We also deployed our system during daytime and nighttime, with varying cloud coverage as seen in \autoref{fig:meteo_ISWR}.
-More details about each run are given in~\autoref{tab:all_runs}.
-All maps that were recorded during the teach phase are illustrated~\autoref{fig:ref_ltr}.
-
-\begin{figure} [htpb]
-	\centering
-         \includegraphics[]{figs/weatherCodes_withRunsNumbers.pdf}
-         \caption{Temperature and weather during the deployment.
-         Teach runs are depicted in green squares whereas Repeat runs are depicted in blue circles.
-         Teach runs have been performed in relatively clear weather whist teach runs suffered from rain and different levels of snowfall.}
-	\label{fig:meteo_weather}
-\end{figure}
-\begin{figure} [htpb]
-	\centering
-        \includegraphics[]{figs/ISWR_withRunsNumbers.pdf} %the size is already setup will creating the figure in python/plt
-         \caption{Illumination of the environment during the deployment.
-         Teach runs are depicted in green squares whereas Repeat runs are depicted in blue circles.
-         Both teach and repeat runs have been performed at different illumination levels.}
-	\label{fig:meteo_ISWR}
-\end{figure}
-
-\begin{table}[htpb]
+\begin{table}[tpb]
 	\caption{Overview of all runs realized in this work. 
 		All times are defined in the local Eastern Standard Time. 
 		The column $\Delta t$ defines the elapsed time since the teach run of the associated path.
@@ -67,11 +53,11 @@ All maps that were recorded during the teach phase are illustrated~\autoref{fig:
 		\textbf{R7}: A battery breakdown prevented us from finishing this run, it is therefore interrupted.} 
 	\label{tab:all_runs}
 	\begin{center}
-		\begin{tabular}{c c c c c c c c}
+		\begin{tabular}{c c c c c c c c} \toprule
 			% after \\: \hline or \cline{col1-col2} \cline{col3-col4} ...
 			ID & Path & Start time & Duration & $\Delta t$ & \# $\readpc$ & Distance & Camera \\
-			 &  &  & (hh:mm) & (hh:mm) &  & (\SI{}{km}) \\
-			\hline
+			&  &  & (hh:mm) & (hh:mm) &  & (\SI{}{km}) \\
+			\midrule
 			TeachA & A & \DTMdate{2021-03-30} \DTMtime{11:04:00} & \DTMtime{00:27:00} & \DTMtime{00:00:00} & \SI{16367}{} & \SI{1.4}{} & \cmark \\
 			TeachB & B' & \DTMdate{2021-03-29} \DTMtime{15:45:00} & \DTMtime{00:33:00} & \DTMtime{00:00:00} & \SI{19513}{} & \SI{1.5}{} & \cmark \\
 			TeachC & C & \DTMdate{2021-03-30} \DTMtime{07:28:00} & \DTMtime{00:23:00} & \DTMtime{00:00:00} & \SI{13770}{} & \SI{0.5}{} & \cmark \\
@@ -89,23 +75,58 @@ All maps that were recorded during the teach phase are illustrated~\autoref{fig:
 			R12 & A' & \DTMdate{2021-04-01} \DTMtime{19:09:00} & \DTMtime{00:38:00} & \DTMtime{59:41:00} & \SI{23602}{} & \SI{1.4}{} & \cmark \\
 			R13 & A & \DTMdate{2021-04-02} \DTMtime{06:53:00} & \DTMtime{00:28:00} & \DTMtime{71:25:00} & \SI{16840}{} & \SI{1.4}{} & \cmark \\
 			R14 & B' & \DTMdate{2021-04-02} \DTMtime{07:25:00} & \DTMtime{00:30:00} & \DTMtime{71:57:00} & \SI{18049}{} & \SI{1.5}{} & \xmark \\
-			\hline
+			\bottomrule
 			Total & -- & -- & \DTMtime{08:24:00} & -- & \SI{306289}{} & \SI{18.4}{} \\
 			
 		\end{tabular}
 	\end{center}
 \end{table}
 
+\begin{figure} [h!]
+	\centering
+		\begin{subfigure}[b]{\textwidth}
+			\centering
+			\includegraphics[]{figs/weatherCodes_withRunsNumbers.pdf}
+			\caption{
+				Temperature and weather during the deployment.
+				Teach runs are depicted in green squares whereas Repeat runs are depicted in blue circles.
+				Teach runs have been performed in relatively clear weather whist teach runs suffered from rain and different levels of snowfall.
+				\todo{Find instrument model for temperature, precipitation type}}
+			\label{fig:meteo_weather}
+			\vspace{0.2in}
+		\end{subfigure}
+		\begin{subfigure}[b]{\textwidth}
+			\centering
+		      \includegraphics[]{figs/ISWR_withRunsNumbers.pdf} %the size is already setup will creating the figure in python/plt
+		       \caption{
+		       	Illumination of the environment during the deployment.
+		        Teach runs are depicted in green squares whereas Repeat runs are depicted in blue circles.
+		        Both teach and repeat runs have been performed at different illumination levels.
+	       		\todo{Find instrument model for irradiation.}}
+			\label{fig:meteo_ISWR}
+		\end{subfigure}
+	\caption{
+		Meteorological conditions for all runs conducted in this work.
+		All data was recorded on a local meteorological station.
+		\todo{Find name of the meteorological station.}}
+	\label{fig:meteo_all}
+\end{figure}
+
+
 % Check the labels
 % Try to add alpha to maps
-Teach runs were done in order to record $\refpc'$ and $\reftraj$ for all three paths. %JL: always recall what is the mathematical object before saying it: the trajectory x_ref [...] instead of xref [...]
-The A path was recorded going from the Garage \ac{POI} to the \laverdiere \ac{POI}, with the map containing \SI{1729505} points). %JL: parenthesis bug
-The B path was recorded going from the \laverdiere \ac{POI} to the Garage \ac{POI}, with the map containing \SI{2423769} points). %JL: same
+
+Teach runs were done in order to record $\refpc'$ and $\reftraj$ for all three paths.
+During these runs, the robot was manually driven, $\refpc'$ and $\reftraj$ were built online. 
+The data was saved on disk and loaded when attempting the corresponding repeat run.
+The A path was recorded going from the Garage \ac{POI} to the \laverdiere~\ac{POI}, with the map containing \SI{1729505} points). %JL: parenthesis bug
+The B path was recorded going from the \laverdiere~\ac{POI} to the Garage \ac{POI}, with the map containing \SI{2423769} points). %JL: same
 The C path was recorded going from the Garage \ac{POI} to the Gazebo \ac{POI}, with the map containing \SI{637690} points). %JL: same
 The recorded maps overlaid with the reference trajectories for all three paths are shown in~\autoref{fig:ref_ltr}.
-In this figure, the coordinates are defined in the local $\mapf$. %JL: the local *frame* G?
+In this figure, the coordinates are defined in the $\mapf$ frame specific to the path. 
 
-\begin{figure}[htpb]
+
+\begin{figure}[h!]
 	\begin{center}
 		\begin{subfigure}[b]{0.32\textwidth}
 			\includegraphics[width=\linewidth]{figs/ltr_map_traj/path_a.pdf}

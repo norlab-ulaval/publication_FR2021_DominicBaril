@@ -4,6 +4,11 @@
 \subsection{Robotic deployments in snow}
 \label{sec:snow_robots}
 
+%Max:
+% The description of each robot system are great. It will be even better to link them between each others to avoid doing a list of these systems.
+% The links can be done by speaking about the strenght and weakness between each system, and how the new one deal with issues related to the older one.
+% Example: Dante II was very slow compare to Nomad. Lidar was not ony used to do a map, but was used to do obstacle avoidance.
+
 To our knowledge, few robots have been deployed in harsh winter environments. 
 Dante II is a \SI{900}{kg} tethered legged robot, which conducted a 5-day, \SI{165}{m} descent into the Mount Spurr Volcano, in Alaska~\citep{Bares1999}.
 During this deployment, Dante II reached speeds upwards to \SI{0.011}{m/s} during the descent.
@@ -57,6 +62,14 @@ Our system has been deployed in complex meteorological scenarios, relying on lid
 
 \subsection{Teach-and-Repeat}
 \label{rel_nav}
+
+%Max: I like the link you have done between each paper. For the camera part, maybe we should insist more on the weather condition which happend for each paper to show that camera teach and repeat work better on light weather condition. As you said in the end of the paragraph, we want to demonstrate that LTR is better for all weather conditions, specially for winter and snowy one which were not deal with VTR.
+% Is there only one GNSS teach and repeat on the state of the art (Congram2021) ? In the figure there are 3 paper pointing as GNSS ones, and Congram2021 is sorted as VTR. Maybe we should do a paragraph only for GNSS tech and repeat if there are many papers
+% Maybe we should find a better way to sort and present in the figure the paper which used camera and GNSS together for the teach and repeat.
+% In general, I think we should insist more at the end of the related section on the advantage of using a LTR over the other methods, by pointed out their weakness and how the LTR can solve them.
+% Example: VTR need clear weather and some light to work. We demonstrate in this paper the LTR can work during harsh weather condition.
+% As you said, GPS accuracy work well in open environment, however we demonstrate in this paper that in forest trail, the GNSS is not accurate enough to follow a path compare to the LTR.
+% I think it's very important to insist on the issue we solve with the LTR. It's the main goal of the paper and the reader should fell it !
 
 % Text on topological path tracking / SLAM?
 Teach-and-Repeat approaches are rooted in the idea that a route driven by a mobile robot should have previously been driven (or "taught") by a human operator~\citep{Furgale2010}.
