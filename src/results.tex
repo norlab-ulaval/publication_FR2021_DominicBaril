@@ -15,24 +15,44 @@ Lastly, we identify failure cases for our system and they were handled in the fi
 \subsubsection{Vision-based}
 \label{sec:res_vis}
 
-%\lightlipsum[1]
-\todo{Should I add a section on the camera's parameters?}
-\todo{I am not sure if the police of each column of the figure is the good one for the article...}
+The Dalsa C1920 camera allowed us to analyze the feasibility to use this type of sensor in a subarctic forest. As it was observed by ~\citep{Williams2009} and ~\citep{Paton2017}, the use of cameras for robotic purpose in winter conditions is extremely difficult because of the lack of features on snow terrain. As depicted in~\autoref{fig:cameras_b}, the only features available are the ones from the trees and the surroundings. The path totally recovered by snow is flat and without texture.~\citep{Paton2017} also observed that lighting changes can alter the quality of the image and sunlight reflection on snow can saturate the camera sensor. Their observations related to lighting changes was based on the variation of the sun position during the day, but, in our case, the illumination changes inside the same path. In~\autoref{fig:cameras_a}, there is an example from the TeachA where the quality of the image is sufficient while the robot is in the wood, but can drastically changes if there is an opening in the canopy. In those situations, the camera's sensor is overexposed.
 
-The Dalsa C1920 camera installed on the Warthog can be used in low temperature which allow us to analyze the feasibility to use this type of sensor in a subarctic forest. 
-One of the biggest problem related to photography in winter conditions is caused by the reflection of light by snow which often leads to an over exposition and then to the saturation of the image. 
-In the left column of~\autoref{fig:cameras_expo} there is an example where the robot was driving in the wood (bottom left) and an other sequence from the same run where the robot was exposed to the sun (top right). 
-The reflection on the path saturates completely the image and removes all the details from the surroundings. 
-In the middle column of the same figure, the pictures were taken during a snowfall. 
-The snowflakes are practically invisible in the images, which means that they don't affect the sensor. 
-The camera was also tested at night to analyze the possibility to use it at every moment of the day. 
-Run 1's column demonstrates clearly that the lack of light prevents the camera from working in dark situations.
+Data were also taken during a snowfall to see the effect on image's quality. As we can observed in~\autoref{fig:cameras_b}, snowflakes are circled in red and are practically invisible in the camera image. Another problem with the use of cameras for vision-based localization comes from the lack of luminosity at night as depicted in~\autoref{fig:cameras_c}. The robot needs to be equipped with its own source of light to travel in the dark compared to lidar which is independent to the lighting conditions.
 
-\begin{figure} [htpb]
-	\centering
-	\includegraphics[height=3.0in]{figs/figure_camera.pdf}
-	\caption{Pictures taken for three different runs. The left column from TeachA is an example of the sun's effect on the quality of the images. The images from the middle column were taken during a snowfall (most prominent snowflakes are circled in red). The right column from R1 was taken at night, hence the lack of luminosity.}
+\begin{figure}[htpb]
+	\begin{center}
+		\begin{subfigure}[b]{0.32\textwidth}
+			\includegraphics[width=\linewidth]{figs/camera/figure_camera_teachA_top.pdf}
+		\end{subfigure}%
+		~
+		\begin{subfigure}[b]{0.32\textwidth}
+			\includegraphics[width=\linewidth]{figs/camera/figure_camera_run9_top.pdf}
+		\end{subfigure}
+		~
+		\begin{subfigure}[b]{0.32\textwidth}
+			\includegraphics[width=\linewidth]{figs/camera/figure_camera_dark_top.pdf}
+		\end{subfigure}%
+		\\ \vspace{2mm}
+		\begin{subfigure}[b]{0.32\textwidth}
+			\includegraphics[width=\linewidth]{figs/camera/figure_camera_teachA_bottom.pdf}
+			\caption{TeachA}
+			\label{fig:cameras_a}
+		\end{subfigure}%
+		~
+		\begin{subfigure}[b]{0.32\textwidth}
+			\includegraphics[width=\linewidth]{figs/camera/figure_camera_run9_bottom.pdf}
+			\caption{R8}
+			\label{fig:cameras_b}
+		\end{subfigure}
+		~
+		\begin{subfigure}[b]{0.32\textwidth}
+			\includegraphics[width=\linewidth]{figs/camera/figure_camera_dark_bottom.pdf}
+			\caption{Night}
+			\label{fig:cameras_c}
+		\end{subfigure}%
+	\caption{Pictures taken for three different runs. (a) is an example of the sun's effect on the quality of the images. (b) were taken during a snowfall (most prominent snowflakes are circled in red). Images depicted in (c) were taken at night, hence the lack of luminosity.} 
 	\label{fig:cameras_expo}
+	\end{center}
 \end{figure}
 
 \subsubsection{GNSS}
