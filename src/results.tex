@@ -1,6 +1,8 @@
 \section{Results}
 \label{sec:results}
 
+% Goal : demonstrate the robustness to 
+
 The goal of this section is to quantify the performance of our \ac{LTR} framework when deployed in the environment described in~\autoref{sec:env}.
 We achieve this by evaluating the localization accuracy of the \ac{ICP} algorithm through various metrics.
 We also show our camera and \ac{GNSS} measurements to demonstrate navigation approaches using these sensors as primary mean of localization would suffer significant performance loss in a subarctic forest.
@@ -167,10 +169,35 @@ In terms of different runs, it can be observed that cross-track error is stable,
 \label{sec:fail}
 %% Discuss Laverdiere failure and garage failure
 
-\subsubsection{Run 2 initialization}
-\label{sec:laverdiere_fail}
+\subsubsection{Corridor effect}
+\label{sec:forest_canyon}
 
 \lightlipsum[1]
+
+\begin{figure}[htpb]
+	\begin{center}
+		\begin{subfigure}[b]{\textwidth}
+			\centering
+			\includegraphics[height=2.5in]{figs/forest_canyon/path_a_w_input_pcls.pdf}
+			\caption{Input point clouds registered during R5, with the A path reference map.
+			In red is an input point cloud registered while the \ac{UGV} was in the garage.
+			In blue is an input point cloud registered while the \ac{UGV} was in the forest corridor.}
+			\label{fig:forest_canyon_top}
+		\end{subfigure}
+		\\
+		\begin{subfigure}[b]{\textwidth}
+			\centering
+			\includegraphics[height=1.6in]{figs/forest_canyon/forest_canyon.pdf}
+			\caption{Mean $\match$ error after $\readpc$ was translated. 
+				The colorbar is defined in logscale.}
+			\label{fig:forest_canyon_bottom}
+		\end{subfigure}
+		\caption{Cross-track error during the deployment.
+			The cross-track error was computed for every localization position recorded during each repeat run.
+			For each map, the coordinates are defined in the reference map frame $\mapf$, which are the same as shown in~\autoref{fig:ref_ltr}.} 
+		\label{fig:forest_canyon}
+	\end{center}
+\end{figure}
 
 \subsubsection{Run 10 failed initialization}
 \label{sec:laverdiere_fail}
