@@ -174,27 +174,40 @@ In terms of different runs, it can be observed that cross-track error is stable,
 
 \lightlipsum[1]
 
-\begin{figure}[htpb]
+\begin{figure}[h!]
 	\begin{center}
-		\begin{subfigure}[b]{\textwidth}
-			\centering
-			\includegraphics[height=2.5in]{figs/forest_canyon/path_a_w_input_pcls.pdf}
-			\caption{Input point clouds registered during R5, with the A path reference map.
-			In red is an input point cloud registered while the \ac{UGV} was in the garage.
-			In blue is an input point cloud registered while the \ac{UGV} was in the forest corridor.}
-			\label{fig:forest_canyon_top}
-		\end{subfigure}
-		\\
-		\begin{subfigure}[b]{\textwidth}
-			\centering
-			\includegraphics[height=1.6in]{figs/forest_canyon/forest_canyon.pdf}
-			\caption{Mean $\match$ error after $\readpc$ was translated. 
-				The colorbar is defined in logscale.}
-			\label{fig:forest_canyon_bottom}
-		\end{subfigure}
-		\caption{Cross-track error during the deployment.
-			The cross-track error was computed for every localization position recorded during each repeat run.
-			For each map, the coordinates are defined in the reference map frame $\mapf$, which are the same as shown in~\autoref{fig:ref_ltr}.} 
+		\begin{subfigure}[b]{0.3\textwidth}
+			\includegraphics[width=\linewidth]{figs/forest_canyon/run5_perturbations.pdf}
+			%\caption{A view from above the \textit{Montmorency} forest, which covers \SI{400}{km^2}.}
+			\label{fig:R5_pert}
+			\caption{R5}
+		\end{subfigure}%
+		~
+		\begin{subfigure}[b]{0.3\textwidth}
+			\includegraphics[width=\linewidth]{figs/forest_canyon/run6_perturbations.pdf}
+			%\caption{An example of a snowy path, in which our system performed \ac{LTR}.}
+			\label{fig:R6_pert}
+			\caption{R6}
+		\end{subfigure}%
+		~
+		\begin{subfigure}[b]{0.3\textwidth}
+			\includegraphics[width=\linewidth]{figs/forest_canyon/run2_perturbations.pdf}
+			%\caption{An example of a snowy path, in which our system performed \ac{LTR}.}
+			\label{fig:R2_pert}
+			\caption{R2}
+		\end{subfigure}%
+		~
+		\begin{subfigure}[b]{0.065\textwidth}
+			\includegraphics[width=\linewidth]{figs/forest_canyon/colorbar.pdf}
+			%\caption{An example of a snowy path, in which our system performed \ac{LTR}.}
+			\label{fig:R2_pert}
+			\caption{R2}
+		\end{subfigure}%
+		%% Maybe change with a camera image?
+		\caption{Mean residual error after longitudinal perturbation of $^{\lidarf} \readpc$, when matched on $^{\lidarf} \refpc$.
+		The perturbations were done from \SI{-6}{m} to \SI{-6}{m}, with increments of \SI{0.5}{m}.
+		The maps were built with 500 point clouds for each run that were spread evenly time wise, with the color proportional to the mean perturbation error.
+		} 
 		\label{fig:forest_canyon}
 	\end{center}
 \end{figure}
