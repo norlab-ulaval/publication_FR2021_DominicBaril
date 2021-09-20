@@ -68,13 +68,6 @@ This is due to the few number of satellite seen by the antennas and the lack of 
 Others pictures in this figure show some miss-alignement of the path of the robot into the forest trails.
 The path computed by the \ac{GNSS} are located into the trees and not on the forest trail.
 
-\begin{figure} [htpb]
-	\centering
-	\includegraphics[height=3.0in]{./figs/GPS/FR_gps_data_fails2.pdf}
-	\caption{Examples of GPS positioning error along the path A and B.}
-	\label{fig:gnss_error_path}
-\end{figure}
-
 After this quanlitative analyzis, we also did a quantitative analyzis of the \ac{GNSS} error obtained for each run and according to each path.
 The \ac{GNSS} error can be estimated by taking the computing distance between the two antennas and compare it to the one measured by a precise instrument such as a total station \citep{Vaidis2021}.
 For each run, we computed this distance for each timestamp of the \ac{GNSS} data and substract it by the theoritical one.
@@ -95,20 +88,21 @@ For the run 4, 2, 6 and 9, we can also link the result of the \ac{GNSS} precisio
 In these runs, the number was lower in average than the other runs, which leads to an increase of the uncertainty about the localization as seen in \autoref{fig:gnss_run_error}.
 For all the others runs, their results are almost the same with an accuracy around 1 meter and a good precision.
 
-\begin{figure} [htpb]
-	\centering
-	\includegraphics[height=1.6in]{./figs/GPS/RTK_error.pdf}
-	\caption{GNSS error for each runs.}
-	\label{fig:gnss_run_error}
-\end{figure}
+
 
 \begin{figure} [htpb]
 	\centering
-	\includegraphics[height=1.6in]{./figs/GPS/Satellite_number.pdf}
+	\includegraphics[height=2.5in]{./figs/GPS/GNSS_numsatvserr.pdf}
 	\caption{GNSS satellite number for each run.}
 	\label{fig:gnss_satellite_number}
 \end{figure}
 
+\begin{SCfigure}
+	\centering
+	\includegraphics[height=3.0in]{./figs/GPS/GNSS_numsatimg.pdf}
+	\caption{GNSS error for each runs.}
+	\label{fig:gnss_run_error}
+\end{SCfigure}
 
 
 \subsubsection{ICP}
@@ -146,7 +140,7 @@ In terms of different runs, it can be observed that cross-track error is stable,
 		\\
 		\begin{subfigure}[b]{\textwidth}
 			\centering
-			\includegraphics[height=1.6in]{figs/pf_error_runs.pdf}
+			\includegraphics[height=2.0in]{figs/cur_vs_crosstrack.pdf}
 			\caption{Cross-track error for all runs.}
 			\label{fig:pf_error_runs}
 		\end{subfigure}
