@@ -1,6 +1,8 @@
 \section{Results}
 \label{sec:results}
 
+% Goal : demonstrate the robustness to 
+
 The goal of this section is to quantify the performance of our \ac{LTR} framework when deployed in the environment described in~\autoref{sec:env}.
 We achieve this by evaluating the localization accuracy of the \ac{ICP} algorithm through various metrics.
 We also show our camera and \ac{GNSS} measurements to demonstrate navigation approaches using these sensors as primary mean of localization would suffer significant performance loss in a subarctic forest.
@@ -15,44 +17,93 @@ Lastly, we identify failure cases for our system and they were handled in the fi
 \subsubsection{Vision-based}
 \label{sec:res_vis}
 
-%\lightlipsum[1]
-\todo{Should I add a section on the camera's parameters?}
-\todo{I am not sure if the police of each column of the figure is the good one for the article...}
+The Dalsa C1920 camera allowed us to analyze the feasibility to use this type of sensor in a subarctic forest. As it was observed by ~\citep{Williams2009} and ~\citep{Paton2017}, the use of cameras for robotic purpose in winter conditions is extremely difficult because of the lack of features on snow terrain. As depicted in~\autoref{fig:cameras_b}, the only features available are the ones from the trees and the surroundings. The path totally recovered by snow is flat and without texture.~\citep{Paton2017} also observed that lighting changes can alter the quality of the image and sunlight reflection on snow can saturate the camera sensor. Their observations related to lighting changes was based on the variation of the sun position during the day, but, in our case, the illumination changes inside the same path. In~\autoref{fig:cameras_a}, there is an example from the TeachA where the quality of the image is sufficient while the robot is in the wood, but can drastically changes if there is an opening in the canopy. In those situations, the camera's sensor is overexposed.
 
-The Dalsa C1920 camera installed on the Warthog can be use in low temperature which allow us to analyze the feasibility to use this type of sensor in a subarctic forest. One of the biggest problem related to photography in winter conditions is caused by the reflection of light by snow which often leads to an over exposition and then to the saturation of the image. In the left column of~\autoref{fig:cameras_expo} there is an example where the robot was driving in the wood (bottom left) and an other sequence from the same run where the robot was exposed to the sun (top right). The reflection on the path saturates completely the image and removes all the details from the surroundings. In the middle column of the same figure, the pictures were taken during a snowfall. The snowflakes are practically invisible in the images, which means that they don't affect the sensor. The camera was also tested at night to analyze the possibility to use it at every moment of the day. Run 1's column demonstrates clearly that the lack of light prevents the camera from working in dark situations.
+Data were also taken during a snowfall to see the effect on image's quality. As we can observed in~\autoref{fig:cameras_b}, snowflakes are circled in red and are practically invisible in the camera image. Another problem with the use of cameras for vision-based localization comes from the lack of luminosity at night as depicted in~\autoref{fig:cameras_c}. The robot needs to be equipped with its own source of light to travel in the dark compared to lidar which is independent to the lighting conditions.
 
-\begin{figure} [htpb]
-	\centering
-	\includegraphics[height=3.0in]{figs/figure_camera.pdf}
-	\caption{Pictures taken for three different runs. The left column from TeachA is an example of the sun's effect on the quality of the images. The images from the middle column were taken during a snowfall (most prominent snowflakes are circled in red). The right column from R1 was taken at night, hence the lack of luminosity.}
+\begin{figure}[htpb]
+	\begin{center}
+		\begin{subfigure}[b]{0.32\textwidth}
+			\includegraphics[width=\linewidth]{figs/camera/figure_camera_teachA_top.pdf}
+		\end{subfigure}%
+		~
+		\begin{subfigure}[b]{0.32\textwidth}
+			\includegraphics[width=\linewidth]{figs/camera/figure_camera_run9_top.pdf}
+		\end{subfigure}
+		~
+		\begin{subfigure}[b]{0.32\textwidth}
+			\includegraphics[width=\linewidth]{figs/camera/figure_camera_dark_top.pdf}
+		\end{subfigure}%
+		\\ \vspace{2mm}
+		\begin{subfigure}[b]{0.32\textwidth}
+			\includegraphics[width=\linewidth]{figs/camera/figure_camera_teachA_bottom.pdf}
+			\caption{TeachA}
+			\label{fig:cameras_a}
+		\end{subfigure}%
+		~
+		\begin{subfigure}[b]{0.32\textwidth}
+			\includegraphics[width=\linewidth]{figs/camera/figure_camera_run9_bottom.pdf}
+			\caption{R8}
+			\label{fig:cameras_b}
+		\end{subfigure}
+		~
+		\begin{subfigure}[b]{0.32\textwidth}
+			\includegraphics[width=\linewidth]{figs/camera/figure_camera_dark_bottom.pdf}
+			\caption{Night}
+			\label{fig:cameras_c}
+		\end{subfigure}%
+	\caption{Pictures taken for three different runs. (a) is an example of the sun's effect on the quality of the images. (b) were taken during a snowfall (most prominent snowflakes are circled in red). Images depicted in (c) were taken at night, hence the lack of luminosity.} 
 	\label{fig:cameras_expo}
+	\end{center}
 \end{figure}
 
 \subsubsection{GNSS}
 \label{sec:res_gnss}
 
-\lightlipsum[1]
+As explained in the previous sections, \ac{GNSS} positionning was not used for the teach and repeat because of the lack of precision of the \ac{GNNS} in cluted environnement such as fores trails.
+
+\autoref{fig:gnss_error_path} shows some qualitative examples of positionning error given along the path A and Bd during the run 4 and 5.
+On the bottom right side picture, we can clearly see that the \ac{GNSS} positionning is not good in the garage when the run start. 
+This is due to the few number of satellite seen by the antennas and the lack of signal received to do the localization accurately.
+Others pictures in this figure show some miss-alignement of the path of the robot into the forest trails.
+The path computed by the \ac{GNSS} are located into the trees and not on the forest trail.
+
+After this quanlitative analyzis, we also did a quantitative analyzis of the \ac{GNSS} error obtained for each run and according to each path.
+The \ac{GNSS} error can be estimated by taking the computing distance between the two antennas and compare it to the one measured by a precise instrument such as a total station \citep{Vaidis2021}.
+For each run, we computed this distance for each timestamp of the \ac{GNSS} data and substract it by the theoritical one.
+\autoref{fig:gnss_run_error} shows the box plot of the \ac{GNSS} error for each run and with their conresponding path.
+We can observe that some paths produced a different spread of the error.
+It's the case for the path C, where the precision of the \ac{GNSS} is very high compare to the one of the path B.
+Also, for some paths the errors in localization can be higher than the width of the forest trails.
+Because of this, the teach and repeat would not have worked properly if our localization was based on \ac{GNSS} positionning.
+This quantitative analyzis confirms the observations done with the qualitative analyzis.
+
+By relying only on \autoref{fig:meteo_all}, we are not able to give the reason of the error difference observed for each path and run.
+Based on \autoref{fig:gnss_satellite_number}, we can give some answers.
+This figure represents some boxplot about the satellite number seen by the \ac{GNSS} antennas during each run for each path.
+The number varie between 2 to 21.
+The run C has the highest average number of satellite seen during its runs.
+This can explain why the precision of the \ac{GNSS} is higher than the other paths.
+For the run 4, 2, 6 and 9, we can also link the result of the \ac{GNSS} precision to the number of satellites seen.
+In these runs, the number was lower in average than the other runs, which leads to an increase of the uncertainty about the localization as seen in \autoref{fig:gnss_run_error}.
+For all the others runs, their results are almost the same with an accuracy around 1 meter and a good precision.
+
+
 
 \begin{figure} [htpb]
 	\centering
-	\includegraphics[height=4.0in]{./figs/GPS/FR_gps_data_fails2.pdf}
-	\caption{Examples of GPS positioning error along the path A and B.}
-	\label{fig:gnss_error_path}
-\end{figure}
-
-\begin{figure} [htpb]
-	\centering
-	\includegraphics[height=2.0in]{./figs/GPS/RTK_error.pdf}
-	\caption{GNSS error for each runs.}
-	\label{fig:gnss_run_error}
-\end{figure}
-
-\begin{figure} [htpb]
-	\centering
-	\includegraphics[height=2.0in]{./figs/GPS/Satellite_number.pdf}
+	\includegraphics[height=2.5in]{./figs/GPS/GNSS_numsatvserr.pdf}
 	\caption{GNSS satellite number for each run.}
 	\label{fig:gnss_satellite_number}
 \end{figure}
+
+\begin{SCfigure}
+	\centering
+	\includegraphics[height=3.0in]{./figs/GPS/GNSS_numsatimg.pdf}
+	\caption{GNSS error for each runs.}
+	\label{fig:gnss_run_error}
+\end{SCfigure}
+
 
 \subsubsection{ICP}
 \label{sec:ICP}
@@ -61,7 +112,7 @@ The Dalsa C1920 camera installed on the Warthog can be use in low temperature wh
 
 \begin{figure} [htpb]
 	\centering
-	\includegraphics[height=2.0in]{example-image}
+	\includegraphics[height=1.6in]{example-image}
 	\caption{Figure explaining ICP error for every run (correlated with meteo).}
 	\label{fig:icp_error}
 \end{figure}
@@ -89,7 +140,7 @@ In terms of different runs, it can be observed that cross-track error is stable,
 		\\
 		\begin{subfigure}[b]{\textwidth}
 			\centering
-			\includegraphics[height=1.6in]{figs/pf_error_runs.pdf}
+			\includegraphics[height=2.0in]{figs/cur_vs_crosstrack.pdf}
 			\caption{Cross-track error for all runs.}
 			\label{fig:pf_error_runs}
 		\end{subfigure}
@@ -112,17 +163,55 @@ In terms of different runs, it can be observed that cross-track error is stable,
 \label{sec:fail}
 %% Discuss Laverdiere failure and garage failure
 
-\subsubsection{Run 2 initialization}
-\label{sec:laverdiere_fail}
+\subsubsection{Corridor effect}
+\label{sec:forest_canyon}
 
 \lightlipsum[1]
+
+\begin{figure}[h!]
+	\begin{center}
+		\begin{subfigure}[b]{0.3\textwidth}
+			\includegraphics[width=\linewidth]{figs/forest_canyon/run5_perturbations.pdf}
+			%\caption{A view from above the \textit{Montmorency} forest, which covers \SI{400}{km^2}.}
+			\label{fig:R5_pert}
+			\caption{R5}
+		\end{subfigure}%
+		~
+		\begin{subfigure}[b]{0.3\textwidth}
+			\includegraphics[width=\linewidth]{figs/forest_canyon/run6_perturbations.pdf}
+			%\caption{An example of a snowy path, in which our system performed \ac{LTR}.}
+			\label{fig:R6_pert}
+			\caption{R6}
+		\end{subfigure}%
+		~
+		\begin{subfigure}[b]{0.3\textwidth}
+			\includegraphics[width=\linewidth]{figs/forest_canyon/run2_perturbations.pdf}
+			%\caption{An example of a snowy path, in which our system performed \ac{LTR}.}
+			\label{fig:R2_pert}
+			\caption{R2}
+		\end{subfigure}%
+		~
+		\begin{subfigure}[b]{0.065\textwidth}
+			\includegraphics[width=\linewidth]{figs/forest_canyon/colorbar.pdf}
+			%\caption{An example of a snowy path, in which our system performed \ac{LTR}.}
+			\label{fig:R2_pert}
+			\caption{R2}
+		\end{subfigure}%
+		%% Maybe change with a camera image?
+		\caption{Mean residual error after longitudinal perturbation of $^{\lidarf} \readpc$, when matched on $^{\lidarf} \refpc$.
+		The perturbations were done from \SI{-6}{m} to \SI{-6}{m}, with increments of \SI{0.5}{m}.
+		The maps were built with 500 point clouds for each run that were spread evenly time wise, with the color proportional to the mean perturbation error.
+		} 
+		\label{fig:forest_canyon}
+	\end{center}
+\end{figure}
 
 \subsubsection{Run 10 failed initialization}
 \label{sec:laverdiere_fail}
 
 \lightlipsum[1]
 
-\begin{figure}[h!]
+\begin{figure}[tpbh!]
 	\begin{center}
 		\begin{subfigure}[b]{0.3\textwidth}
 			\includegraphics[width=\linewidth]{figs/run10_init_fail/run_6.pdf}

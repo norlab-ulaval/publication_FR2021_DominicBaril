@@ -11,10 +11,14 @@ Finally, the hardware used to deploy the \ac{LTR} system, including the \ac{UGV}
 
 \begin{figure} [h!]
 	\centering
-	\includegraphics[height=2.8in]{figs/LTR_flowchart.pdf}
+	\includegraphics[width=\linewidth]{figs/Teach_and_repeat_pipeline/teach_and_repeat_pipeline.pdf}
 	\caption{Flowchart for LTR}
 	\label{fig:ltr_flow}
 \end{figure}
+
+%Max: is there a reason why we choose G as name for the map frame ? Usually it's W for world. I confuse it with GNSS global frame.
+% What is a Frenet-Serret frame ?
+% The figures are great and easy to understand. For the teach phase, maybe use the more space you can in the blue rectangle as the one of the repeat phase. There is an empty space at the top right part. Also maybe change the color or style of the teach phase and repeat phase rectangle. It can be read at on bloc of the diagram.
 
 Various coordinate frames need to be defined for the \ac{LTR} framework to work, all of which are illustrated in~\autoref{fig:ltr_frames}.
 First, a map frame $\mapf$ is defined representing the world in which the robot is navigating.
@@ -25,8 +29,8 @@ The rigid transform from the robot frame to the lidar frame \transform{\robotf}{
 Reading point clouds $\readpc$ are originally observed in the lidar frame $\lidarf$ and reference point clouds are expressed in the map frame $\mapf$.
 The transform between $\robotf$ and $\mapf$ \transform{\robotf}{\mapf} is updated via the \ac{ICP} algorithm and is used as odometry for the robot.
 Lastly, for path following algorithm, a Frenet-Serret frame $\pathf$ is defined directly on the path.
+\todo{define 3d and 2d pose components}
 
-%% TODO : Replace with our version of the figure
 \begin{figure} [htpb]
 	\centering
 	\includegraphics[width=.6\linewidth]{figs/warthog_frames/warthog_frames.pdf}
@@ -37,8 +41,15 @@ Lastly, for path following algorithm, a Frenet-Serret frame $\pathf$ is defined 
 \subsection{Iterative closest point}
 \label{ICP}
 
+% Max: This section is well written. It explains clearly how we used ICP for the localization. Maybe we should like some of your explanation with the table of the parameters.
+% Example: Two different type of input filters shown in table ... where applied to P: ...
+% We should also explained our choice for the mapping, ie why have we choose point-to-plane, what is 4DOF minimization in the table, and other parameters not explained previously.
+% I think it missed the output filter on the point cloud in the figure and in the table. Did you use some of them ?
+
 Incoming lidar scans, or reading point clouds $\readpc$ registered to a reference map, or reference point cloud $\refpc$ using the \ac{ICP} algorithm in order to localize the robot and build a map of the environment during the teach phase.
 Pioneered by~\citet{Besl1992} and~\citet{Chen1991}, this algorithm iteratively matches points between two point clouds and looks for a rigid transform minimizing the distance between each matched points.
+%Max: The description of the different state of the mapping done by ICP is for one iteration i. Put a sentence to be clear about that, because if not, you miss some information in your equation. 
+% Example: Here, we describe the ICP process for one iteration to simplify the notation of our equation.
 The first data processing step in our implementation is to apply input filters to $\readpc$ in order to decrease computation time and remove outlier points.
 We apply two input filters to $\readpc$ : Random sub-sampling $\readpc$ and removing points that are located within pre-defined bounding boxes to remove points corresponding to the robot's body and bystanders walking behind the robot.
 In our implementation, we know that $\readpc$ is observed in the lidar frame $\lidarf$ and that $\refpc$ is defined in the map frame $\mapf$.
@@ -68,7 +79,9 @@ For more details, please refer to~\citep{Pomerleau2015}.
 The resulting transform \transform{\lidarf}{\mapf} can be used to express the 3D robot pose in $\mapf$ by chaining \transform{\lidarf}{\mapf} \transform{\robotf}{\lidarf} since the latter is known through calibration.
 An overview of the \ac{ICP} pipeline is shown in~\autoref{fig:icp_pipeline}.
 Our implementation is strongly based on the \texttt{libpointmatcher}\footnote{\url{https://github.com/ethz-asl/libpointmatcher}}~\citep{Pomerleau2013}.
+% Max: should we put the link to our norlab libpointmatche ?
 The parameters that were used on our system are detailed in~\autoref{tab:icp_params}.
+% Max: maybe it's better to put a link to the filter explanation (https://norlab.ulaval.ca/libpointmatcher-modules/). People will understand better the modules used.
 
 %% Need to write on point cloud preprocessing, matching, minimization (point-to-plane) and post-processing (might be added to mapping).
 
@@ -133,6 +146,10 @@ Following the same idea, our high-frequency odometry is used to estimate the de-
 \subsection{Teach phase}
 \label{sec:teach_phase}
 
+% Max: is there a reason why the 3D lidar scans and the IMu and wheel odometry box and outside of the blue one ? It is not the same as figure 3.
+% Maybe we can also say the map can be computed in post processing based on the data collected.
+% What is Q' ? It was not describe previously.
+
 During the teach phase, the robot is driven along a specific path by a human operator, while all sensors are used to collect data.
 The \ac{ICP} algorithm is used to solve the \ac{SLAM} problem in real time, hence incoming reading point clouds $\readpc$ are registered to the reference point cloud $\refpc$ and then appended to the latter, effectively building a map.
 The other output of the \ac{ICP} algorithm, the transform that allows to register the reading point cloud to the reference point cloud \transform{\lidarf}{\mapf} represents the pose of the robot $\bm x$. %JL: hard to read, simplifies sentence
@@ -141,13 +158,17 @@ The teach pipeline is illustrated in~\autoref{fig:teach_pipeline}.
 
 \begin{figure} [htpb]
 	\centering
-	\includegraphics[height=1.8in]{figs/teach_pipeline/teach_pipeline.pdf}
+	\includegraphics[width=\linewidth]{figs/Teach_pipeline/teach_pipeline.pdf}
 	\caption{Teach phase pipeline}
 	\label{fig:teach_pipeline}
 \end{figure}
 
 \subsubsection{Large-scale mapping}
 \label{sec:tiled_map}
+
+% Max: For figure 7, where is vs in the figure ? It's difficult to see the frame L and R also.
+% Maybe it's possible to draw a figure to show all of the explanation about the text, I mean about Q and Q'. I have an idea for this.
+% I think the post filter explanation deserve to be in the ICP part.
 
 When a lidar scan, or input point cloud, $\readpc$ is acquired, it is fed to the mapping algorithm, along with the estimated lidar pose $_{\robotf}^{\mapf}\bm{\check{T}}$. %JL: too much ','
 The estimated pose is provided by the odometry system decribed in~\autoref{sec:imu_wheel_odom}.
@@ -159,7 +180,7 @@ In order to keep a reasonable map point density, a point is only appended to the
 After merging the input point cloud into the map, some post filters are applied to the resulting point cloud.
 The first consists of computing the surface normals for all points in order to allow point-to-plane minimization.
 The second one is used to filter out dynamic points, following what was proposed by~\citet{Pomerleau2014}.
-This filtered point cloud then becomes the map $\refpc$ for the next iteration of the mapping algorithm, as shown in~\autoref{fig:tiled_map}.
+This filtered point cloud then becomes the map $\refpc$ for the next iteration of the mapping algorithm.
 
 \begin{SCfigure}
 	\centering
@@ -172,11 +193,18 @@ This filtered point cloud then becomes the map $\refpc$ for the next iteration o
 	\label{fig:tiled_map}
 \end{SCfigure}
 
-In order to save some computational power, the map is divided into voxels and only those which are inside or near the user-defined lidar maximum range considered to build $\refpc$.
+In order to save some computational power, the map is divided into voxels and only those which are inside or near the user-defined lidar maximum range are comprised in $\refpc$.
 The dimension of voxels is defined as $v_s$, in meters. %same, v_s is a real positive number
-The map voxels which are farther from the robot are saved on disk and are loaded if they are within sensor range.
-The sum of the voxels constitute the global map $\refpc'$, we can therefore state that $\refpc \subseteq \refpc'$. %sum or aggregation ? 'Sum of voxels' might be confusing
-A video-game-inspired algorithm is used to manage which voxels are loaded and unloaded from $\refpc'$ depending on the robot position in the map \transform{\robotf}{\mapf}. %Interesting, but miss a citation to the video-game algorithm! Otherwise there is little information in this sentence
+Each voxel is given an integer 3D coordinate $\begin{bmatrix} v_{x}, v_{y}, v_{z} \end{bmatrix}^T \in \mathcal{Z}^3$ computed as follows:
+\begin{equation*}
+	\begin{bmatrix} v_{x}, v_{y}, v_{z} \end{bmatrix}^T = \floor(^{\mapf}\bm{v_o} / v_s),
+\end{equation*}
+where $\floor$ is a function that only keeps the integer part of the elements of a real-valued vector and $^{\mapf}\bm{v_o}$ is the position in the map frame of the origin of the voxel, which is located in its back lower left corner.
+The map voxels which are farther from the robot are saved on disk for later in case they are back again near the sensor range.
+When a voxel is saved on disk, it is saved in a file named: cell\_$v_x$\_$v_y$\_$v_z$.
+The sum of all the voxels constitute the global map $\refpc'$, we can therefore state that $\refpc \subseteq \refpc'$. %sum or aggregation ? 'Sum of voxels' might be confusing
+%A video-game-inspired algorithm is used to manage which voxels are loaded and unloaded from $\refpc'$ depending on the robot position in the map \transform{\robotf}{\mapf}. %Interesting, but miss a citation to the video-game algorithm! Otherwise there is little information in this sentence
+
 This map segmentation technique allows us to map and localize in real time in arbitrarily large environments.
 The different mapping parameters we used are listed in~\autoref{tab:mapping_params}.
 
@@ -214,7 +242,7 @@ The repeat pipeline is shown in~\autoref{fig:repeat_pipeline}.
 
 \begin{figure} [htpb]
 	\centering
-	\includegraphics[height=1.8in]{figs/repeat_pipeline/repeat_pipeline.pdf}
+	\includegraphics[width=.95\linewidth]{figs/Repeat_pipeline/repeat_pipeline.pdf}
 	\caption{Repeat phase pipeline}
 	\label{fig:repeat_pipeline}
 \end{figure}
@@ -355,6 +383,6 @@ All technical specifications for the platform are given in~\autoref{fig:warthog}
 		\qquad
 		\includegraphics[height=3in]{figs/warthog_hardware.pdf}
 	\end{minipage}
-	\caption{The experimental setup for \ac{LTR} on our Clearpath Robotics Warthog \ac{UGV}: (1) Robosense RS-32 lidar, (2) XSens MTi-10 \ac{IMU}, (3) Acrosser AIV-Q170V1FL computer, (4) Dalsa C1920 color camera, (5) 2 Emlid Reach-RS+ \ac{GPS} antennas.}
+	\caption{The experimental setup for \ac{LTR} on our Clearpath Robotics Warthog \ac{UGV}: (1) Robosense RS-32 lidar, (2) XSens MTi-10 \ac{IMU}, (3) Acrosser AIV-Q170V1FL computer, (4) Dalsa C1920 color camera, (5) 2 Emlid Reach-RS+ \ac{GPS} antennas. \todo{why dotted line}}
 	\label{fig:warthog}
 \end{figure}
