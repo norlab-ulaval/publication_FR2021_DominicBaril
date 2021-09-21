@@ -5,24 +5,28 @@
 
 \begin{figure} [h]
 	\begin{center}
-	% Replace with topological map
-	\begin{subfigure}[b]{0.45\textwidth}
-		\includegraphics[width=\linewidth]{figs/foret-montmorency.pdf}
-		%\caption{A view from above the \textit{Montmorency} boreal forest, which served the purpose of test area for this work.}
-		\label{fig:view_above}
+	\begin{subfigure}[b]{0.32\textwidth}
+		\includegraphics[width=\linewidth]{figs/intro/large_path_inkscape.pdf}
+		\caption{A photo of a forest road.}
+		\label{fig:large_path}
 	\end{subfigure}%
+	~
+	\begin{subfigure} [b] {0.32\textwidth}
+		\includegraphics[width=\linewidth]{figs/intro/narrow_path_inkscape.pdf}
+		\caption{A photo of a forest trail.}
+		\label{fig:narrow_path}
+	\end{subfigure}
 	~~
-	% replace with aerial?
-	\begin{subfigure} [b] {0.45\textwidth}
-		\includegraphics[width=\linewidth]{figs/warthog_laverdiere.pdf}
-		%\caption{Shot of our system parked in front of the \laverdiere~cottage.}
-		\label{fig:front_fig}
+	\begin{subfigure} [b] {0.32\textwidth}
+		\includegraphics[width=\linewidth]{figs/intro/woods_inkscape.pdf}
+		\caption{A photo of dense wood.}
+		\label{fig:wood}
 	\end{subfigure}
 	\end{center}
-	\caption{Our \ac{LTR} framework was designed to be used in subarctic environments.
-	The \textit{Montmorency} boreal forest is an ideal example of such areas.
-	The image on the right shows our \ac{UGV} parked at the end of one of our defined paths.
-	Image credit : \foretmo.}
+	\caption{Our \ac{LTR} framework was designed to be used in subarctic off-road environments.
+	Various paths can be driven on in such environments, namely forest roads and forest trails. 
+	The main focus of this work is autonomous \ac{LTR} on forest trails, which have a maximum width of \SI{6.5}{m}.
+	Our work does not cover deep woods navigation, in which our system would not be viable.}
 	\label{fig:intro}
 \end{figure}
 

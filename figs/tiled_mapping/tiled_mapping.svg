@@ -760,14 +760,14 @@
       </g>
     </g>
     <ellipse
-       style="fill:#00d134;fill-opacity:0;stroke:#000000;stroke-width:0.293144;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:#00d134;fill-opacity:0;stroke:#000000;stroke-width:0.267088;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="path1452"
        cx="38.247356"
        cy="22.562815"
-       rx="11.923429"
-       ry="11.714512" />
+       rx="10.754478"
+       ry="10.7816" />
     <g
-       transform="matrix(0.291746,0,0,0.291746,24.506085,21.721376)"
+       transform="matrix(0.291746,0,0,0.291746,24.964867,21.721376)"
        ns2:version="1.2.0"
        ns2:texconverter="pdflatex"
        ns2:pdfconverter="inkscape"
@@ -1087,8 +1087,8 @@
       </g>
     </g>
     <path
-       style="fill:none;stroke:#000000;stroke-width:0.241311;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker1506)"
-       d="M 38.899825,22.54432 27.685509,22.457772"
+       style="fill:none;stroke:#000000;stroke-width:0.234842;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker1506)"
+       d="M 38.821463,22.550509 28.949959,22.45739"
        id="path1496" />
     <rect
        style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.0775759;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
